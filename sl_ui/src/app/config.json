@@ -1,0 +1,21 @@
+{
+  "version": "0.1.0",
+  "api": {
+    "baseUrl": "",
+    "users": {
+      "me": "users/me/",
+      "login": "users/token/",
+      "signup": "users/signup/",
+      "activate": "users/activate/",
+      "passwordReset": "accounts/password_reset/"
+    },
+    "user-access": "user-access/"
+  },
+  "organizationData": {
+    "name": "Universidad Privada Boliviana",
+    "acronym": "UPB"
+  },
+  "appInformation": {
+    "title": "Street Light Remote Lab"
+  }
+}

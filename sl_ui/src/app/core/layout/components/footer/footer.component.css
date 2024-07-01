@@ -1,0 +1,17 @@
+footer {
+  height: 50px;
+  width: 100%;
+  color: black;
+  text-align: center;
+}
+
+#copyright {
+  display: flex;
+}
+
+@media (max-width: 600px) {
+  footer {
+    margin-top: 20px;
+    height: 150px;
+  }
+}

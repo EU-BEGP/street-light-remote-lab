@@ -1,0 +1,27 @@
+<div class="exterior-container">
+  <form [formGroup]="editionForm" #formDirective="ngForm" (ngSubmit)="updateUser(formDirective)">
+    <mat-form-field class="input-field">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" />
+    </mat-form-field>
+
+    <mat-form-field class="input-field">
+      <mat-label>Last name</mat-label>
+      <input matInput formControlName="lastName" />
+    </mat-form-field>
+
+    <mat-form-field class="input-field">
+      <mat-label>Email</mat-label>
+      <input matInput placeholder="user@gmail.com" formControlName="email" />
+      <mat-icon matSuffix>email</mat-icon>
+    </mat-form-field>
+
+    <p class="mat-caption">Required fields are marked with *</p>
+
+    <div class="button-container">
+      <button class="access-button" type="submit" mat-raised-button color="primary">
+        Update data
+      </button>
+    </div>
+  </form>
+</div>
