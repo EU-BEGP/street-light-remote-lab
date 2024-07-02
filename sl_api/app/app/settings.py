@@ -39,6 +39,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 INSTALLED_APPS = [
     "app",
     "users",
+    "street_light_rl",
     "django_light",
     "django.contrib.admin",
     "django.contrib.auth",
