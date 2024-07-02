@@ -9,7 +9,7 @@ import os
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ('name',)
+        fields = '__all__'
 
 class UserProfileSerializer(serializers.ModelSerializer):
     """Serializer for the user profile object"""
@@ -18,7 +18,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'name', 'last_name', 'country', 'time_zone', 'groups')
+        fields = ('id', 'email', 'name', 'last_name', 'groups')
         read_only_fields = ('id', 'email')
 
 class UserSerializer(serializers.ModelSerializer):
@@ -26,8 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ('id', 'email', 'password', 'name', 'last_name',
-                  'country', 'time_zone')
+        fields = ('id', 'email', 'password', 'name', 'last_name')
         extra_kwargs = {'password': {'write_only': True, 'min_length': 8}}
 
     def create(self, validated_data):

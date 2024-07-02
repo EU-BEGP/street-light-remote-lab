@@ -8,7 +8,7 @@ def create_groups(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('core', '0001_initial')
+        ('users', '0001_initial')
     ]
 
     operations = [

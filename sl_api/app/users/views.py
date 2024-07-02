@@ -5,7 +5,7 @@ from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 
-from core.models import User
+from users.models import User
 from users.serializers import UserSerializer, AuthTokenSerializer, UserProfileSerializer
 from utils import account_activation_token
 
