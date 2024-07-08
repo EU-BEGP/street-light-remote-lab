@@ -2,6 +2,7 @@ Django==4.0
 djangorestframework==3.13.1
 channels[daphne]==4.0.0
 channels-redis==4.0.0
+paho-mqtt==2.1.0
 psycopg2==2.9.3
 django-cors-headers==3.11.0
 django-light==0.1.0.post3
