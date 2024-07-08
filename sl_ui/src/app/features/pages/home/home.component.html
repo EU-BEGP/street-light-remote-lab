@@ -2,28 +2,14 @@
 <div class="main-container">
   <mat-tab-group mat-align-tabs="start">
     <mat-tab label="Activity 1">
-      <mat-grid-list cols="2" rowHeight="2:1">
-        <mat-grid-tile>1</mat-grid-tile>
-        <mat-grid-tile>2</mat-grid-tile>
-        <mat-grid-tile>3</mat-grid-tile>
-        <mat-grid-tile>4</mat-grid-tile>
-      </mat-grid-list>
+      <div *ngFor="let message of data">
+        <mat-grid-list cols="2" rowHeight="2:1">
+          <mat-grid-tile>{{message | json}}</mat-grid-tile>
+        </mat-grid-list>
+      </div>
     </mat-tab>
     <mat-tab label="Activity 2">
-      <mat-grid-list cols="2" rowHeight="2:1">
-        <mat-grid-tile>1</mat-grid-tile>
-        <mat-grid-tile>2</mat-grid-tile>
-        <mat-grid-tile>3</mat-grid-tile>
-        <mat-grid-tile>4</mat-grid-tile>
-      </mat-grid-list>
-    </mat-tab>
-    <mat-tab label="Activity 3">
-      <mat-grid-list cols="2" rowHeight="2:1">
-        <mat-grid-tile>1</mat-grid-tile>
-        <mat-grid-tile>2</mat-grid-tile>
-        <mat-grid-tile>3</mat-grid-tile>
-        <mat-grid-tile>4</mat-grid-tile>
-      </mat-grid-list>
+      Content for activity 2
     </mat-tab>
   </mat-tab-group>
 </div>

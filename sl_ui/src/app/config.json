@@ -9,7 +9,7 @@
       "activate": "users/activate/",
       "passwordReset": "accounts/password_reset/"
     },
-    "user-access": "user-access/"
+    "messagesWS": ""
   },
   "organizationData": {
     "name": "Universidad Privada Boliviana",
