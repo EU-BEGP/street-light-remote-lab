@@ -82,7 +82,19 @@ TEMPLATES = [
     },
 ]
 
+ASGI_APPLICATION = "app.asgi.application"
 WSGI_APPLICATION = "app.wsgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [
+                ("redis", 6379)
+            ],  # Use 'redis' as the host name, same as the service name in Docker Compose
+        },
+    },
+}
 
 
 # Database
