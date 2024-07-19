@@ -1,3 +1,4 @@
+import asyncio
 from django.core.management.base import BaseCommand
 import paho.mqtt.client as mqtt
 
@@ -28,10 +29,12 @@ def on_message(client, userdata, msg):
     print(message_object)
 
     # Send data to WebSocket consumers
-    async_to_sync(channel_layer.group_send)(
-        "data_group",  # Group name to send to
-        {"type": "send_websocket_data", "data": json.dumps(message_object)},
+    loop = asyncio.get_event_loop()
+    coroutine = channel_layer.group_send(
+        "data_group",
+        {"type": "send_websocket_data", "data": json.dumps(websocket_data)},
     )
+    loop.run_until_complete(coroutine)
 
 
 class Command(BaseCommand):
