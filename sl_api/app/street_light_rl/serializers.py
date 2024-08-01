@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Robot, Experiment, Message
+from .models import Robot, Experiment, Message, Grid
 
 
 class RobotSerializer(serializers.ModelSerializer):
@@ -14,7 +14,15 @@ class ExperimentSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class BatchedMessageSerializer(serializers.ModelSerializer):
+class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ("x_pos", "y_pos", "intensity", "timestamp")
+
+
+class GridSerializer(serializers.ModelSerializer):
+    grid_messages = MessageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Grid
+        fields = "__all__"

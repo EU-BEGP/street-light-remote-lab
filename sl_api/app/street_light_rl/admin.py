@@ -9,7 +9,12 @@ class RobotAdmin(admin.ModelAdmin):
 
 class ExperimentAdmin(admin.ModelAdmin):
     ordering = ["id"]
-    list_display = ["id", "name", "description", "robot", "owner", "registration_date"]
+    list_display = ["id", "name", "description", "owner", "robot", "registration_date"]
+
+
+class GridAdmin(admin.ModelAdmin):
+    ordering = ["id"]
+    list_display = ["id", "width", "height", "robot", "experiment", "timestamp"]
 
 
 class MessageAdmin(admin.ModelAdmin):
@@ -20,21 +25,12 @@ class MessageAdmin(admin.ModelAdmin):
         "y_pos",
         "intensity",
         "is_last",
-        "robot"
+        "grid",
+        "timestamp",
     ]
 
-class GridAdmin(admin.ModelAdmin):
-    ordering = ["id"]
-    list_display = [
-        "id",
-        "timestamp",
-        "robot",
-        "experiment",
-        "width",
-        "height"
-    ]
 
 admin.site.register(Robot, RobotAdmin)
-admin.site.register(Message, MessageAdmin)
 admin.site.register(Experiment, ExperimentAdmin)
 admin.site.register(Grid, GridAdmin)
+admin.site.register(Message, MessageAdmin)
