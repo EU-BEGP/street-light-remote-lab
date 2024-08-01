@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Robot, Experiment, Message
+from .models import Robot, Experiment, Message, Grid
 
 
 class RobotAdmin(admin.ModelAdmin):
@@ -20,12 +20,21 @@ class MessageAdmin(admin.ModelAdmin):
         "y_pos",
         "intensity",
         "is_last",
-        "experiment",
-        "robot",
-        "timestamp",
+        "robot"
     ]
 
+class GridAdmin(admin.ModelAdmin):
+    ordering = ["id"]
+    list_display = [
+        "id",
+        "timestamp",
+        "robot",
+        "experiment",
+        "width",
+        "height"
+    ]
 
 admin.site.register(Robot, RobotAdmin)
 admin.site.register(Message, MessageAdmin)
 admin.site.register(Experiment, ExperimentAdmin)
+admin.site.register(Grid, GridAdmin)

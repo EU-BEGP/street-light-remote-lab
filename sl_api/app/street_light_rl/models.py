@@ -23,21 +23,34 @@ class Experiment(models.Model):
     )
 
 
+class Grid(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=True)
+    robot = models.ForeignKey(
+        Robot,
+        related_name="robot_grids",
+        on_delete=models.CASCADE
+    )
+    experiment = models.ForeignKey(
+        Experiment,
+        related_name="experiment_grids",
+        on_delete=models.CASCADE
+    )
+    width = models.IntegerField(null=True, blank=True)
+    height = models.IntegerField(null=True, blank=True)
+
+
 class Message(models.Model):
     x_pos = models.IntegerField()
     y_pos = models.IntegerField()
     intensity = models.FloatField()
     is_last = models.BooleanField(default=False)
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    experiment = models.ForeignKey(
-        Experiment,
-        related_name="experiment_messages",
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-    )
-
     robot = models.ForeignKey(
-        Robot, related_name="robot_messages", on_delete=models.CASCADE
+        Robot,
+        related_name="robot_messages",
+        on_delete=models.CASCADE
+    )
+    grid = models.ForeignKey(
+        Grid,
+        related_name="grid_messages",
+        on_delete=models.CASCADE
     )
