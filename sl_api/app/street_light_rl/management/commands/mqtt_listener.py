@@ -45,3 +45,4 @@ class Command(BaseCommand):
 
         client.connect(mqtt_host, int(mqtt_port), 60)
         client.loop_forever()
+

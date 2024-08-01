@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Robot, Experiment, Message
+from .models import Robot, Experiment, Message, Grid
 
 
 class RobotAdmin(admin.ModelAdmin):
@@ -9,7 +9,12 @@ class RobotAdmin(admin.ModelAdmin):
 
 class ExperimentAdmin(admin.ModelAdmin):
     ordering = ["id"]
-    list_display = ["id", "name", "description", "robot", "owner", "registration_date"]
+    list_display = ["id", "name", "description", "owner", "robot", "registration_date"]
+
+
+class GridAdmin(admin.ModelAdmin):
+    ordering = ["id"]
+    list_display = ["id", "width", "height", "robot", "experiment", "timestamp"]
 
 
 class MessageAdmin(admin.ModelAdmin):
@@ -20,12 +25,12 @@ class MessageAdmin(admin.ModelAdmin):
         "y_pos",
         "intensity",
         "is_last",
-        "experiment",
-        "robot",
+        "grid",
         "timestamp",
     ]
 
 
 admin.site.register(Robot, RobotAdmin)
-admin.site.register(Message, MessageAdmin)
 admin.site.register(Experiment, ExperimentAdmin)
+admin.site.register(Grid, GridAdmin)
+admin.site.register(Message, MessageAdmin)
