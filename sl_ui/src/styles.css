@@ -1,3 +1,4 @@
+/* ---------------- General Layout and Utility Styles ---------------- */
 html,
 body {
   height: 100%;
@@ -6,13 +7,31 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
-  height: 100%;
 }
 
 * {
   box-sizing: border-box;
 }
 
+.center {
+  margin: 0 auto;
+  display: block;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 17px;
+  padding-top: 30px;
+}
+
+/* -------------------------------------------------------------- */
+
+/* ---------------- Float-based Layout Styles ---------------- */
 .column {
   float: left;
   width: 50%;
@@ -39,19 +58,24 @@ body {
   clear: both;
 }
 
+/* -------------------------------------------------------------- */
+
+/* ---------------- Flexbox and Spacing Utilities ---------------- */
 .spacer {
   flex: 1 1 auto;
-}
-
-.toast-container .ngx-toastr {
-  box-shadow: 0 0 12px #3b3b3b !important;
 }
 
 .container {
   padding: 70px;
 }
 
-/* ---------------- Form styles ---------------- */
+.toast-container .ngx-toastr {
+  box-shadow: 0 0 12px #3b3b3b !important;
+}
+
+/* -------------------------------------------------------------- */
+
+/* ---------------- Form Styles ---------------- */
 form {
   padding: 30px;
 }
@@ -71,29 +95,9 @@ input[type="password"]::-ms-clear {
   width: 100%;
 }
 
-.center {
-  margin: 0 auto;
-  display: block;
-}
+/* ---------------------------------------------- */
 
-.text-center {
-  text-align: center;
-}
-
-.title {
-  text-align: center;
-  font-weight: bold;
-  font-size: 17px;
-  padding-top: 30px;
-}
-
-/* ------------------------------------------ */
-
-.reservation-list {
-  width: 80%;
-}
-
-/* ---------------- Table styles ---------------- */
+/* ---------------- Table and Data Presentation Styles ---------------- */
 .mat-card-title-group {
   display: flex;
   justify-content: center;
@@ -136,115 +140,4 @@ tr.no-data-row {
   flex: 0 0 10%;
 }
 
-.action-button {
-  color: grey;
-}
-
-.mobile-label {
-  display: none;
-}
-
-/* ------------------------------------------ */
-
-.spinner-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 400px;
-}
-
-.page-content {
-  padding: 15px 40px 0px 40px;
-  background: #fdfdfd;
-  min-height: calc(100vh - 190px);
-  margin-top: 20px;
-}
-
-.dialog-responsive {
-  width: 40%;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  .reservation-list {
-    width: 100%;
-  }
-
-  .mat-typography h2 {
-    font-size: 17px;
-  }
-
-  .column,
-  .cols-3,
-  .cols-4,
-  .cols-5 {
-    width: 100%;
-  }
-
-  .input-field {
-    padding: 0px;
-  }
-}
-
-@media only screen and (max-width: 850px) {
-  .dialog-responsive {
-    width: 100%;
-  }
-
-  .mat-cell:first-of-type {
-    padding-left: 0px;
-  }
-
-  .mobile-label {
-    width: 80px;
-    display: inline-block;
-    font-weight: bold;
-    padding-left: 0px;
-  }
-
-  .mat-header-row {
-    display: none;
-  }
-
-  .mat-row {
-    flex-direction: column;
-    align-items: start;
-    padding: 8px 24px;
-  }
-}
-
-@media (min-width: 600px) and (max-width: 1000px) {
-  .reservation-list {
-    width: 100%;
-  }
-
-  .cols-5 {
-    width: 50%;
-  }
-}
-
-@media (min-width: 1000px) and (max-width: 1300px) {
-  .reservation-list {
-    width: 85%;
-  }
-
-  .cols-4 {
-    width: 50%;
-  }
-
-  .cols-5 {
-    width: 33%;
-  }
-}
-
-@media (min-width: 1300px) and (max-width: 1480px) {
-  .cols-5 {
-    width: 25%;
-  }
-}
-
-@media (min-width: 1480) {
-  .cols-5 {
-    width: 20%;
-  }
-}
+/* -------------------------------------------------------------- */

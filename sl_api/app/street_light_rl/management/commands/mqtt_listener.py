@@ -32,7 +32,7 @@ def on_message(client, userdata, msg):
     loop = asyncio.get_event_loop()
     coroutine = channel_layer.group_send(
         "data_group",
-        {"type": "send_websocket_data", "data": json.dumps(websocket_data)},
+        {"type": "send_websocket_data", "data": json.dumps(message_object)},
     )
     loop.run_until_complete(coroutine)
 
@@ -45,4 +45,3 @@ class Command(BaseCommand):
 
         client.connect(mqtt_host, int(mqtt_port), 60)
         client.loop_forever()
-
