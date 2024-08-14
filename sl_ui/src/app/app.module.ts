@@ -30,6 +30,12 @@ import { HomeComponent } from './features/pages/home/home.component';
 import { ProfileComponent } from './core/auth/pages/profile/profile.component';
 import { ProfileFormComponent } from './core/auth/components/profile-form/profile-form.component';
 import { CountdownModule } from 'ngx-countdown';
+
+import * as PlotlyJS from 'plotly.js-dist-min';
+import { PlotlyModule } from 'angular-plotly.js';
+
+PlotlyModule.plotlyjs = PlotlyJS;
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,6 +53,7 @@ import { CountdownModule } from 'ngx-countdown';
     ProfileFormComponent,
   ],
   imports: [
+    PlotlyModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
