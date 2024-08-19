@@ -2,38 +2,14 @@
 <div>
   <mat-tab-group mat-align-tabs="center">
     <mat-tab label="Activity 1">
+      <app-light-control></app-light-control>
       <div class="activity-content">
-
         <div class="column">
-          <h2 class="title">Intensity Grid</h2>
-          <mat-grid-list [cols]="GRID_DIMENSION" [rowHeight]="50" gutterSize="10px">
-            <mat-grid-tile *ngFor="let cell of grid.flat()">
-              {{cell}}
-            </mat-grid-tile>
-          </mat-grid-list>
-
-          <div class="grid-elements">
-            <div>
-              <label for="power-slider">Power Slider:</label>
-              <mat-slider id="power-slider" min="10" max="100" step="1" [(ngModel)]="sliderValue"
-                aria-label="Power Slider">
-              </mat-slider>
-              <span>Value: {{sliderValue}}</span>
-            </div>
-            <div>
-              <mat-slide-toggle>Turn On/Off Light</mat-slide-toggle>
-            </div>
-            <button mat-button color="primary">Send Information</button>
-          </div>
+          <app-intensity-grid [gridDimension]="10"></app-intensity-grid>
         </div>
-
         <div class="column">
-          <h2 class="title">Graphic View</h2>
-          <div>
-            <plotly-plot [data]="graph.data"></plotly-plot>
-          </div>
+          <app-intensity-chart></app-intensity-chart>
         </div>
-
       </div>
     </mat-tab>
     <mat-tab label="Activity 2">

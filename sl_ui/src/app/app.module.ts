@@ -33,6 +33,9 @@ import { CountdownModule } from 'ngx-countdown';
 
 import * as PlotlyJS from 'plotly.js-dist-min';
 import { PlotlyModule } from 'angular-plotly.js';
+import { IntensityGridComponent } from './features/components/intensity-grid/intensity-grid.component';
+import { IntensityChartComponent } from './features/components/intensity-chart/intensity-chart.component';
+import { LightControlComponent } from './features/components/light-control/light-control.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -51,6 +54,9 @@ PlotlyModule.plotlyjs = PlotlyJS;
     HomeComponent,
     ProfileComponent,
     ProfileFormComponent,
+    IntensityGridComponent,
+    IntensityChartComponent,
+    LightControlComponent,
   ],
   imports: [
     PlotlyModule,
