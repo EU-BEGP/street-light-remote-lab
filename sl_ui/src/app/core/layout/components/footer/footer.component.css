@@ -2,16 +2,15 @@
 footer {
   height: 90px;
   width: 100%;
-  color: black;
-  background-color: white;
-  text-align: center;
-  position: fixed;
   bottom: 0;
   left: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: white;
+  color: black;
+  text-align: center;
 }
 
 #erasmus-logo {
