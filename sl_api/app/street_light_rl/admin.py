@@ -14,7 +14,15 @@ class ExperimentAdmin(admin.ModelAdmin):
 
 class GridAdmin(admin.ModelAdmin):
     ordering = ["id"]
-    list_display = ["id", "width", "height", "robot", "experiment", "timestamp"]
+    list_display = [
+        "id",
+        "grid_id",
+        "width",
+        "height",
+        "robot",
+        "experiment",
+        "timestamp",
+    ]
 
 
 class MessageAdmin(admin.ModelAdmin):

@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+import uuid
 
 
 class Robot(models.Model):
@@ -24,12 +25,17 @@ class Experiment(models.Model):
 class Grid(models.Model):
     width = models.IntegerField(null=True, blank=True)
     height = models.IntegerField(null=True, blank=True)
+    grid_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     robot = models.ForeignKey(
         Robot, related_name="robot_grids", on_delete=models.CASCADE
     )
     experiment = models.ForeignKey(
-        Experiment, related_name="experiment_grids", on_delete=models.CASCADE
+        Experiment,
+        related_name="experiment_grids",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
     )
 
 
