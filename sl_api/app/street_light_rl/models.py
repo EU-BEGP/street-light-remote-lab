@@ -31,7 +31,11 @@ class Grid(models.Model):
         Robot, related_name="robot_grids", on_delete=models.CASCADE
     )
     experiment = models.ForeignKey(
-        Experiment, related_name="experiment_grids", on_delete=models.CASCADE, null=True, blank=True
+        Experiment,
+        related_name="experiment_grids",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
     )
 
 
