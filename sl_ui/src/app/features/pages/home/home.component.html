@@ -1,11 +1,15 @@
 <app-navbar></app-navbar>
-<div class="main-container">
-  <mat-tab-group mat-align-tabs="start">
+<div>
+  <mat-tab-group mat-align-tabs="center">
     <mat-tab label="Activity 1">
-      <div *ngFor="let message of data">
-        <mat-grid-list cols="2" rowHeight="2:1">
-          <mat-grid-tile>{{message | json}}</mat-grid-tile>
-        </mat-grid-list>
+      <app-light-control></app-light-control>
+      <div class="activity-content">
+        <div class="column">
+          <app-intensity-grid [gridDimension]="10"></app-intensity-grid>
+        </div>
+        <div class="column">
+          <app-intensity-chart></app-intensity-chart>
+        </div>
       </div>
     </mat-tab>
     <mat-tab label="Activity 2">
@@ -13,4 +17,3 @@
     </mat-tab>
   </mat-tab-group>
 </div>
-<app-scroll-to-top></app-scroll-to-top>

@@ -1,1 +1,37 @@
+/* ---------------- Activity Content Layout ---------------- */
+.activity-content {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
 
+.column {
+  flex: 1;
+  margin-right: 20px;
+  padding: 10px;
+  border: 2px solid #5262BC;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.column:last-child {
+  margin-right: 0;
+}
+
+/* ---------------- Angular Material ---------------- */
+.mat-button {
+  background-color: #5262BC;
+  color: white;
+  padding: 8px 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+mat-tab-group {
+  margin: 0 auto;
+  width: 100%;
+}
+
+mat-tab-group[mat-align-tabs='center'] .mat-tab-labels {
+  justify-content: center;
+}

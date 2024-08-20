@@ -23,6 +23,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSortModule } from '@angular/material/sort';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 const MaterialComponents = [
   MatButtonModule,
@@ -49,6 +51,8 @@ const MaterialComponents = [
   MatTableModule,
   MatSidenavModule,
   MatSortModule,
+  MatSliderModule,
+  MatSlideToggleModule,
 ];
 
 @NgModule({
