@@ -21,4 +21,10 @@ urlpatterns = [
         views.ExperimentGridsView.as_view(),
         name="experiment-grids",
     ),
+    path("request-grid/", views.RequestGridMQTT.as_view(), name="request-grid"),
+    path(
+        "light-properties/",
+        views.LightPropertiesMQTT.as_view(),
+        name="light-properties",
+    ),
 ]

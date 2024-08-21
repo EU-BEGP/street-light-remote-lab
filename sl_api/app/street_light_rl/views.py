@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -10,6 +10,9 @@ from .serializers import (
     GridSerializer,
 )
 import json
+
+import paho.mqtt.publish as publish
+import os
 
 
 class RobotListView(generics.ListAPIView):
@@ -196,3 +199,41 @@ def _handle_date_params(self, start_date_param, end_date_param, queryset):
 
     serializer_data = self.get_serializer(filtered_queryset, many=True).data
     return serializer_data  # Returns the grid(s) that match the specified criteria.
+
+
+class RequestGridMQTT(generics.GenericAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    # Function to publish a message to indicate the robot to start capturing grid data
+    def get(self, request, *args, **kwargs):
+        topic = os.environ.get("MQTT_PUB_GRID_TOPIC")
+        host = os.environ.get("MQTT_HOST")
+        port = os.environ.get("MQTT_PORT")
+        message = {"message": "capture"}
+
+        publish.single(topic, json.dumps(message), hostname=host, port=int(port))
+        return Response(
+            {"success": "Request sent successfully"}, status=status.HTTP_200_OK
+        )
+
+
+class LightPropertiesMQTT(generics.GenericAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    # Function to publish a message to indicate the robot to start capturing grid data
+    def post(self, request, *args, **kwargs):
+        topic = os.environ.get("MQTT_PUB_LIGHT_TOPIC")
+        host = os.environ.get("MQTT_HOST")
+        port = os.environ.get("MQTT_PORT")
+
+        state = request.data.get("state", None)
+        dim = request.data.get("dim", None)
+
+        message = {"state": state, "dim": dim}
+        publish.single(topic, json.dumps(message), hostname=host, port=int(port))
+
+        return Response(
+            {"success": "Data sent successfully"}, status=status.HTTP_200_OK
+        )

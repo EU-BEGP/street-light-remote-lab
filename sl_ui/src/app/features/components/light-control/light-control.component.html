@@ -4,7 +4,7 @@
     <div class="section-container">
       <div class="left-section">
         <h4>Click the button below to fetch the latest grid data.</h4>
-        <button mat-button color="primary">Get Grid Data</button>
+        <button mat-button color="primary" (click)="requestGrid()">Get Grid Data</button>
       </div>
       <div class="separator"></div>
       <div class="right-section">
@@ -20,7 +20,7 @@
             <mat-slide-toggle color="primary" [(ngModel)]="switchValue"></mat-slide-toggle>
           </div>
           <div class="control-item">
-            <button mat-button color="primary">Set Light Properties</button>
+            <button mat-button color="primary" (click)="setLightProperties()">Set Light Properties</button>
           </div>
         </div>
       </div>
