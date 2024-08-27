@@ -3,23 +3,183 @@ from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from datetime import datetime, timedelta
-from .models import Robot, Experiment, Grid
+from .models import Robot, Experiment, Grid, Message
 from .serializers import (
     RobotSerializer,
     ExperimentSerializer,
     GridSerializer,
+    MessageSerializer,
 )
 import json
+import http
 
-
-class RobotListView(generics.ListAPIView):
+class RobotListView(generics.ListCreateAPIView):
     serializer_class = RobotSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
     queryset = Robot.objects.all()
 
+    def create(self, request, *args, **kwargs):
+        # Gets data from POST request in json format.
+        data = request.data
+        serializer = self.serializer_class(data=data)
+        if serializer.is_valid():
+            # Checks if data can be correctly serialized and contains necessary fields.
+            serializer.save()
+            # Creates and saves new Experiment object in database.
+            return Response(serializer.data, status=http.HTTPStatus.CREATED)
+        else:
+            # If the serializer is not valid, the serializer errors are returned.
+            return Response(serializer.errors)
 
-class RobotExperimentsView(generics.ListAPIView):
+class ExperimentListView(generics.ListCreateAPIView):
+    serializer_class = ExperimentSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+    queryset = Experiment.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        # Gets data from POST request in json format.
+        data = request.data
+        serializer = self.serializer_class(data=data)
+        if serializer.is_valid():
+            # Checks if data can be correctly serialized and contains necessary fields.
+            serializer.save()
+            # Creates and saves new Experiment object in database.
+            return Response(serializer.data, status=http.HTTPStatus.CREATED)
+        else:
+            # If the serializer is not valid, the serializer errors are returned.
+            return Response(serializer.errors)
+
+class UpdateGrid(generics.UpdateAPIView):
+    serializer_class = GridSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        queryset = Grid.objects.all()
+        # Gets grid_id from url.
+        grid_id = self.kwargs.get('grid_id')
+        # Gets the grid object with a matching 'grid_id' from the queryset.
+        grid = queryset.get(id=grid_id)
+        return grid
+
+    def patch(self, request, *args, **kwargs):
+        object = self.get_object()
+        serializer = self.serializer_class(object, data=request.data)
+        if serializer.is_valid():
+            # If the serializer is valid, the grid object is updated.
+            serializer.save()
+            return Response(serializer.data, status=http.HTTPStatus.CREATED)
+        else:
+            # If the serializer is not valid, the serializer errors are returned.
+            return Response(serializer.errors)
+
+class UpdateRobot(generics.UpdateAPIView):
+    serializer_class = RobotSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        queryset = Robot.objects.all()
+        # Gets robot_id from url.
+        robot_id = self.kwargs.get('robot_id')
+        # Gets the robot object with a matching'robot_id' from the queryset.
+        robot = queryset.get(robot_id=robot_id)
+        return robot
+
+
+    def patch(self, request, *args, **kwargs):
+        object = self.get_object()
+        serializer = self.serializer_class(object, data = request.data)
+        if serializer.is_valid():
+            # If the serializer is valid, the robot object is updated.
+            serializer.save()
+            return Response(serializer.data, status=http.HTTPStatus.CREATED)
+        else:
+            # If the serializer is not valid, the serializer errors are returned.
+            return Response(serializer.errors)
+
+class UpdateMessage(generics.UpdateAPIView):
+    serializer_class = MessageSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        queryset = Message.objects.all()
+        # Gets message id from url.
+        message_id = self.kwargs.get('id')
+        # Gets the message object with a matching message 'id' from the queryset.
+        message = queryset.get(id=message_id)
+        return message
+
+
+    def patch(self, request, *args, **kwargs):
+        object = self.get_object()
+        serializer = self.serializer_class(object, data = request.data)
+        if serializer.is_valid():
+            # If the serializer is valid, the message object is updated.
+            serializer.save()
+            return Response(serializer.data, status=http.HTTPStatus.CREATED)
+        else:
+            # If the serializer is not valid, the serializer errors are returned.
+            return Response(serializer.errors)
+
+class UpdateExperiment(generics.UpdateAPIView):
+    serializer_class = ExperimentSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        queryset = Experiment.objects.all()
+        # Gets experiment id from url.
+        experiment_id = self.kwargs.get('id')
+        # Gets experiment object with experiment'id' from queryset.
+        experiment = queryset.get(id=experiment_id)
+        return experiment
+
+
+    def patch(self, request, *args, **kwargs):
+        object = self.get_object()
+        serializer = self.serializer_class(object, data = request.data)
+        if serializer.is_valid():
+            # If the serializer is valid, the experiment object is updated.
+            serializer.save()
+            return Response(serializer.data, status=http.HTTPStatus.CREATED)
+        else:
+            # If the serializer is not valid, the serializer errors are returned.
+            return Response(serializer.errors)
+
+
+class GridsView(generics.ListAPIView):
+    # Returns all grid objects in the database.
+    serializer_class = GridSerializer
+    queryset = Grid.objects.all()
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+class MessagesView(generics.ListCreateAPIView):
+    # Returns all message objects in the database.
+    serializer_class = MessageSerializer
+    queryset = Message.objects.all()
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def create(self, request, *args, **kwargs):
+        # Gets data from POST request in json format.
+        data = request.data
+        serializer = self.serializer_class(data=data)
+        if serializer.is_valid():
+            # Checks if data can be correctly serialized and contains necessary fields.
+            serializer.save()
+            # Creates and saves new Message object in database.
+            return Response(serializer.data, status=http.HTTPStatus.CREATED)
+        else:
+            # If the serializer is not valid, the serializer errors are returned.
+            return Response(serializer.errors)
+
+
+class RobotExperimentsView(generics.ListCreateAPIView):
     serializer_class = ExperimentSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -28,14 +188,6 @@ class RobotExperimentsView(generics.ListAPIView):
         robot_id = self.kwargs["robot_id"]
         experiments = Experiment.objects.filter(robot_id=robot_id)
         return experiments
-
-
-class ExperimentListView(generics.ListAPIView):
-    serializer_class = ExperimentSerializer
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-    queryset = Experiment.objects.all()
-
 
 class RobotGridsView(generics.ListAPIView):
     serializer_class = GridSerializer
@@ -104,7 +256,7 @@ class ExperimentGridsView(generics.ListAPIView):
         # Returns an error message if the experiment ID is invalid or if the experiment has no associated grids.
         if len(queryset) == 0:
             return Response(
-                "Error: The provided Robot ID is invalid or the robot does not have any associated grids.",
+                "Error: The provided Experiment ID is invalid or the robot does not have any associated grids.",
                 status=404,
             )
 
