@@ -12,6 +12,8 @@
     "streetLights": {
       "requestGrid": "street-lights/request-grid/",
       "lightProperties": "street-lights/light-properties/"
+      "lightProperties": "street-lights/light-properties/",
+      "robot": "street-lights/robots/"
     },
     "messagesWS": ""
   },
