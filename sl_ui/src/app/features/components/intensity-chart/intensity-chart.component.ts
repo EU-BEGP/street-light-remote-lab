@@ -23,6 +23,10 @@ export class IntensityChartComponent implements OnInit {
   }
 
   updateGraph(message: any): void {
+    if (message.x_pos == 0 && message.y_pos == 0) {
+      this.graph.data[0].z = this.generateInitialZValues(this.gridDimension)
+    }
+
     if (message && message.x_pos >= 0 && message.x_pos < this.gridDimension && message.y_pos >= 0 && message.y_pos < this.gridDimension) {
       this.graph.data[0].z[message.y_pos][message.x_pos] = message.intensity;
     }

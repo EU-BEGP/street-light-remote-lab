@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -12,6 +12,9 @@ from .serializers import (
 )
 import json
 import http
+import paho.mqtt.publish as publish
+import os
+
 
 class RobotListView(generics.ListCreateAPIView):
     serializer_class = RobotSerializer
@@ -32,6 +35,7 @@ class RobotListView(generics.ListCreateAPIView):
             # If the serializer is not valid, the serializer errors are returned.
             return Response(serializer.errors)
 
+
 class ExperimentListView(generics.ListCreateAPIView):
     serializer_class = ExperimentSerializer
     authentication_classes = (TokenAuthentication,)
@@ -51,6 +55,7 @@ class ExperimentListView(generics.ListCreateAPIView):
             # If the serializer is not valid, the serializer errors are returned.
             return Response(serializer.errors)
 
+
 class UpdateGrid(generics.UpdateAPIView):
     serializer_class = GridSerializer
     authentication_classes = (TokenAuthentication,)
@@ -59,7 +64,7 @@ class UpdateGrid(generics.UpdateAPIView):
     def get_object(self):
         queryset = Grid.objects.all()
         # Gets grid_id from url.
-        grid_id = self.kwargs.get('grid_id')
+        grid_id = self.kwargs.get("grid_id")
         # Gets the grid object with a matching 'grid_id' from the queryset.
         grid = queryset.get(id=grid_id)
         return grid
@@ -75,6 +80,7 @@ class UpdateGrid(generics.UpdateAPIView):
             # If the serializer is not valid, the serializer errors are returned.
             return Response(serializer.errors)
 
+
 class UpdateRobot(generics.UpdateAPIView):
     serializer_class = RobotSerializer
     authentication_classes = (TokenAuthentication,)
@@ -83,15 +89,14 @@ class UpdateRobot(generics.UpdateAPIView):
     def get_object(self):
         queryset = Robot.objects.all()
         # Gets robot_id from url.
-        robot_id = self.kwargs.get('robot_id')
+        robot_id = self.kwargs.get("robot_id")
         # Gets the robot object with a matching'robot_id' from the queryset.
         robot = queryset.get(robot_id=robot_id)
         return robot
 
-
     def patch(self, request, *args, **kwargs):
         object = self.get_object()
-        serializer = self.serializer_class(object, data = request.data)
+        serializer = self.serializer_class(object, data=request.data)
         if serializer.is_valid():
             # If the serializer is valid, the robot object is updated.
             serializer.save()
@@ -99,6 +104,7 @@ class UpdateRobot(generics.UpdateAPIView):
         else:
             # If the serializer is not valid, the serializer errors are returned.
             return Response(serializer.errors)
+
 
 class UpdateMessage(generics.UpdateAPIView):
     serializer_class = MessageSerializer
@@ -108,15 +114,14 @@ class UpdateMessage(generics.UpdateAPIView):
     def get_object(self):
         queryset = Message.objects.all()
         # Gets message id from url.
-        message_id = self.kwargs.get('id')
+        message_id = self.kwargs.get("id")
         # Gets the message object with a matching message 'id' from the queryset.
         message = queryset.get(id=message_id)
         return message
 
-
     def patch(self, request, *args, **kwargs):
         object = self.get_object()
-        serializer = self.serializer_class(object, data = request.data)
+        serializer = self.serializer_class(object, data=request.data)
         if serializer.is_valid():
             # If the serializer is valid, the message object is updated.
             serializer.save()
@@ -124,6 +129,7 @@ class UpdateMessage(generics.UpdateAPIView):
         else:
             # If the serializer is not valid, the serializer errors are returned.
             return Response(serializer.errors)
+
 
 class UpdateExperiment(generics.UpdateAPIView):
     serializer_class = ExperimentSerializer
@@ -133,15 +139,14 @@ class UpdateExperiment(generics.UpdateAPIView):
     def get_object(self):
         queryset = Experiment.objects.all()
         # Gets experiment id from url.
-        experiment_id = self.kwargs.get('id')
+        experiment_id = self.kwargs.get("id")
         # Gets experiment object with experiment'id' from queryset.
         experiment = queryset.get(id=experiment_id)
         return experiment
 
-
     def patch(self, request, *args, **kwargs):
         object = self.get_object()
-        serializer = self.serializer_class(object, data = request.data)
+        serializer = self.serializer_class(object, data=request.data)
         if serializer.is_valid():
             # If the serializer is valid, the experiment object is updated.
             serializer.save()
@@ -157,6 +162,7 @@ class GridsView(generics.ListAPIView):
     queryset = Grid.objects.all()
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
+
 
 class MessagesView(generics.ListCreateAPIView):
     # Returns all message objects in the database.
@@ -188,6 +194,7 @@ class RobotExperimentsView(generics.ListCreateAPIView):
         robot_id = self.kwargs["robot_id"]
         experiments = Experiment.objects.filter(robot_id=robot_id)
         return experiments
+
 
 class RobotGridsView(generics.ListAPIView):
     serializer_class = GridSerializer
@@ -348,3 +355,41 @@ def _handle_date_params(self, start_date_param, end_date_param, queryset):
 
     serializer_data = self.get_serializer(filtered_queryset, many=True).data
     return serializer_data  # Returns the grid(s) that match the specified criteria.
+
+
+class RequestGridMQTT(generics.GenericAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    # Function to publish a message to indicate the robot to start capturing grid data
+    def get(self, request, *args, **kwargs):
+        topic = os.environ.get("MQTT_PUB_GRID_TOPIC")
+        host = os.environ.get("MQTT_HOST")
+        port = os.environ.get("MQTT_PORT")
+        message = {"message": "capture"}
+
+        publish.single(topic, json.dumps(message), hostname=host, port=int(port))
+        return Response(
+            {"success": "Request sent successfully"}, status=status.HTTP_200_OK
+        )
+
+
+class LightPropertiesMQTT(generics.GenericAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    # Function to publish a message to indicate the robot to start capturing grid data
+    def post(self, request, *args, **kwargs):
+        topic = os.environ.get("MQTT_PUB_LIGHT_TOPIC")
+        host = os.environ.get("MQTT_HOST")
+        port = os.environ.get("MQTT_PORT")
+
+        state = request.data.get("state", None)
+        dim = request.data.get("dim", None)
+
+        message = {"state": state, "dim": dim}
+        publish.single(topic, json.dumps(message), hostname=host, port=int(port))
+
+        return Response(
+            {"success": "Data sent successfully"}, status=status.HTTP_200_OK
+        )

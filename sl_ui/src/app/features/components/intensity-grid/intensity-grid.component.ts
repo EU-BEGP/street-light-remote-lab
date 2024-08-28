@@ -16,6 +16,10 @@ export class IntensityGridComponent implements OnInit {
   }
 
   updateGrid(message: any): void {
+    if (message.x_pos == 0 && message.y_pos == 0) {
+      this.grid = Array(this.gridDimension).fill(null).map(() => Array(this.gridDimension).fill(0));
+    }
+
     if (message && message.x_pos >= 0 && message.x_pos < this.gridDimension && message.y_pos >= 0 && message.y_pos < this.gridDimension) {
       this.grid[message.x_pos][message.y_pos] = message.intensity;
     }

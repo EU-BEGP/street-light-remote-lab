@@ -12,7 +12,7 @@ import json
 
 mqtt_host = os.environ.get("MQTT_HOST")
 mqtt_port = os.environ.get("MQTT_PORT")
-mqtt_topic = os.environ.get("MQTT_TOPIC")
+mqtt_topic = os.environ.get("MQTT_SUB_TOPIC")
 
 channel_layer = get_channel_layer()
 

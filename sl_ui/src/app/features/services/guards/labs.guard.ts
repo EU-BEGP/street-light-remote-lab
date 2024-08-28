@@ -28,7 +28,7 @@ export class LabsGuard implements CanActivate {
         ) {
           return true;
         } else {
-          this.router.navigate(['home']);
+          this.router.navigate(['remote-lab']);
           return false;
         }
       })

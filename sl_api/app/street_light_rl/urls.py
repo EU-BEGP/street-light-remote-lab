@@ -21,34 +21,40 @@ urlpatterns = [
         views.ExperimentGridsView.as_view(),
         name="experiment-grids",
     ),
-        path( # Returns all grids in the database.
+    path(  # Returns all grids in the database.
         "grids/",
         views.GridsView.as_view(),
         name="grids",
     ),
-        path(
-        "messages/", # Returns all messages in the database.
+    path(
+        "messages/",  # Returns all messages in the database.
         views.MessagesView.as_view(),
         name="messages",
     ),
-        path( # Updates an existing message object.
+    path(  # Updates an existing message object.
         "message/<int:id>/",
         views.UpdateMessage.as_view(),
         name="message",
     ),
-        path( # Updates an existing grid object.
+    path(  # Updates an existing grid object.
         "grid/<int:grid_id>/",
         views.UpdateGrid.as_view(),
         name="grid",
     ),
-        path( # Updates an existing experiment object.
+    path(  # Updates an existing experiment object.
         "experiment/<int:id>/",
         views.UpdateExperiment.as_view(),
         name="experiment",
     ),
-        path( # Updates an existing robot object.
+    path(  # Updates an existing robot object.
         "robot/<str:robot_id>/",
         views.UpdateRobot.as_view(),
         name="robot",
+    ),
+    path("request-grid/", views.RequestGridMQTT.as_view(), name="request-grid"),
+    path(
+        "light-properties/",
+        views.LightPropertiesMQTT.as_view(),
+        name="light-properties",
     ),
 ]

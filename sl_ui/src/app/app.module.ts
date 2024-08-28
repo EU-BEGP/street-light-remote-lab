@@ -25,8 +25,6 @@ import { NotFoundComponent } from './core/auth/pages/not-found/not-found.compone
 
 import { AuthInterceptorService } from './core/auth/services/auth-interceptor.service';
 
-import { HomeComponent } from './features/pages/home/home.component';
-
 import { ProfileComponent } from './core/auth/pages/profile/profile.component';
 import { ProfileFormComponent } from './core/auth/components/profile-form/profile-form.component';
 import { CountdownModule } from 'ngx-countdown';
@@ -36,6 +34,7 @@ import { PlotlyModule } from 'angular-plotly.js';
 import { IntensityGridComponent } from './features/components/intensity-grid/intensity-grid.component';
 import { IntensityChartComponent } from './features/components/intensity-chart/intensity-chart.component';
 import { LightControlComponent } from './features/components/light-control/light-control.component';
+import { RemoteLabComponent } from './features/pages/remote-lab/remote-lab.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -51,12 +50,12 @@ PlotlyModule.plotlyjs = PlotlyJS;
     SpinnerComponent,
     ScrollToTopComponent,
     NotFoundComponent,
-    HomeComponent,
     ProfileComponent,
     ProfileFormComponent,
     IntensityGridComponent,
     IntensityChartComponent,
     LightControlComponent,
+    RemoteLabComponent,
   ],
   imports: [
     PlotlyModule,

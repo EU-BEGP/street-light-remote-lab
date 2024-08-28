@@ -50,6 +50,7 @@ export class LoginComponent implements OnInit {
         if (response != undefined) {
           localStorage.setItem('token', response.body.token);
           this.checkReturnUrl();
+          this.router.navigateByUrl('/remote-lab');
           this.toastr.success(`Welcome ${user.email}`);
         }
       });
