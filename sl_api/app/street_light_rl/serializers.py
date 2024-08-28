@@ -17,7 +17,7 @@ class ExperimentSerializer(serializers.ModelSerializer):
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = ("x_pos", "y_pos", "intensity", "timestamp")
+        fields = ("x_pos", "y_pos", "grid", "intensity", "timestamp")
 
 
 class GridSerializer(serializers.ModelSerializer):
