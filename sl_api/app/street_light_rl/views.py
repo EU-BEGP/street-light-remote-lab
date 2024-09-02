@@ -11,7 +11,6 @@ from .serializers import (
     MessageSerializer,
 )
 import json
-import http
 import paho.mqtt.publish as publish
 import os
 
@@ -30,7 +29,7 @@ class RobotListView(generics.ListCreateAPIView):
             # Checks if data can be correctly serialized and contains necessary fields.
             serializer.save()
             # Creates and saves new Experiment object in database.
-            return Response(serializer.data, status=http.HTTPStatus.CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             # If the serializer is not valid, the serializer errors are returned.
             return Response(serializer.errors)
@@ -42,6 +41,16 @@ class ExperimentListView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Experiment.objects.all()
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+
+        owner = request.query_params.get("owner", None)
+        if owner is not None:
+            queryset = queryset.filter(owner=owner)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def create(self, request, *args, **kwargs):
         # Gets data from POST request in json format.
         data = request.data
@@ -50,7 +59,7 @@ class ExperimentListView(generics.ListCreateAPIView):
             # Checks if data can be correctly serialized and contains necessary fields.
             serializer.save()
             # Creates and saves new Experiment object in database.
-            return Response(serializer.data, status=http.HTTPStatus.CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             # If the serializer is not valid, the serializer errors are returned.
             return Response(serializer.errors)
@@ -75,7 +84,7 @@ class UpdateGrid(generics.UpdateAPIView):
         if serializer.is_valid():
             # If the serializer is valid, the grid object is updated.
             serializer.save()
-            return Response(serializer.data, status=http.HTTPStatus.CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             # If the serializer is not valid, the serializer errors are returned.
             return Response(serializer.errors)
@@ -100,7 +109,7 @@ class UpdateRobot(generics.UpdateAPIView):
         if serializer.is_valid():
             # If the serializer is valid, the robot object is updated.
             serializer.save()
-            return Response(serializer.data, status=http.HTTPStatus.CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             # If the serializer is not valid, the serializer errors are returned.
             return Response(serializer.errors)
@@ -125,7 +134,7 @@ class UpdateMessage(generics.UpdateAPIView):
         if serializer.is_valid():
             # If the serializer is valid, the message object is updated.
             serializer.save()
-            return Response(serializer.data, status=http.HTTPStatus.CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             # If the serializer is not valid, the serializer errors are returned.
             return Response(serializer.errors)
@@ -150,7 +159,7 @@ class UpdateExperiment(generics.UpdateAPIView):
         if serializer.is_valid():
             # If the serializer is valid, the experiment object is updated.
             serializer.save()
-            return Response(serializer.data, status=http.HTTPStatus.CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             # If the serializer is not valid, the serializer errors are returned.
             return Response(serializer.errors)
@@ -179,7 +188,7 @@ class MessagesView(generics.ListCreateAPIView):
             # Checks if data can be correctly serialized and contains necessary fields.
             serializer.save()
             # Creates and saves new Message object in database.
-            return Response(serializer.data, status=http.HTTPStatus.CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             # If the serializer is not valid, the serializer errors are returned.
             return Response(serializer.errors)

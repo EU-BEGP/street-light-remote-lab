@@ -5,10 +5,10 @@
       <app-light-control></app-light-control>
       <div class="activity-content">
         <div class="column">
-          <app-intensity-grid [gridDimension]="10"></app-intensity-grid>
+          <app-intensity-grid [gridDimension]="this.gridDimension"></app-intensity-grid>
         </div>
         <div class="column">
-          <app-intensity-chart></app-intensity-chart>
+          <app-intensity-chart [gridDimension]="this.gridDimension"></app-intensity-chart>
         </div>
       </div>
     </mat-tab>

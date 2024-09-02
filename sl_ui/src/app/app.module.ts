@@ -35,6 +35,7 @@ import { IntensityGridComponent } from './features/components/intensity-grid/int
 import { IntensityChartComponent } from './features/components/intensity-chart/intensity-chart.component';
 import { LightControlComponent } from './features/components/light-control/light-control.component';
 import { RemoteLabComponent } from './features/pages/remote-lab/remote-lab.component';
+import { ExperimentsComponent } from './features/components/experiments/experiments.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -56,6 +57,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     IntensityChartComponent,
     LightControlComponent,
     RemoteLabComponent,
+    ExperimentsComponent,
   ],
   imports: [
     PlotlyModule,

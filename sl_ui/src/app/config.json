@@ -10,9 +10,12 @@
       "passwordReset": "accounts/password_reset/"
     },
     "streetLights": {
-      "requestGrid": "street-lights/request-grid/",
-      "lightProperties": "street-lights/light-properties/",
-      "robot": "street-lights/robots/"
+      "mqtt": {
+        "requestGrid": "street-lights/request-grid/",
+        "lightProperties": "street-lights/light-properties/"
+      },
+      "robot": "street-lights/robots/",
+      "experiment": "street-lights/experiments/"
     },
     "messagesWS": ""
   },

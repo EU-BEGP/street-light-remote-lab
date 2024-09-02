@@ -15,6 +15,8 @@ export class RemoteLabComponent implements OnInit, OnDestroy {
   @ViewChild(IntensityChartComponent) chartComponent!: IntensityChartComponent;
   @ViewChild(LightControlComponent) lightControlComponent!: LightControlComponent;
 
+  gridDimension: number = 10;
+
   constructor(
     private websocketService: WebsocketService,
     private router: Router
