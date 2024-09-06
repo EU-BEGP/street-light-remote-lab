@@ -11,10 +11,11 @@
     },
     "streetLights": {
       "mqtt": {
-        "requestGrid": "street-lights/request-grid/",
-        "lightProperties": "street-lights/light-properties/"
+        "requestGrid": "street-lights/mqtt/grid/",
+        "lightProperties": "street-lights/mqtt/light-properties/"
       },
       "robot": "street-lights/robots/",
+      "lamp": "street-lights/lamps/",
       "experiment": "street-lights/experiments/"
     },
     "messagesWS": ""

@@ -1,50 +1,57 @@
 from django.conf import settings
 from django.db import models
-import uuid
+from django.core.exceptions import ValidationError
 
 
 class Robot(models.Model):
-    robot_id = models.CharField(primary_key=True, max_length=50, unique=True)
+    code = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=250, default="", blank=True)
 
+class Lamp(models.Model):
+    code = models.CharField(max_length=50, unique=True)
+    dim_level = models.FloatField(default=0.0)
+    state = models.BooleanField(default=False)
+    robot= models.OneToOneField(
+        Robot,
+        related_name="lamp_robot",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
 
 class Experiment(models.Model):
     name = models.CharField(max_length=255, blank=True)
-    description = models.TextField(blank=True)
-    registration_date = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="owner_experiments",
         on_delete=models.CASCADE,
     )
-    robot = models.ForeignKey(
-        Robot, related_name="robot_experiments", on_delete=models.CASCADE
-    )
-
 
 class Grid(models.Model):
+    code = models.UUIDField(unique=True)
     width = models.IntegerField(null=True, blank=True)
     height = models.IntegerField(null=True, blank=True)
-    grid_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    robot = models.ForeignKey(
-        Robot, related_name="robot_grids", on_delete=models.CASCADE
+    created_at= models.DateTimeField(auto_now_add=True)
+    complete = models.BooleanField(default=False)
+    lamp = models.ForeignKey(
+        Lamp, related_name="lamp_grids", on_delete=models.CASCADE
     )
-    experiment = models.ForeignKey(
+    experiment = models.OneToOneField(
         Experiment,
-        related_name="experiment_grids",
+        related_name="experiment_grid",
         on_delete=models.CASCADE,
         null=True,
-        blank=True,
+        blank=True
     )
 
 
 class Message(models.Model):
-    x_pos = models.IntegerField()
-    y_pos = models.IntegerField()
-    intensity = models.FloatField()
+    x_pos = models.IntegerField(default=0)
+    y_pos = models.IntegerField(default=0)
+    intensity = models.FloatField(default=0.0)
     is_last = models.BooleanField(default=False)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     grid = models.ForeignKey(
         Grid, related_name="grid_messages", on_delete=models.CASCADE
     )

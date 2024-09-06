@@ -12,15 +12,16 @@ import paho.mqtt.client as mqtt
 from time import sleep
 
 # Define mqtt constants
-MQTT_PORT = None
-MQTT_HOST = None
-MQTT_PUB_TOPIC = None
-MQTT_SUB_TOPIC = None
+MQTT_PORT       = None
+MQTT_HOST       = None
+MQTT_SUB_TOPIC  = None
+MQTT_PUB_TOPIC  = None
+ROBOT_CODE      = None
 
 """
 Class that allows user to create robot object given the following:
--A robot ID
--A grid ID
+-A robot code
+-A grid code
 -The width of the grid
 -The height of the grid
 -The upper intensity value
@@ -30,12 +31,12 @@ Class that allows user to create robot object given the following:
 
 class Robot:
     def __init__(
-        self, robot_id, grid_id, width, height, lower_intensity_val, upper_intensity_val
+        self, robot_code, grid_code, width, height, lower_intensity_val, upper_intensity_val
     ):
         self.width = width
         self.height = height
-        self.robot_id = robot_id
-        self.grid_id = str(grid_id)
+        self.robot_code = robot_code
+        self.grid_code = str(grid_code)
         self.upper_intensity_val = upper_intensity_val
         self.lower_intensity_val = lower_intensity_val
         self.results = []  # 2D list.
@@ -121,7 +122,7 @@ class Robot:
         for i in range(self.height):
             for j in range(self.width):
                 data_at_index = self.results[i][j]
-                temp_string = f"{{robot_id: {self.robot_id}, grid_id: {self.grid_id}, intensity: {data_at_index}, x_pos: {i}, y_pos: {j}}}"
+                temp_string = f"{{robot_code: {self.robot_code}, grid_code: {self.grid_code}, intensity: {data_at_index}, x_pos: {i}, y_pos: {j}}}"
                 self.final_result_strings.append(temp_string)
 
     """
@@ -152,8 +153,8 @@ class Robot:
                 if (i == (self.height - 1)) and (j == (self.width - 1)):
                     # Send the last message with "is_last" set to true.
                     last_data = {
-                        "robot_id": self.robot_id,
-                        "grid_id": self.grid_id,
+                        "robot_code": self.robot_code,
+                        "grid_code": self.grid_code,
                         "x_pos": self.height - 1,
                         "y_pos": self.width - 1,
                         "intensity": self.results[-1][-1],
@@ -164,14 +165,14 @@ class Robot:
                     client.disconnect()
 
                 data = {
-                    "robot_id": self.robot_id,
-                    "grid_id": self.grid_id,
+                    "robot_code": self.robot_code,
+                    "grid_code": self.grid_code,
                     "x_pos": i,
                     "y_pos": j,
                     "intensity": self.results[i][j],
                     "is_last": False,  # Send all messages with "is_last" set to false except for last.
                 }
-                sleep(0.2)
+                sleep(0.05)
                 client.publish(MQTT_PUB_TOPIC, json.dumps(data))  # Publish to topic.
 
     def send_one_message(self):
@@ -183,8 +184,8 @@ class Robot:
             sys.exit(-1)
 
         single_data = {  # Send one message with is_last set to True if the grid is 1x1.
-            "robot_id": self.robot_id,
-            "grid_id": self.grid_id,
+            "robot_code": self.robot_code,
+            "grid_code": self.grid_code,
             "x_pos": self.height - 1,
             "y_pos": self.width - 1,
             "intensity": self.results[0][0],
@@ -209,12 +210,11 @@ def on_message(client, userdata, msg):
         height = 10
         lower_intensity_val = 0
         upper_intensity_val = 20
-        curr_id = f"robot{random.randrange(1, 5)}"
-        grid_id_str = str(uuid.uuid4())
+        grid_code_str = str(uuid.uuid4())
 
         robot = Robot(
-            curr_id,
-            grid_id_str,
+            ROBOT_CODE,
+            grid_code_str,
             width,
             height,
             lower_intensity_val,
@@ -223,11 +223,7 @@ def on_message(client, userdata, msg):
         robot.generate_data()
         robot.print_results()
         robot.print_grid()
-        if (width == 1) and (height == 1):
-            robot.send_one_message()
-            sys.exit(0)
-        elif (width > 1) and (height > 1):
-            robot.send_json_data()
+        robot.send_json_data()
 
 
 if __name__ == "__main__":

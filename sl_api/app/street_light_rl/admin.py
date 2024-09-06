@@ -1,27 +1,30 @@
 from django.contrib import admin
-from .models import Robot, Experiment, Message, Grid
+from .models import Robot, Lamp, Experiment, Message, Grid
 
 
 class RobotAdmin(admin.ModelAdmin):
-    ordering = ["robot_id"]
-    list_display = ["robot_id", "description"]
+    ordering = ["id"]
+    list_display = ["id", "code", "description"]
 
+class LampAdmin(admin.ModelAdmin):
+    ordering = ["id"]
+    list_display = ["id", "code", "dim_level", "state", "robot"]
 
 class ExperimentAdmin(admin.ModelAdmin):
     ordering = ["id"]
-    list_display = ["id", "name", "description", "owner", "robot", "registration_date"]
+    list_display = ["id", "name", "owner", "created_at"]
 
 
 class GridAdmin(admin.ModelAdmin):
     ordering = ["id"]
     list_display = [
         "id",
-        "grid_id",
+        "code",
         "width",
         "height",
-        "robot",
+        "lamp",
         "experiment",
-        "timestamp",
+        "created_at",
     ]
 
 
@@ -34,11 +37,12 @@ class MessageAdmin(admin.ModelAdmin):
         "intensity",
         "is_last",
         "grid",
-        "timestamp",
+        "created_at",
     ]
 
 
 admin.site.register(Robot, RobotAdmin)
+admin.site.register(Lamp, LampAdmin)
 admin.site.register(Experiment, ExperimentAdmin)
 admin.site.register(Grid, GridAdmin)
 admin.site.register(Message, MessageAdmin)
