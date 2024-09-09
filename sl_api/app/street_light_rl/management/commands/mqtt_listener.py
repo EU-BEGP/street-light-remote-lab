@@ -7,7 +7,10 @@ import paho.mqtt.client as mqtt
 import uuid
 import os
 import json
+import django
 
+# Ensure Django is set up
+django.setup()
 
 mqtt_host = os.environ.get("MQTT_HOST", None)
 mqtt_port = os.environ.get("MQTT_PORT", 1883)
@@ -80,49 +83,46 @@ def process_incoming_message(mqtt_message):
 
         # If the message is the last one, update grid dimension info
         if mqtt_message["is_last"]:
-            print("Last Message received")
+            print("[MQTT Listener]: Last Message received")
             width, height, is_complete = get_grid_information(grid)
             grid.width = width
             grid.height = height
             grid.complete = is_complete
             grid.save()
 
-            return grid
+            # Send complete grid information over websockets
+            if is_complete:
+                print("[MQTT Listener]: Sending complete grid data")
+                grid_messages = Message.objects.filter(grid=grid).order_by("id")
+                for grid_message in grid_messages:
+                    message = {
+                        "x_pos": grid_message.x_pos,
+                        "y_pos": grid_message.y_pos,
+                        "intensity": grid_message.intensity
+                    }
+                    stream_message_over_websocket(message)
+                    sleep(0.1)
 
     except Robot.DoesNotExist as e:
-        print(f"Robot is not registered: {e}")
+        print(f"[MQTT Listener]: Robot is not registered: {e}")
 
     except Lamp.DoesNotExist as e:
-        print(f"Lamp is not registered: {e}")
+        print(f"[MQTT Listener]: Lamp is not registered: {e}")
 
 
 # MQTT callbacks
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
-        print("Connected to MQTT broker")
+        print("[MQTT Listener]: Connected to MQTT broker")
         client.subscribe(mqtt_topic)
     else:
-        print("Failed to connect to MQTT broker. Error code:", rc)
+        print("[MQTT Listener]: Failed to connect to MQTT broker. Error code:", rc)
 
 
 def on_message(client, userdata, msg):
-    # Getand parse MQTT message
+    # Get and parse MQTT message
     mqtt_message = json.loads(msg.payload.decode())
-    grid = process_incoming_message(mqtt_message)
-
-    # Send complete grid information over websockets
-    if grid is not None:
-        if grid.complete:
-            print("Sending complete grid data")
-            grid_messages = Message.objects.filter(grid=grid).order_by("id")
-            for grid_message in grid_messages:
-                message = {
-                    "x_pos": grid_message.x_pos,
-                    "y_pos": grid_message.y_pos,
-                    "intensity": grid_message.intensity
-                }
-                stream_message_over_websocket(message)
-                sleep(0.1)
+    process_incoming_message(mqtt_message)
 
 
 # Command
