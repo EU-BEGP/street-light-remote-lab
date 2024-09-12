@@ -11,6 +11,7 @@ import { ExperimentService } from '../../services/experiment.service';
 import { Experiment } from '../../interfaces/experiment';
 import { ExperimentDialogComponent } from '../experiment-dialog/experiment-dialog.component';
 import { ConfirmationDialogComponent } from 'src/app/core/layout/components/confirmation-dialog/confirmation-dialog.component';
+import { DialogConfigService } from '../../services/dialog-config.service';
 
 @Component({
   selector: 'app-experiments',
@@ -19,7 +20,6 @@ import { ConfirmationDialogComponent } from 'src/app/core/layout/components/conf
 })
 export class ExperimentsComponent implements OnInit {
   isLoading: boolean = false;
-  userId!: number;
 
   // Selected experiment from table (i.e. selected row)
   selectedExperiment?: Experiment;
@@ -28,14 +28,7 @@ export class ExperimentsComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'actions'];
   dataSource: MatTableDataSource<Experiment> = new MatTableDataSource<Experiment>([]);
 
-  private readonly baseDialogConfig: MatDialogConfig = {
-    disableClose: false,
-    autoFocus: false,
-    backdropClass: 'dialog-backdrop',
-    panelClass: 'dialog-responsive',
-    enterAnimationDuration: '500ms',
-    exitAnimationDuration: '500ms'
-  };
+  baseDialogConfig: MatDialogConfig<any> = this.dialogConfigService.getDialogConfig();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -45,14 +38,12 @@ export class ExperimentsComponent implements OnInit {
     private experimentService: ExperimentService,
     private dialog: MatDialog,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private dialogConfigService: DialogConfigService
   ) { }
 
   ngOnInit(): void {
-    this.userService.getUserData().subscribe((user) => {
-      this.userId = user.id!;
-      this.getExperiments(this.userId);
-    });
+    this.getExperiments();
   }
 
   /* ==========================
@@ -68,7 +59,7 @@ export class ExperimentsComponent implements OnInit {
     const dialogRef = this.dialog.open(ExperimentDialogComponent, dialogConfig)
     dialogRef.afterClosed().subscribe((response) => {
       if (response) {
-        this.getExperiments(this.userId);
+        this.getExperiments();
       }
       this.selectedExperiment = undefined;
     });
@@ -83,6 +74,7 @@ export class ExperimentsComponent implements OnInit {
     const dialogConfig: MatDialogConfig = {
       ...this.baseDialogConfig,
       data: {
+        title: "DELETE EXPERIMENT",
         message: "Are you sure you want to delete this experiment and its related data?"
       }
     };
@@ -107,8 +99,8 @@ export class ExperimentsComponent implements OnInit {
    Service Interaction Functions
    ========================== */
 
-  getExperiments(owner: number): void {
-    this.experimentService.getExperiments(owner).subscribe((response: Experiment[]): void => {
+  getExperiments(): void {
+    this.experimentService.getExperiments().subscribe((response: Experiment[]): void => {
       this.dataSource = new MatTableDataSource(response);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -125,7 +117,7 @@ export class ExperimentsComponent implements OnInit {
       this.experimentService.deleteExperiment(experiment.id).subscribe({
         next: (_) => {
           this.toastr.success('The experiment has been deleted successfully.');
-          this.getExperiments(this.userId);
+          this.getExperiments();
         },
         error: (e) => {
           this.toastr.error(

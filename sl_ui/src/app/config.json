@@ -16,7 +16,8 @@
       },
       "robot": "street-lights/robots/",
       "lamp": "street-lights/lamps/",
-      "experiment": "street-lights/experiments/"
+      "experiment": "street-lights/experiments/",
+      "grid": "street-lights/grids/"
     },
     "messagesWS": ""
   },

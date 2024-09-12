@@ -4,9 +4,9 @@ import { WebsocketService } from '../../services/message-websocket.service';
 import { IntensityGridComponent } from '../../components/intensity-grid/intensity-grid.component';
 import { IntensityChartComponent } from '../../components/intensity-chart/intensity-chart.component';
 import { LightControlComponent } from '../../components/light-control/light-control.component';
-
 import { ExperimentService } from '../../services/experiment.service';
-import { Experiment } from '../../interfaces/experiment';
+import { GridService } from '../../services/grid.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-remote-lab',
@@ -18,18 +18,23 @@ export class RemoteLabComponent implements OnInit, OnDestroy {
   @ViewChild(IntensityChartComponent) chartComponent!: IntensityChartComponent;
   @ViewChild(LightControlComponent) lightControlComponent!: LightControlComponent;
 
-  experimentId: number = 0;
-  hasExperiment: boolean = false;
+  hasUnsavedChanges: boolean = false;
+  displayControl: boolean = true;
   isLoading: boolean = false;
-  infoGridMessage: string = "Waiting for Grid Data"
-  gridDimension: number = 10;
+
+  experimentId: number = 0;
   gridId: number = 0;
+
+  gridDimension: number = 10;
+  infoGridMessage: string = "Waiting for Grid Data"
 
   constructor(
     private websocketService: WebsocketService,
     private router: Router,
     private route: ActivatedRoute,
-    private experimentService: ExperimentService
+    private experimentService: ExperimentService,
+    private gridService: GridService,
+    private toastr: ToastrService,
   ) { }
 
   ngOnInit(): void {
@@ -38,17 +43,16 @@ export class RemoteLabComponent implements OnInit, OnDestroy {
       this.experimentId = params["experiment"];
       this.experimentService.getExperimentGrid(this.experimentId).subscribe(
         (response: any): void => {
-          // If the experiment is not assigned to any grid
-          if (response.length === 0) {
-            this.connectToWebSocket(); // Connect to WebSocket only if not assigned
-          } else {
-            this.hasExperiment = true;
+          // If the experiment is assigned to any grid
+          if (response.length) {
+            this.displayControl = false;
             this.gridComponent.setGrid(response[0].grid_messages)
             this.chartComponent.setGraph(response[0].grid_messages)
           }
         },
         (error: any): void => {
-          console.error(error);
+          this.displayControl = false;
+          this.toastr.error(error.error.error);
         }
       );
     });
@@ -60,6 +64,7 @@ export class RemoteLabComponent implements OnInit, OnDestroy {
 
   onGridRequested(): void {
     this.isLoading = true;
+    this.connectToWebSocket();
   }
 
   private connectToWebSocket(): void {
@@ -67,11 +72,34 @@ export class RemoteLabComponent implements OnInit, OnDestroy {
 
     // Connect to websocekts and receive messages
     this.websocketService.messages$.subscribe((message) => {
+      this.hasUnsavedChanges = true;
       this.isLoading = false;
       if (message.is_last) this.gridId = message.grid_id;
 
       this.gridComponent.refreshGrid(message);
       this.chartComponent.refreshGraph(message);
     });
+  }
+
+  saveGridToExperiment(): void {
+    if (this.gridId !== 0) {
+      this.gridService.updateGrid(
+        { experiment: this.experimentId },
+        this.gridId
+      ).subscribe({
+        next: (response: any): void => {
+          this.hasUnsavedChanges = false;
+          this.displayControl = false;
+          this.toastr.success(
+            'Grid bound to experiment'
+          );
+        },
+        error: (e: any): void => {
+          this.toastr.error(
+            'There was an error binding the grid to the experiment'
+          );
+        },
+      });
+    }
   }
 }

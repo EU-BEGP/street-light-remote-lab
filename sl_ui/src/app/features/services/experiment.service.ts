@@ -21,9 +21,8 @@ export class ExperimentService {
     };
   }
 
-  getExperiments(userId?: number): Observable<Experiment[]> {
-    const url = userId ? `${this.URL}?owner=${userId}` : this.URL;
-    return this.http.get<Experiment[]>(url);
+  getExperiments(): Observable<Experiment[]> {
+    return this.http.get<Experiment[]>(this.URL);
   }
 
   getExperimentById(experimentId: number): Observable<Experiment> {

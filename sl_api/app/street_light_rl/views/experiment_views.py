@@ -5,6 +5,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import NotFound
 
 
 ## LIST | CREATE Experiment
@@ -14,15 +15,15 @@ class ExperimentListCreateView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     queryset = Experiment.objects.all().order_by("id")
 
+    def get_queryset(self):
+        user = self.request.user
+        return Experiment.objects.filter(owner=user)
+
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
 
-        owner = request.query_params.get("owner", None)
         start_date_param = request.query_params.get("start_date", None)
         end_date_param = request.query_params.get("end_date", None)
-
-        if owner is not None:
-            queryset = queryset.filter(owner=owner)
 
         if start_date_param is not None:
             queryset, error_message = handle_date_params(
@@ -36,12 +37,9 @@ class ExperimentListCreateView(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
-        # Capture owner
-        owner = self.request.user
-
+        user = self.request.user
         data = request.data.copy()
-        # Add the owner field to the data
-        data["owner"] = owner.id
+        data["owner"] = user.id
 
         serializer = self.serializer_class(data=data)
         if serializer.is_valid():
@@ -53,22 +51,32 @@ class ExperimentListCreateView(generics.ListCreateAPIView):
 
 
 ## UPDATE Experiment
-class ExperimentUpdateView(generics.UpdateAPIView):
+class ExperimentRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     serializer_class = ExperimentSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get_object(self):
-        queryset = Experiment.objects.all()
-        # Gets experiment id from url.
+        user = self.request.user
         experiment_id = self.kwargs.get("id")
-        # Gets experiment object with experiment'id' from queryset.
-        experiment = queryset.get(id=experiment_id)
+
+        if not experiment_id:
+            raise NotFound(detail="Experiment ID is required")
+
+        # Filter the queryset by the current user
+        queryset = Experiment.objects.filter(owner=user)
+
+        try:
+            experiment = queryset.get(id=experiment_id)
+        except Experiment.DoesNotExist:
+            # If the object does not exist, raise a NotFound exception
+            raise NotFound(detail="Experiment not found")
+
         return experiment
 
     def patch(self, request, *args, **kwargs):
-        object = self.get_object()
-        serializer = self.serializer_class(object, data=request.data, partial=True)
+        experiment = self.get_object()
+        serializer = self.serializer_class(experiment, data=request.data, partial=True)
         if serializer.is_valid():
             # If the serializer is valid, the experiment object is updated.
             serializer.save()
@@ -84,9 +92,6 @@ class ExperimentDeleteView(generics.DestroyAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        """
-        Optionally restrict the returned experiments to the ones owned by the current user.
-        """
         user = self.request.user
         return Experiment.objects.filter(owner=user)
 
@@ -98,7 +103,27 @@ class ExperimentGridListView(generics.ListAPIView):
 
     def get_queryset(self):
         experiment_id = self.kwargs["id"]
-        grid = Grid.objects.filter(experiment_id=experiment_id).prefetch_related(
+        return Grid.objects.filter(experiment_id=experiment_id).prefetch_related(
             "grid_messages"
         )
-        return grid
+
+    def list(self, request, *args, **kwargs):
+        experiment_id = self.kwargs["id"]
+        user = self.request.user
+
+        try:
+            experiment = Experiment.objects.get(id=experiment_id)
+        except Experiment.DoesNotExist:
+            return Response(
+                {"error": "Experiment not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        if experiment.owner != user:
+            return Response(
+                {"error": "You are not the owner of this experiment"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

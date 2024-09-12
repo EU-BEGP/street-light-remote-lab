@@ -2,28 +2,38 @@
 .activity-content {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  padding: 5px;
 }
 
 .column {
   flex: 1;
   margin-right: 20px;
-  padding: 10px;
+  padding: 20px;
   border: 2px solid var(--main-blue);
   border-radius: 8px;
   background-color: #f9f9f9;
 }
 
 .column:last-child {
-  margin-right: 0;
+  margin-right: 20px;
+}
+
+.column:first-child {
+  margin-left: 20px;
 }
 
 /* ---------------- Angular Material ---------------- */
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .mat-button {
   background-color: var(--main-blue);
   color: white;
-  padding: 8px 12px;
-  font-size: 16px;
+  padding: 10px;
+  font-size: 15px;
   cursor: pointer;
 }
 

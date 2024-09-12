@@ -6,7 +6,6 @@ import json
 class MessageConsumer(WebsocketConsumer):
     def connect(self):
         self.accept()
-        self.send(text_data=json.dumps({"message": "WebSocket connected"}))
         async_to_sync(self.channel_layer.group_add)("data_group", self.channel_name)
 
     def disconnect(self, close_code):

@@ -21,7 +21,7 @@ class Lamp(models.Model):
 
 
 class Experiment(models.Model):
-    name = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,

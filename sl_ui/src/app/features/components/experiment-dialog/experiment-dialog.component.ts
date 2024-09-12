@@ -46,7 +46,6 @@ export class ExperimentDialogComponent implements OnInit {
    ========================== */
 
   onSubmit(): void {
-    console.log("Here")
     if (this.experimentForm.valid) {
       if (this.dialogData) {
         this.updateExperiment()

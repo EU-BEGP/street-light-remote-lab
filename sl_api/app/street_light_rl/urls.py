@@ -34,7 +34,7 @@ urlpatterns = [
     ),
     path(
         "experiments/<int:id>/",
-        experiment_views.ExperimentUpdateView.as_view(),
+        experiment_views.ExperimentRetrieveUpdateView.as_view(),
         name="experiment-update",
     ),
     path(

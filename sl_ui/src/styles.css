@@ -124,7 +124,7 @@ input[type="password"]::-ms-clear {
   text-align: center;
   font-weight: bold;
   font-size: 18px;
-  padding-top: 20px;
+  padding-top: 0px;
 }
 
 /* ------------------------------------------ */
