@@ -1,10 +1,15 @@
 from street_light_rl.models import Lamp, Grid, Experiment
-from street_light_rl.serializers import LampSerializer, GridSerializer, ExperimentSerializer
+from street_light_rl.serializers import (
+    LampSerializer,
+    GridSerializer,
+    ExperimentSerializer,
+)
 from street_light_rl.views.utilities import handle_grid_param, handle_date_params
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
+
 
 ## LIST | CREATE Lamp
 class LampListCreateView(generics.ListCreateAPIView):
@@ -25,6 +30,7 @@ class LampListCreateView(generics.ListCreateAPIView):
         else:
             # If the serializer is not valid, the serializer errors are returned.
             return Response(serializer.errors)
+
 
 ## UPDATE Lamp
 class LampUpdateView(generics.UpdateAPIView):
@@ -49,6 +55,7 @@ class LampUpdateView(generics.UpdateAPIView):
             # If the serializer is not valid, the serializer errors are returned.
             return Response(serializer.errors)
 
+
 ## Get experiments related to a Lamp
 class LampExperimentsListView(generics.ListAPIView):
     serializer_class = ExperimentSerializer
@@ -68,7 +75,7 @@ class LampGridsListView(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        lamp_id= self.kwargs["id"]
+        lamp_id = self.kwargs["id"]
         grids = Grid.objects.filter(lamp=lamp_id).prefetch_related("grid_messages")
         return grids
 
@@ -86,7 +93,9 @@ class LampGridsListView(generics.ListAPIView):
                 return Response(error_message, status=status.HTTP_400_BAD_REQUEST)
 
         if start_date_param is not None:
-            queryset, error_message = handle_date_params(self, start_date_param, end_date_param, queryset)
+            queryset, error_message = handle_date_params(
+                self, start_date_param, end_date_param, queryset
+            )
 
             if error_message:
                 return Response(error_message, status=status.HTTP_400_BAD_REQUEST)

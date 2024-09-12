@@ -1,11 +1,12 @@
 import { Experiment } from "./experiment";
-import { Message } from "./message";
-import { Robot } from "./robot";
+import { Lamp } from "./lamp";
 
 export interface Grid {
   id?: number;
-  gridId?: string;
-  robot?: Robot;
+  code?: string;
+  width?: number;
+  height?: number;
+  complete?: boolean;
+  lamp?: Lamp;
   experiment?: Experiment;
-  messages?: Message[];
 }

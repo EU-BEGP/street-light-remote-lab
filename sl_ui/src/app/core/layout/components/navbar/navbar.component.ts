@@ -6,9 +6,9 @@ import {
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-
 import { UserService } from 'src/app/core/auth/services/user.service';
 import { Group } from 'src/app/core/auth/enums/group';
+import { User } from 'src/app/core/auth/interfaces/user';
 
 @Component({
   selector: 'app-navbar',
@@ -20,8 +20,8 @@ export class NavbarComponent implements OnInit {
     Breakpoints.Handset
   );
 
-  shownMenu = false;
-  showLabsButton = false;
+  shownMenu: boolean = false;
+  showLabsButton: boolean = false;
 
   constructor(
     private router: Router,
@@ -34,14 +34,13 @@ export class NavbarComponent implements OnInit {
 
     if (token) {
       this.userService.getUserData().subscribe(
-        (user) => {
+        (user: User): void => {
           user.groups!.forEach((group) => {
             if (group.name === Group.Instructors) this.showLabsButton = true;
           });
         },
-        (err) => (this.shownMenu = false)
+        (err: any): boolean => (this.shownMenu = false)
       );
-
       this.shownMenu = true;
     } else {
       this.shownMenu = false;
@@ -50,7 +49,7 @@ export class NavbarComponent implements OnInit {
   }
 
   goToHome(): void {
-    this.router.navigateByUrl('/remote-lab');
+    this.router.navigateByUrl('/experiments');
   }
 
   goToMyProfile(): void {
@@ -63,7 +62,7 @@ export class NavbarComponent implements OnInit {
 
   logout(): void {
     localStorage.removeItem('token');
-    this.goToHome();
+    this.goToLogin();
     this.shownMenu = false;
     this.showLabsButton = false;
   }

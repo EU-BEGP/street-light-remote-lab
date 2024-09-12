@@ -1,4 +1,5 @@
 export interface Robot {
-  robotId?: string;
+  id?: number;
+  code?: string;
   description?: string;
 }

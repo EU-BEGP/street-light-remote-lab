@@ -1,23 +1,24 @@
 from django.conf import settings
 from django.db import models
-from django.core.exceptions import ValidationError
 
 
 class Robot(models.Model):
     code = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=250, default="", blank=True)
 
+
 class Lamp(models.Model):
     code = models.CharField(max_length=50, unique=True)
     dim_level = models.FloatField(default=0.0)
     state = models.BooleanField(default=False)
-    robot= models.OneToOneField(
+    robot = models.OneToOneField(
         Robot,
         related_name="lamp_robot",
         on_delete=models.CASCADE,
         null=True,
-        blank=True
+        blank=True,
     )
+
 
 class Experiment(models.Model):
     name = models.CharField(max_length=255, blank=True)
@@ -28,21 +29,20 @@ class Experiment(models.Model):
         on_delete=models.CASCADE,
     )
 
+
 class Grid(models.Model):
     code = models.UUIDField(unique=True)
     width = models.IntegerField(null=True, blank=True)
     height = models.IntegerField(null=True, blank=True)
-    created_at= models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False)
-    lamp = models.ForeignKey(
-        Lamp, related_name="lamp_grids", on_delete=models.CASCADE
-    )
+    lamp = models.ForeignKey(Lamp, related_name="lamp_grids", on_delete=models.CASCADE)
     experiment = models.OneToOneField(
         Experiment,
         related_name="experiment_grid",
         on_delete=models.CASCADE,
         null=True,
-        blank=True
+        blank=True,
     )
 
 

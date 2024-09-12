@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { LightService } from 'src/app/features/services/light.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./light-control.component.css']
 })
 export class LightControlComponent implements OnInit {
+  @Output() gridRequested = new EventEmitter<void>();
   sliderValue: number = 50;
   switchValue: boolean = false;
 
@@ -21,6 +22,7 @@ export class LightControlComponent implements OnInit {
     this.lightService.requestGrid().subscribe((response) => {
       if (response.success) {
         this.toastr.success(response.success);
+        this.gridRequested.emit();
       }
     });
   }

@@ -37,6 +37,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "app",
     "users",
     "street_light_rl",
@@ -91,7 +92,7 @@ CHANNEL_LAYERS = {
         "CONFIG": {
             "hosts": [
                 ("redis", 6379)
-            ],  # Use 'redis' as the host name, same as the service name in Docker Compose
+            ],
         },
     },
 }

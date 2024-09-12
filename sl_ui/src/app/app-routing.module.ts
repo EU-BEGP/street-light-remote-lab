@@ -6,6 +6,7 @@ import { RemoteLabComponent } from './features/pages/remote-lab/remote-lab.compo
 import { AuthGuard } from './core/auth/services/guards/auth.guard';
 import { ProfileComponent } from './core/auth/pages/profile/profile.component';
 import { ActivationComponent } from './core/auth/pages/activation/activation.component';
+import { ExperimentsComponent } from './features/components/experiments/experiments.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,10 @@ const routes: Routes = [
   {
     path: 'remote-lab',
     component: RemoteLabComponent,
+  },
+  {
+    path: 'experiments',
+    component: ExperimentsComponent,
   },
   {
     path: 'activate',

@@ -12,6 +12,6 @@ export class NotFoundComponent implements OnInit {
   ngOnInit(): void { }
 
   goToHome(): void {
-    this.router.navigateByUrl('/remote-lab')
+    this.router.navigateByUrl('/experiments')
   }
 }

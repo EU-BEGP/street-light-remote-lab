@@ -2,14 +2,14 @@
 .activity-content {
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  padding: 5px;
 }
 
 .column {
   flex: 1;
   margin-right: 20px;
   padding: 10px;
-  border: 2px solid #5262BC;
+  border: 2px solid var(--main-blue);
   border-radius: 8px;
   background-color: #f9f9f9;
 }
@@ -20,7 +20,7 @@
 
 /* ---------------- Angular Material ---------------- */
 .mat-button {
-  background-color: #5262BC;
+  background-color: var(--main-blue);
   color: white;
   padding: 8px 12px;
   font-size: 16px;

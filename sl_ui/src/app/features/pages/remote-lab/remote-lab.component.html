@@ -2,7 +2,8 @@
 <div>
   <mat-tab-group mat-align-tabs="center">
     <mat-tab label="Activity 1">
-      <app-light-control></app-light-control>
+      <app-spinner id="grid-spinner" [showSpinner]="this.isLoading" [message]="this.infoGridMessage"></app-spinner>
+      <app-light-control (gridRequested)="onGridRequested()"></app-light-control>
       <div class="activity-content">
         <div class="column">
           <app-intensity-grid [gridDimension]="this.gridDimension"></app-intensity-grid>
@@ -13,7 +14,6 @@
       </div>
     </mat-tab>
     <mat-tab label="Activity 2">
-      Content for activity 2
     </mat-tab>
   </mat-tab-group>
 </div>

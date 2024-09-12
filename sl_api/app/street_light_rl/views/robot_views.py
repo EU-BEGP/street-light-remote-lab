@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+
 ## LIST | CREATE robot
 class RobotListCreateView(generics.ListCreateAPIView):
     serializer_class = RobotSerializer
@@ -24,6 +25,7 @@ class RobotListCreateView(generics.ListCreateAPIView):
         else:
             # If the serializer is not valid, the serializer errors are returned.
             return Response(serializer.errors)
+
 
 ## UPDATE robot
 class RobotUpdateView(generics.UpdateAPIView):

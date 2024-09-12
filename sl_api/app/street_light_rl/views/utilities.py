@@ -1,6 +1,7 @@
 import json
 from datetime import datetime, timedelta
 
+
 def handle_grid_param(self, grid_param, queryset):
     # Return always a list so the serializer works correctly
     try:
@@ -28,7 +29,11 @@ def handle_date_params(self, start_date_param, end_date_param, queryset):
 
         # Format dates
         start_date_formatted = datetime.strptime(start_date_param, date_format).date()
-        end_date_formatted = datetime.strptime(end_date_param, date_format).date() if end_date_param is not None else (datetime.now() + timedelta(days=1)).date()
+        end_date_formatted = (
+            datetime.strptime(end_date_param, date_format).date()
+            if end_date_param is not None
+            else (datetime.now() + timedelta(days=1)).date()
+        )
 
         # Get range
         queryset = queryset.filter(

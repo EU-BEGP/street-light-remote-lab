@@ -1,0 +1,25 @@
+.dialog-content {
+  text-align: center;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.text-center {
+  text-align: center;
+  font-size: 18px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.dialog-actions .spacer {
+  flex: 1;
+}
+
+button {
+  margin: 0 10px;
+}

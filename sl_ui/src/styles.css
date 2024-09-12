@@ -1,4 +1,9 @@
 /* ---------------- General Layout and Utility Styles ---------------- */
+:root {
+  --main-blue: #5262BC;
+  --secondary-blue: #6371C2;
+}
+
 html,
 body {
   height: 100%;
@@ -37,7 +42,7 @@ body {
 .title {
   text-align: center;
   font-weight: bold;
-  font-size: 17px;
+  font-size: 15px;
 }
 
 /* -------------------------------------------------------------- */
@@ -86,7 +91,7 @@ body {
 
 /* -------------------------------------------------------------- */
 
-/* ---------------- Form Styles ---------------- */
+/* ---------------- Form styles ---------------- */
 form {
   padding: 30px;
 }
@@ -106,17 +111,55 @@ input[type="password"]::-ms-clear {
   width: 100%;
 }
 
-/* ---------------------------------------------- */
+.center {
+  margin: 0 auto;
+  display: block;
+}
 
-/* ---------------- Table and Data Presentation Styles ---------------- */
+.text-center {
+  text-align: center;
+}
+
+.title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 17px;
+  padding-top: 30px;
+}
+
+/* ------------------------------------------ */
+
+/* ---------------- Dialog Styles ---------------- */
+.dialog-responsive {
+  width: 50%;
+}
+
+/* ------------------------------------------ */
+
+/* ---------------- Card Header Styles ---------------- */
+.card-header {
+  color: white;
+  margin-bottom: 16px;
+}
+
+.table-title {
+  font-size: 1.2rem;
+  font-weight: normal;
+}
+
 .mat-card-title-group {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+/* ------------------------------------------ */
+
+/* ---------------- Table Styles ---------------- */
 .table {
-  border-radius: 10px;
+  width: 95%;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .table-content {
@@ -124,15 +167,29 @@ input[type="password"]::-ms-clear {
   padding-top: 10px;
 }
 
-.table-header {
-  color: white;
-  padding: 18px 20px;
-  margin: 0px 15px;
+.mat-table {
+  width: 100%;
+  border-radius: 10px;
+  overflow: auto;
+  max-height: 700px;
+  background-color: #fff;
 }
 
-.table-title {
-  font-size: 1.2rem;
-  font-weight: normal;
+.mat-header-cell {
+  font-size: 15px;
+  text-align: center;
+}
+
+.mat-header-row,
+.mat-row {
+  display: flex;
+}
+
+.mat-row.no-data-row {
+  text-align: center;
+  margin-top: 20px;
+  border-width: 0;
+  border-style: solid;
 }
 
 tr.no-data-row {
@@ -142,13 +199,8 @@ tr.no-data-row {
   margin-top: 20px;
 }
 
-.mat-table {
-  overflow: auto;
-  max-height: 500px;
+mat-paginator {
+  margin-top: 16px;
 }
 
-.mat-column-id {
-  flex: 0 0 10%;
-}
-
-/* -------------------------------------------------------------- */
+/* ------------------------------------------ */

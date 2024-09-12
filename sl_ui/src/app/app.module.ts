@@ -36,6 +36,8 @@ import { IntensityChartComponent } from './features/components/intensity-chart/i
 import { LightControlComponent } from './features/components/light-control/light-control.component';
 import { RemoteLabComponent } from './features/pages/remote-lab/remote-lab.component';
 import { ExperimentsComponent } from './features/components/experiments/experiments.component';
+import { ExperimentDialogComponent } from './features/components/experiment-dialog/experiment-dialog.component';
+import { ConfirmationDialogComponent } from './core/layout/components/confirmation-dialog/confirmation-dialog.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -58,6 +60,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     LightControlComponent,
     RemoteLabComponent,
     ExperimentsComponent,
+    ExperimentDialogComponent,
+    ConfirmationDialogComponent,
   ],
   imports: [
     PlotlyModule,

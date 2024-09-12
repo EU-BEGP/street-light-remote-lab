@@ -15,7 +15,10 @@ export class RemoteLabComponent implements OnInit, OnDestroy {
   @ViewChild(IntensityChartComponent) chartComponent!: IntensityChartComponent;
   @ViewChild(LightControlComponent) lightControlComponent!: LightControlComponent;
 
+  isLoading: boolean = false;
+  infoGridMessage: string = "Waiting for Grid Data"
   gridDimension: number = 10;
+  gridId: number = 0;
 
   constructor(
     private websocketService: WebsocketService,
@@ -25,6 +28,9 @@ export class RemoteLabComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.websocketService.connect();
     this.websocketService.messages$.subscribe((message) => {
+      this.isLoading = false;
+      if (message.is_last) this.gridId = message.grid_id;
+
       this.gridComponent.updateGrid(message)
       this.chartComponent.updateGraph(message)
     });
@@ -32,5 +38,9 @@ export class RemoteLabComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.websocketService.disconnect();
+  }
+
+  onGridRequested(): void {
+    this.isLoading = true;
   }
 }

@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+
 ## LIST | CREATE Experiment
 class ExperimentListCreateView(generics.ListCreateAPIView):
     serializer_class = ExperimentSerializer
@@ -24,7 +25,9 @@ class ExperimentListCreateView(generics.ListCreateAPIView):
             queryset = queryset.filter(owner=owner)
 
         if start_date_param is not None:
-            queryset, error_message = handle_date_params(self, start_date_param, end_date_param, queryset)
+            queryset, error_message = handle_date_params(
+                self, start_date_param, end_date_param, queryset
+            )
 
             if error_message:
                 return Response(error_message, status=status.HTTP_400_BAD_REQUEST)
@@ -33,17 +36,21 @@ class ExperimentListCreateView(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def create(self, request, *args, **kwargs):
-        # Gets data from POST request in json format.
-        data = request.data
+        # Capture owner
+        owner = self.request.user
+
+        data = request.data.copy()
+        # Add the owner field to the data
+        data["owner"] = owner.id
+
         serializer = self.serializer_class(data=data)
         if serializer.is_valid():
-            # Checks if data can be correctly serialized and contains necessary fields.
             serializer.save()
-            # Creates and saves new Experiment object in database. return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             # If the serializer is not valid, the serializer errors are returned.
-            return Response(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 ## UPDATE Experiment
 class ExperimentUpdateView(generics.UpdateAPIView):
@@ -67,8 +74,21 @@ class ExperimentUpdateView(generics.UpdateAPIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            # If the serializer is not valid, the serializer errors are returned.
-            return Response(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+## DELETE Experiment
+class ExperimentDeleteView(generics.DestroyAPIView):
+    serializer_class = ExperimentSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        """
+        Optionally restrict the returned experiments to the ones owned by the current user.
+        """
+        user = self.request.user
+        return Experiment.objects.filter(owner=user)
 
 
 class ExperimentGridListView(generics.ListAPIView):

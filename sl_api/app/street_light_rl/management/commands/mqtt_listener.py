@@ -18,6 +18,7 @@ mqtt_topic = os.environ.get("MQTT_SUB_TOPIC", None)
 
 channel_layer = get_channel_layer()
 
+
 def get_grid_information(grid):
     messages = Message.objects.filter(grid=grid)
 
@@ -36,12 +37,17 @@ def get_grid_information(grid):
     present_coords = set((x, y) for x, y in zip(x_coords, y_coords))
 
     # Create a set of expected coordinates
-    expected_coords = set((x, y) for x in range(min_x, min_x + width) for y in range(min_y, min_y + height))
+    expected_coords = set(
+        (x, y)
+        for x in range(min_x, min_x + width)
+        for y in range(min_y, min_y + height)
+    )
 
     # Find missing coordinates
     missing_coords = expected_coords - present_coords
 
     return width, height, not missing_coords
+
 
 def stream_message_over_websocket(message):
     # Send message data to WebSocket consumer
@@ -52,9 +58,12 @@ def stream_message_over_websocket(message):
     )
     loop.run_until_complete(coroutine)
 
+
 def process_incoming_message(mqtt_message):
     robot_code = mqtt_message["robot_code"]  # Get robot_code from message.
-    grid_code = uuid.UUID(mqtt_message["grid_code"]) # Get grid code and converting to a uuid object.
+    grid_code = uuid.UUID(
+        mqtt_message["grid_code"]
+    )  # Get grid code and converting to a uuid object.
 
     # Approach: Get robot code and relate them to a lamp
     try:
@@ -96,10 +105,15 @@ def process_incoming_message(mqtt_message):
                 grid_messages = Message.objects.filter(grid=grid).order_by("id")
                 for grid_message in grid_messages:
                     message = {
+                        "grid_id": grid_message.grid.id,
                         "x_pos": grid_message.x_pos,
                         "y_pos": grid_message.y_pos,
-                        "intensity": grid_message.intensity
+                        "intensity": grid_message.intensity,
                     }
+
+                    if grid_message.is_last:
+                        message["is_last"] = True
+
                     stream_message_over_websocket(message)
                     sleep(0.1)
 

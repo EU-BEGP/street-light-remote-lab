@@ -11,6 +11,7 @@ light_topic = os.environ.get("MQTT_PUB_LIGHT_TOPIC", None)
 host = os.environ.get("MQTT_HOST", None)
 port = os.environ.get("MQTT_PORT", 1883)
 
+
 class GetGridMQTT(generics.GenericAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -36,13 +37,15 @@ class SetLightPropertiesMQTT(generics.GenericAPIView):
 
         if state is not None and dim is not None:
             message = {"state": state, "dim": dim}
-            publish.single(light_topic, json.dumps(message), hostname=host, port=int(port))
+            publish.single(
+                light_topic, json.dumps(message), hostname=host, port=int(port)
+            )
 
             return Response(
                 {"success": "Data sent successfully"}, status=status.HTTP_200_OK
             )
         else:
             return Response(
-                {"error": "Please provide the state and dim properties"}, status=status.HTTP_400_BAD_REQUEST
+                {"error": "Please provide the state and dim properties"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
-

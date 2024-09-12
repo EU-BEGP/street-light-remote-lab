@@ -1,12 +1,26 @@
-.spinner {
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 500px;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 1000;
 }
 
-@media (max-width: 600px) {
-  .spinner {
-    height: 150px;
-  }
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.caption {
+  color: var(--main-blue);
+  font-size: 20px;
+  margin-top: 10px;
 }

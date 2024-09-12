@@ -6,9 +6,11 @@ class RobotAdmin(admin.ModelAdmin):
     ordering = ["id"]
     list_display = ["id", "code", "description"]
 
+
 class LampAdmin(admin.ModelAdmin):
     ordering = ["id"]
     list_display = ["id", "code", "dim_level", "state", "robot"]
+
 
 class ExperimentAdmin(admin.ModelAdmin):
     ordering = ["id"]
