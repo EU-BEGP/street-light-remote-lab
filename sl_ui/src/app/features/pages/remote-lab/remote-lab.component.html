@@ -3,7 +3,7 @@
   <mat-tab-group mat-align-tabs="center">
     <mat-tab label="Activity 1">
       <app-spinner id="grid-spinner" [showSpinner]="this.isLoading" [message]="this.infoGridMessage"></app-spinner>
-      <app-light-control (gridRequested)="onGridRequested()"></app-light-control>
+      <app-light-control (gridRequested)="onGridRequested()" *ngIf="!hasExperiment"></app-light-control>
       <div class="activity-content">
         <div class="column">
           <app-intensity-grid [gridDimension]="this.gridDimension"></app-intensity-grid>

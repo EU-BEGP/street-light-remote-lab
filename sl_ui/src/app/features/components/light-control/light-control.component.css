@@ -7,7 +7,7 @@
 .box-container {
   width: 70%;
   background-color: #fff;
-  padding: 10px;
+  padding: 5px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -21,7 +21,7 @@
 
 .left-section {
   flex: 1;
-  padding: 10px;
+  padding: 5px;
   border-right: 1px solid var(--main-blue);
   display: flex;
   flex-direction: column;
@@ -32,7 +32,7 @@
 .right-section {
   flex: 1;
   display: flex;
-  padding: 10px;
+  padding: 5px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -48,7 +48,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 40px;
+  gap: 50px;
 }
 
 .control-item {
@@ -61,7 +61,7 @@
 .mat-button {
   background-color: var(--main-blue);
   color: white;
-  padding: 8px 12px;
-  font-size: 16px;
+  padding: 10px;
+  font-size: 15px;
   cursor: pointer;
 }

@@ -43,7 +43,9 @@ export class AuthInterceptorService implements HttpInterceptor {
           localStorage.removeItem('token');
 
           // Show informational message
+          this.router.navigateByUrl('/access');
           this.toastr.error(err.error.detail);
+
         }
 
         // Pass the error along

@@ -48,7 +48,7 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  goToHome(): void {
+  goToExperiments(): void {
     this.router.navigateByUrl('/experiments');
   }
 

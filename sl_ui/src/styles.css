@@ -123,8 +123,8 @@ input[type="password"]::-ms-clear {
 .title {
   text-align: center;
   font-weight: bold;
-  font-size: 17px;
-  padding-top: 30px;
+  font-size: 18px;
+  padding-top: 20px;
 }
 
 /* ------------------------------------------ */

@@ -2,7 +2,7 @@
 .activity-content {
   display: flex;
   justify-content: space-between;
-  padding: 5px;
+  padding: 10px;
 }
 
 .column {

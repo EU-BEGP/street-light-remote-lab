@@ -1,5 +1,5 @@
 <mat-toolbar color="primary" class="navbar-container">
-  <div id="main-label" (click)="goToHome()">
+  <div id="main-label" (click)="goToExperiments()">
     <img id="logo" src="./assets/logo.png" alt="logo" width="30px" />
     <span id="navbar-title">Street Light Remote Lab</span>
   </div>
@@ -14,6 +14,11 @@
 
   <mat-menu class="navbar-menu" #menu="matMenu">
     <div *ngIf="shownMenu; else showLoginButton">
+      <button mat-menu-item aria-label="Experiment Button" (click)="goToExperiments()">
+        <mat-icon class="icon">widgets</mat-icon>
+        <span> Experiments</span>
+      </button>
+
       <button mat-menu-item aria-label="Profile list button" (click)="goToMyProfile()">
         <mat-icon class="icon">person</mat-icon>
         <span> Profile </span>
@@ -36,6 +41,11 @@
   <!-- Web menu -->
   <ng-template #navbarButtons>
     <div *ngIf="shownMenu; else showLoginButton">
+      <button mat-button aria-label="Experiment button" (click)="goToExperiments()">
+        <mat-icon class="icon">widgets</mat-icon>
+        <span> Experiments </span>
+      </button>
+
       <button mat-button aria-label="Profile list button" (click)="goToMyProfile()">
         <mat-icon class="icon">person</mat-icon>
         <span> Profile </span>
@@ -43,7 +53,7 @@
 
       <button mat-button aria-label="Logout icon" (click)="logout()">
         <mat-icon class="icon">logout</mat-icon>
-        Logout
+        <span>Logout</span>
       </button>
     </div>
 

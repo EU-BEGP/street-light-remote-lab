@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Input } from '@angular/core';
+import { Message } from '../../interfaces/message';
 
 @Component({
   selector: 'app-intensity-chart',
@@ -22,19 +23,41 @@ export class IntensityChartComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  updateGraph(message: any): void {
-    if (message.x_pos == 0 && message.y_pos == 0) {
-      this.graph.data[0].z = this.generateInitialZValues(this.gridDimension)
-    }
+  setGraph(messages: Message[]): void {
+    messages.forEach((message: Message): void => {
+      this.updateGraphByMessage(message);
+    })
+  }
 
-    if (message && message.x_pos >= 0 && message.x_pos < this.gridDimension && message.y_pos >= 0 && message.y_pos < this.gridDimension) {
-      this.graph.data[0].z[message.y_pos][message.x_pos] = message.intensity;
+  refreshGraph(message: Message): void {
+    if (message.x_pos == 0 && message.y_pos == 0) {
+      this.restoreGraph();
     }
+    this.updateGraphByMessage(message);
   }
 
   private generateInitialZValues(gridSize: number): number[][] {
     return Array.from({ length: gridSize }, () =>
-      Array.from({ length: gridSize }, () => Math.floor(Math.random() * 21))
+      Array.from({ length: gridSize }, () => 0)
     );
+  }
+
+  private restoreGraph(): void {
+    const newZ = this.generateInitialZValues(this.gridDimension);
+    this.graph.data = [{
+      ...this.graph.data[0],
+      z: newZ
+    }];
+  }
+
+  private updateGraphByMessage(message: Message): void {
+    if (message && message.x_pos >= 0 && message.x_pos < this.gridDimension && message.y_pos >= 0 && message.y_pos < this.gridDimension) {
+      // CREATE a new `z` array with updated values
+      this.graph.data[0].z = this.graph.data[0].z.map((row: number[], rowIndex: number): number[] =>
+        rowIndex === message.y_pos
+          ? [...row.slice(0, message.x_pos), message.intensity, ...row.slice(message.x_pos + 1)]
+          : row
+      );
+    }
   }
 }

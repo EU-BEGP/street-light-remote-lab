@@ -1,10 +1,10 @@
 import { Grid } from "./grid";
 
 export interface Message {
-  id?: number;
-  xPos?: number;
-  yPos?: number;
-  intensity?: number;
-  isLast?: boolean;
-  grid?: Grid;
+  id: number;
+  x_pos: number;
+  y_pos: number;
+  intensity: number;
+  is_last: boolean;
+  grid: Grid;
 }
