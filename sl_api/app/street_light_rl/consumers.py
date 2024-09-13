@@ -11,9 +11,8 @@ class MessageConsumer(WebsocketConsumer):
     def disconnect(self, close_code):
         async_to_sync(self.channel_layer.group_discard)("data_group", self.channel_name)
 
-    def receive(self, text_data):
-        text_data_json = json.loads(text_data)
-        print(text_data_json)
+    def receive(self, message):
+        pass
 
     def send_websocket_data(self, event):
         # Handler method for "send_websocket_data" messages
