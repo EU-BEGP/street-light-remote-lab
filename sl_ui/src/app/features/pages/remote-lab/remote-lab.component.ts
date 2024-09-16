@@ -26,7 +26,7 @@ export class RemoteLabComponent implements OnInit, OnDestroy {
   gridId: number = 0;
 
   gridDimension: number = 10;
-  infoGridMessage: string = "Waiting for Grid Data"
+  infoGridMessage: string = 'Waiting for Grid Data'
 
   constructor(
     private websocketService: WebsocketService,
@@ -40,7 +40,7 @@ export class RemoteLabComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Get experiment grid information
     this.route.queryParams.subscribe((params): void => {
-      this.experimentId = params["experiment"];
+      this.experimentId = params['experiment'];
       this.experimentService.getExperimentGrid(this.experimentId).subscribe(
         (response: any): void => {
           // If the experiment is assigned to any grid

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
@@ -14,46 +13,31 @@ import config from 'src/app/config.json'
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-  hide: boolean = true;
 
+  hidePassword: boolean = true;
   passwordResetUrl = `${config.api.baseUrl}${config.api.users.passwordReset}`;
 
-  loginForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
-  });
+  loginForm = this.formBuilder.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required]]
+
+  })
 
   constructor(
     private authService: AuthService,
     private toastr: ToastrService,
+    private formBuilder: FormBuilder,
     private router: Router
   ) { }
 
   ngOnInit(): void { }
 
-  get emailControl() {
-    return this.loginForm.controls['email'];
-  }
 
-  get passwordControl() {
-    return this.loginForm.controls['password'];
-  }
+  /*** HTML interaction functions ***/
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      const user: User = {
-        email: this.emailControl.value!,
-        password: this.passwordControl.value!,
-      };
-
-      this.authService.login(user).subscribe((response) => {
-        if (response != undefined) {
-          localStorage.setItem('token', response.body.token);
-          this.checkReturnUrl();
-          this.router.navigateByUrl('/experiments');
-          this.toastr.success(`Welcome ${user.email}`);
-        }
-      });
+      this.loginUser()
     } else {
       this.toastr.error(
         'Please, complete correctly the information.',
@@ -62,22 +46,28 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  getEmailErrorMessage(): string {
-    if (this.emailControl.hasError('required'))
-      return 'You must enter an email address.';
+  /*** Service interaction functions ***/
 
-    return this.emailControl.hasError('email') ? 'Not a valid email address.' : '';
-  }
-
-  getPasswordErrorMessage(): string {
-    if (this.passwordControl.hasError('required')) {
-      return 'You must enter a password.';
+  loginUser(): void {
+    const loginFormValue: any = this.loginForm.value;
+    const user: User = {
+      'email': loginFormValue.email,
+      'password': loginFormValue.password
     }
 
-    return this.passwordControl.hasError('minlength')
-      ? 'Password must have at least 8 characters.'
-      : '';
+    this.authService.login(user).subscribe({
+      next: (response: any): void => {
+        if (response != undefined) {
+          localStorage.setItem('token', response.body.token);
+          this.checkReturnUrl();
+          this.router.navigateByUrl('/experiments');
+          this.toastr.success(`Welcome ${user.email}`);
+        }
+      }
+    });
   }
+
+  /*** Internal functions ***/
 
   checkReturnUrl() {
     let params = new URLSearchParams(document.location.search);
@@ -87,5 +77,16 @@ export class LoginComponent implements OnInit {
     else {
       this.router.navigateByUrl('');
     }
+  }
+
+  /* Form manipulation */
+
+  // Getters
+  get emailControl() {
+    return this.loginForm.get('email');
+  }
+
+  get passwordControl() {
+    return this.loginForm.get('password');
   }
 }

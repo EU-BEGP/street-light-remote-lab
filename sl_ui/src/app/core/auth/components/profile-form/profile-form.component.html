@@ -1,22 +1,38 @@
 <div class="exterior-container">
-  <form [formGroup]="editionForm" #formDirective="ngForm" (ngSubmit)="updateUser(formDirective)">
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+
     <mat-form-field class="input-field">
       <mat-label>Name</mat-label>
       <input matInput formControlName="name" />
+      <mat-error *ngIf="nameControl?.invalid && (nameControl?.touched || nameControl?.dirty)">
+        <div *ngIf="nameControl?.hasError('required')">
+          Name field is required.
+        </div>
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field class="input-field">
       <mat-label>Last name</mat-label>
       <input matInput formControlName="lastName" />
+      <mat-error *ngIf="lastNameControl?.invalid && (lastNameControl?.touched || lastNameControl?.dirty)">
+        <div *ngIf="lastNameControl?.hasError('required')">
+          Last Name field is required.
+        </div>
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field class="input-field">
       <mat-label>Email</mat-label>
-      <input matInput placeholder="user@gmail.com" formControlName="email" />
-      <mat-icon matSuffix>email</mat-icon>
+      <input matInput placeholder="user@mail.com" formControlName="email" />
+      <mat-error *ngIf="emailControl?.invalid && (emailControl?.touched || emailControl?.dirty)">
+        <div *ngIf="emailControl?.hasError('required')">
+          Email field is required
+        </div>
+        <div *ngIf="emailControl?.hasError('email')">
+          Invalid email address
+        </div>
+      </mat-error>
     </mat-form-field>
-
-    <p class="mat-caption">Required fields are marked with *</p>
 
     <div class="button-container">
       <button class="access-button" type="submit" mat-raised-button color="primary">

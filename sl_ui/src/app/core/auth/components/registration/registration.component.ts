@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  UntypedFormGroup,
-  UntypedFormControl,
-  FormGroupDirective,
+  FormBuilder,
+  Validators,
   ValidatorFn,
   ValidationErrors,
-  AbstractControl,
+  AbstractControl
 } from '@angular/forms';
-import { Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
@@ -22,74 +20,33 @@ export class RegistrationComponent implements OnInit {
   hidePassword: boolean = true;
   hidePasswordConfirmation: boolean = true;
 
-  registrationForm = new UntypedFormGroup({
-    name: new UntypedFormControl('', [Validators.required]),
-    lastName: new UntypedFormControl('', [Validators.required]),
-    email: new UntypedFormControl('', [Validators.required, Validators.email]),
-    password: new UntypedFormControl('', [
-      Validators.minLength(8),
+  registrationForm = this.formBuilder.group({
+    name: ['', [Validators.required]],
+    lastName: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [
       Validators.required,
-      this.matchValidator('passwordConfirmation', true),
-    ]),
-    passwordConfirmation: new UntypedFormControl('', [
-      Validators.required,
-      this.matchValidator('password'),
-    ]),
-  });
+      Validators.minLength(8)
+    ]],
+    passwordConfirmation: ['', [
+      Validators.required
+    ]],
+  }, { validators: this.matchPasswordValidator('password', 'passwordConfirmation') });
 
   constructor(
     private authService: AuthService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private formBuilder: FormBuilder,
   ) { }
 
   ngOnInit(): void { }
 
-  matchValidator(matchTo: string, reverse?: boolean): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      if (control.parent && reverse) {
-        const c = (control.parent?.controls as any)[matchTo] as AbstractControl;
-        if (c) {
-          c.updateValueAndValidity();
-        }
-        return null;
-      }
-      return !!control.parent &&
-        !!control.parent.value &&
-        control.value === (control.parent?.controls as any)[matchTo].value
-        ? null
-        : { notSame: true };
-    };
-  }
+  /*** HTML interaction functions ***/
 
-  get passwordControl() {
-    return this.registrationForm.controls['password'];
-  }
-
-  get passwordConfirmationControl() {
-    return this.registrationForm.controls['passwordConfirmation'];
-  }
-
-  saveUser(formDirective: FormGroupDirective): void {
+  onSubmit(): void {
     if (this.registrationForm.valid) {
-      const user: User = {
-        name: this.registrationForm.controls['name'].value,
-        last_name: this.registrationForm.controls['lastName'].value,
-        email: this.registrationForm.controls['email'].value,
-        password: this.passwordControl.value,
-      };
-
-      this.authService.signUp(user).subscribe((response) => {
-        if (response.status !== null && response.status === 201) {
-          this.toastr.success(
-            `Welcome ${user.name}`,
-            'Successful registration',
-          );
-          setTimeout(() => {
-            this.router.navigate(['/activate']);
-          }, 2000);
-        }
-      });
+      this.registerUser();
     } else {
       this.toastr.error(
         'Please, complete correctly the information.',
@@ -98,19 +55,31 @@ export class RegistrationComponent implements OnInit {
     }
   }
 
-  isPasswordConfirmationValid(): boolean {
-    return (
-      this.passwordConfirmationControl.errors !== null &&
-      this.passwordConfirmationControl.errors['notSame']
-    );
+  /*** Service interaction functions ***/
+
+  registerUser(): void {
+    const registrationFormValue: any = this.registrationForm.value;
+    const user: User = {
+      name: registrationFormValue.name,
+      last_name: registrationFormValue.lastName,
+      email: registrationFormValue.email,
+      password: registrationFormValue.password
+    }
+
+    this.authService.signUp(user).subscribe((response) => {
+      if (response.status !== null && response.status === 201) {
+        this.toastr.success(
+          `Welcome ${user.name}`,
+          'Successful registration',
+        );
+        setTimeout(() => {
+          this.router.navigate(['/activate']);
+        }, 2000);
+      }
+    });
   }
 
-  getPasswordControlError(): string {
-    return (
-      this.passwordControl.errors != null &&
-      this.passwordControl.errors['minlength']
-    );
-  }
+  /*** Internal functions ***/
 
   checkReturnUrl() {
     let params = new URLSearchParams(document.location.search);
@@ -120,5 +89,46 @@ export class RegistrationComponent implements OnInit {
     else {
       this.router.navigateByUrl('');
     }
+  }
+
+  /* Form manipulation */
+
+  // Getters
+  get nameControl() {
+    return this.registrationForm.get('name');
+  }
+
+  get lastNameControl() {
+    return this.registrationForm.get('lastName');
+  }
+
+  get emailControl() {
+    return this.registrationForm.get('email');
+  }
+
+  get passwordControl() {
+    return this.registrationForm.get('password');
+  }
+
+  get passwordConfirmationControl() {
+    return this.registrationForm.get('passwordConfirmation');
+  }
+
+  /* Custom Validator */
+  matchPasswordValidator(passwordKey: string, passwordConfirmationKey: string): ValidatorFn {
+    return (formGroup: AbstractControl): ValidationErrors | null => {
+      const passwordControl = formGroup.get(passwordKey);
+      const passwordConfirmationControl = formGroup.get(passwordConfirmationKey);
+
+      if (!passwordControl || !passwordConfirmationControl) {
+        return null; // Return null if controls are not found
+      }
+
+      if (passwordControl.value !== passwordConfirmationControl.value) {
+        return { passwordsMismatch: true }; // Return an error object if passwords do not match
+      }
+
+      return null; // Return null if passwords match
+    };
   }
 }

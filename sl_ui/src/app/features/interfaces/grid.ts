@@ -1,5 +1,5 @@
-import { Experiment } from "./experiment";
-import { Lamp } from "./lamp";
+import { Experiment } from './experiment';
+import { Lamp } from './lamp';
 
 export interface Grid {
   id?: number;

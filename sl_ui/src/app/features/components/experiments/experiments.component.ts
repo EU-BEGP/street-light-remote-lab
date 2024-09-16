@@ -24,7 +24,7 @@ export class ExperimentsComponent implements OnInit {
   // Selected experiment from table (i.e. selected row)
   selectedExperiment?: Experiment;
 
-  tableTitle: string = "Experiments";
+  tableTitle: string = 'Experiments';
   displayedColumns: string[] = ['id', 'name', 'actions'];
   dataSource: MatTableDataSource<Experiment> = new MatTableDataSource<Experiment>([]);
 
@@ -74,8 +74,8 @@ export class ExperimentsComponent implements OnInit {
     const dialogConfig: MatDialogConfig = {
       ...this.baseDialogConfig,
       data: {
-        title: "DELETE EXPERIMENT",
-        message: "Are you sure you want to delete this experiment and its related data?"
+        title: 'DELETE EXPERIMENT',
+        message: 'Are you sure you want to delete this experiment and its related data?'
       }
     };
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig)

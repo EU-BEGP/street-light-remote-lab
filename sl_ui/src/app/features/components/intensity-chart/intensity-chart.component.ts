@@ -14,7 +14,7 @@ export class IntensityChartComponent implements OnInit {
       x: Array.from({ length: this.gridDimension }, (_, i) => i + 1),
       y: Array.from({ length: this.gridDimension }, (_, i) => i + 1),
       z: this.generateInitialZValues(this.gridDimension),
-      type: "surface",
+      type: 'surface',
     }]
   };
 

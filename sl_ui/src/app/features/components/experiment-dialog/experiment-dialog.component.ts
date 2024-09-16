@@ -12,10 +12,11 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ExperimentDialogComponent implements OnInit {
 
-  title: string = "";
+  title: string = '';
   selectedExperimentId: number = 0;
+
   experimentForm = this.formBuilder.group({
-    name: ["", Validators.required]
+    name: ['', Validators.required]
   })
 
   constructor(
@@ -34,16 +35,14 @@ export class ExperimentDialogComponent implements OnInit {
       const experiment = this.dialogData;
       this.selectedExperimentId = experiment.id!;
       // Populate the form with the existing values of the experiment for editing.
-      this._patchFormValues(experiment);
+      this.patchFormValues(experiment);
     } else {
       // If dialogData is not provided, this indicates that a new experiment is being created.
       this.title = 'Create Experiment';
     }
   }
 
-  /* ==========================
-   HTML Interaction Functions
-   ========================== */
+  /*** HTML interaction functions ***/
 
   onSubmit(): void {
     if (this.experimentForm.valid) {
@@ -53,7 +52,9 @@ export class ExperimentDialogComponent implements OnInit {
         this.createExperiment()
       }
     } else {
-      this.toastr.error('Please fill in correctly the data.');
+      this.toastr.error(
+        'Please, complete correctly the information.'
+      );
     }
   }
 
@@ -63,9 +64,7 @@ export class ExperimentDialogComponent implements OnInit {
     this.experimentForm.reset();
   }
 
-  /* ==========================
-   Service Interaction Functions
-   ========================== */
+  /*** Service interaction functions ***/
 
   createExperiment(): void {
     const experiment = this.experimentForm.value as Experiment;
@@ -83,7 +82,10 @@ export class ExperimentDialogComponent implements OnInit {
   }
 
   updateExperiment(): void {
-    const experiment = this.experimentForm.value as Experiment;
+    const experimentFormValue: any = this.experimentForm.value;
+    const experiment: Experiment = {
+      'name': experimentFormValue.name
+    }
 
     this.experimentService.updateExperiment(experiment, this.selectedExperimentId).subscribe({
       next: (_) => {
@@ -97,14 +99,18 @@ export class ExperimentDialogComponent implements OnInit {
     });
   }
 
+  /*** Internal functions ***/
 
-  /* ==========================
-   Internal Functions
-   ========================== */
+  /* Form manipulation */
 
-  _patchFormValues(experiment: Experiment): void {
+  patchFormValues(experiment: Experiment): void {
     this.experimentForm.patchValue({
       name: experiment.name
     })
+  }
+
+  // Getters
+  get nameControl() {
+    return this.experimentForm.get('name');
   }
 }

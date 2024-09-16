@@ -9,7 +9,7 @@ import config from 'src/app/config.json';
 })
 export class GridService {
   private httpOptions = <any>{};
-  private URL: string = "";
+  private URL: string = '';
 
   constructor(private http: HttpClient) {
     this.URL = `${config.api.baseUrl}${config.api.streetLights.grid}`;

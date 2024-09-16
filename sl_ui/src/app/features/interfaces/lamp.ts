@@ -1,4 +1,4 @@
-import { Robot } from "./robot";
+import { Robot } from './robot';
 
 export interface Lamp {
   id?: number;

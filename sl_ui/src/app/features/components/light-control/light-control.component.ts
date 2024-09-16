@@ -29,8 +29,8 @@ export class LightControlComponent implements OnInit {
 
   setLightProperties(): void {
     var message = {
-      "state": this.switchValue,
-      "dim": this.sliderValue
+      'state': this.switchValue,
+      'dim': this.sliderValue
     }
 
     this.lightService.setLightProperties(message).subscribe((response) => {
