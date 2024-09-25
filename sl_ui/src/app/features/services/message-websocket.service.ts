@@ -1,8 +1,8 @@
+import config from 'src/app/config.json';
 import { Injectable } from '@angular/core';
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { Subject, EMPTY } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import config from 'src/app/config.json';
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 export const WS_ENDPOINT = config.api.messagesWS;
 export const RECONNECT_INTERVAL = 2000;
@@ -11,8 +11,8 @@ export const RECONNECT_INTERVAL = 2000;
   providedIn: 'root'
 })
 export class WebsocketService {
-  private socket$: any;
   private messagesSubject$ = new Subject<any>();
+  private socket$: any;
   public messages$ = this.messagesSubject$.asObservable();
 
   constructor() { }
@@ -38,8 +38,6 @@ export class WebsocketService {
     if (this.socket$) {
       this.socket$.complete();
       this.socket$ = undefined;
-    } else {
-      console.error('Socket not initialized or already closed.');
     }
   }
 

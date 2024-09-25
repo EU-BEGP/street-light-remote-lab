@@ -9,7 +9,7 @@ import config from 'src/app/config.json';
   providedIn: 'root',
 })
 export class UserService {
-  private httpOptions = <any>{};
+  private httpOptions: any = <any>{};
 
   constructor(private httpClient: HttpClient) {
     this.httpOptions = {

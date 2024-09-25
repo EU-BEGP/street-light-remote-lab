@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
   HttpClient,
-  HttpErrorResponse,
   HttpHeaders,
 } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
-import { Robot } from '../interfaces/robot';
-import { Experiment } from '../interfaces/experiment';
+import { Observable } from 'rxjs';
 import config from 'src/app/config.json';
 
 @Injectable({

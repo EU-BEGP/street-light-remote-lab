@@ -1,12 +1,12 @@
+import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { WebsocketService } from '../../services/message-websocket.service';
-import { IntensityGridComponent } from '../../components/intensity-grid/intensity-grid.component';
-import { IntensityChartComponent } from '../../components/intensity-chart/intensity-chart.component';
-import { LightControlComponent } from '../../components/light-control/light-control.component';
 import { ExperimentService } from '../../services/experiment.service';
 import { GridService } from '../../services/grid.service';
+import { IntensityChartComponent } from '../../components/intensity-chart/intensity-chart.component';
+import { IntensityGridComponent } from '../../components/intensity-grid/intensity-grid.component';
+import { LightControlComponent } from '../../components/light-control/light-control.component';
 import { ToastrService } from 'ngx-toastr';
+import { WebsocketService } from '../../services/message-websocket.service';
 
 @Component({
   selector: 'app-remote-lab',
@@ -18,43 +18,41 @@ export class RemoteLabComponent implements OnInit, OnDestroy {
   @ViewChild(IntensityChartComponent) chartComponent!: IntensityChartComponent;
   @ViewChild(LightControlComponent) lightControlComponent!: LightControlComponent;
 
-  hasUnsavedChanges: boolean = false;
   displayControl: boolean = true;
-  isLoading: boolean = false;
-
   experimentId: number = 0;
-  gridId: number = 0;
-
   gridDimension: number = 10;
-  infoGridMessage: string = 'Waiting for Grid Data'
+  gridId: number = 0;
+  hasUnsavedChanges: boolean = false;
+  isWsLoading: boolean = false;
 
   constructor(
-    private websocketService: WebsocketService,
-    private router: Router,
-    private route: ActivatedRoute,
     private experimentService: ExperimentService,
     private gridService: GridService,
+    private route: ActivatedRoute,
     private toastr: ToastrService,
+    private websocketService: WebsocketService,
   ) { }
 
   ngOnInit(): void {
     // Get experiment grid information
     this.route.queryParams.subscribe((params): void => {
       this.experimentId = params['experiment'];
-      this.experimentService.getExperimentGrid(this.experimentId).subscribe(
-        (response: any): void => {
-          // If the experiment is assigned to any grid
-          if (response.length) {
+      if (this.experimentId) {
+        this.experimentService.getExperimentGrid(this.experimentId).subscribe(
+          (response: any): void => {
+            // If the experiment is assigned to any grid
+            if (response.length) {
+              this.displayControl = false;
+              this.gridComponent.setGrid(response[0].grid_messages)
+              this.chartComponent.setGraph(response[0].grid_messages)
+            }
+          },
+          (error: any): void => {
             this.displayControl = false;
-            this.gridComponent.setGrid(response[0].grid_messages)
-            this.chartComponent.setGraph(response[0].grid_messages)
+            this.toastr.error(error.error.error);
           }
-        },
-        (error: any): void => {
-          this.displayControl = false;
-          this.toastr.error(error.error.error);
-        }
-      );
+        );
+      }
     });
   }
 
@@ -63,7 +61,7 @@ export class RemoteLabComponent implements OnInit, OnDestroy {
   }
 
   onGridRequested(): void {
-    this.isLoading = true;
+    this.isWsLoading = true;
     this.connectToWebSocket();
   }
 
@@ -72,12 +70,14 @@ export class RemoteLabComponent implements OnInit, OnDestroy {
 
     // Connect to websocekts and receive messages
     this.websocketService.messages$.subscribe((message) => {
-      this.hasUnsavedChanges = true;
-      this.isLoading = false;
-      if (message.is_last) this.gridId = message.grid_id;
+      if (message) {
+        this.isWsLoading = false
+        this.hasUnsavedChanges = true;
+        if (message.is_last) this.gridId = message.grid_id;
 
-      this.gridComponent.refreshGrid(message);
-      this.chartComponent.refreshGraph(message);
+        this.gridComponent.refreshGrid(message);
+        this.chartComponent.refreshGraph(message);
+      }
     });
   }
 

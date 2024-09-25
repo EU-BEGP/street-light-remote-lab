@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import config from 'src/app/config.json';
 
 @Component({
   selector: 'app-access',
@@ -8,9 +7,8 @@ import config from 'src/app/config.json';
 })
 export class AccessComponent implements OnInit {
   title: string = '';
+
   constructor() { }
 
-  ngOnInit(): void {
-    this.title = config.appInformation.title;
-  }
+  ngOnInit(): void { }
 }

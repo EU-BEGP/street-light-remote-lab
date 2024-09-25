@@ -38,7 +38,7 @@ export class ActivationComponent implements OnInit {
           if (response.status !== null && response.status === 200) {
             this.activationStatus = 'success';
             setTimeout(() => {
-              this.router.navigate(['/access']);
+              this.router.navigate(['']);
             }, 5000);
           }
         },

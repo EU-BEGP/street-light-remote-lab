@@ -1,86 +1,90 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from './core/modules/material.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
-import { ToastrModule } from 'ngx-toastr';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgHttpLoaderModule } from 'ng-http-loader';
+import { BrowserModule } from '@angular/platform-browser';
 import { CookieService } from 'ngx-cookie-service';
+import { CountdownModule } from 'ngx-countdown';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { MaterialModule } from './core/material/material.module';
+import { NgxHttpLoaderModule } from 'ngx-http-loader';
+import { ToastrModule } from 'ngx-toastr';
 
+// Components
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './core/layout/components/navbar/navbar.component';
+import { ConfirmationDialogComponent } from './core/layout/components/confirmation-dialog/confirmation-dialog.component';
 import { FooterComponent } from './core/layout/components/footer/footer.component';
-import { LoginComponent } from './core/auth/components/login/login.component';
-import { RegistrationComponent } from './core/auth/components/registration/registration.component';
-import { SpinnerComponent } from './core/layout/components/spinner/spinner.component';
+import { LobbyComponent } from './core/layout/pages/lobby/lobby.component';
+import { NavbarComponent } from './core/layout/components/navbar/navbar.component';
 import { ScrollToTopComponent } from './core/layout/components/scroll-to-top/scroll-to-top.component';
+import { SpinnerComponent } from './core/layout/components/spinner/spinner.component';
 
+// Auth Components
 import { AccessComponent } from './core/auth/pages/access/access.component';
 import { ActivationComponent } from './core/auth/pages/activation/activation.component';
+import { LoginComponent } from './core/auth/components/login/login.component';
 import { NotFoundComponent } from './core/auth/pages/not-found/not-found.component';
-
-import { AuthInterceptorService } from './core/auth/services/auth-interceptor.service';
-
 import { ProfileComponent } from './core/auth/pages/profile/profile.component';
 import { ProfileFormComponent } from './core/auth/components/profile-form/profile-form.component';
-import { CountdownModule } from 'ngx-countdown';
+import { RegistrationComponent } from './core/auth/components/registration/registration.component';
 
-import * as PlotlyJS from 'plotly.js-dist-min';
-import { PlotlyModule } from 'angular-plotly.js';
-import { IntensityGridComponent } from './features/components/intensity-grid/intensity-grid.component';
+// Features Components
+import { ExperimentDialogComponent } from './features/components/experiment-dialog/experiment-dialog.component';
+import { ExperimentsComponent } from './features/components/experiments/experiments.component';
 import { IntensityChartComponent } from './features/components/intensity-chart/intensity-chart.component';
+import { IntensityGridComponent } from './features/components/intensity-grid/intensity-grid.component';
 import { LightControlComponent } from './features/components/light-control/light-control.component';
 import { RemoteLabComponent } from './features/pages/remote-lab/remote-lab.component';
-import { ExperimentsComponent } from './features/components/experiments/experiments.component';
-import { ExperimentDialogComponent } from './features/components/experiment-dialog/experiment-dialog.component';
-import { ConfirmationDialogComponent } from './core/layout/components/confirmation-dialog/confirmation-dialog.component';
+
+// Services
+import { AuthInterceptorService } from './core/auth/services/auth-interceptor.service';
+
+// Plotly
+import * as PlotlyJS from 'plotly.js-dist-min';
+import { PlotlyModule } from 'angular-plotly.js';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
 @NgModule({
   declarations: [
-    AppComponent,
-    NavbarComponent,
-    FooterComponent,
-    LoginComponent,
-    RegistrationComponent,
     AccessComponent,
     ActivationComponent,
-    SpinnerComponent,
-    ScrollToTopComponent,
+    AppComponent,
+    ConfirmationDialogComponent,
+    ExperimentDialogComponent,
+    ExperimentsComponent,
+    FooterComponent,
+    IntensityChartComponent,
+    IntensityGridComponent,
+    LightControlComponent,
+    LobbyComponent,
+    LoginComponent,
+    NavbarComponent,
     NotFoundComponent,
     ProfileComponent,
     ProfileFormComponent,
-    IntensityGridComponent,
-    IntensityChartComponent,
-    LightControlComponent,
+    RegistrationComponent,
     RemoteLabComponent,
-    ExperimentsComponent,
-    ExperimentDialogComponent,
-    ConfirmationDialogComponent,
+    ScrollToTopComponent,
+    SpinnerComponent,
   ],
   imports: [
-    PlotlyModule,
-    BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    MaterialModule,
-    FormsModule,
-    ReactiveFormsModule,
+    BrowserModule,
     CountdownModule,
+    FormsModule,
+    HttpClientModule,
+    MaterialModule,
+    NgxHttpLoaderModule.forRoot(),
+    PlotlyModule,
+    ReactiveFormsModule,
     ToastrModule.forRoot({
       timeOut: 3000,
       closeButton: true,
       preventDuplicates: true,
       progressBar: true,
     }),
-    HttpClientModule,
-    MatTooltipModule,
-    NgHttpLoaderModule.forRoot(),
   ],
   providers: [
     CookieService,

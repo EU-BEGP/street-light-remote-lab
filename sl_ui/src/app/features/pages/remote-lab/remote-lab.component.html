@@ -2,7 +2,7 @@
 <div>
   <mat-tab-group mat-align-tabs="center">
     <mat-tab label="Activity 1">
-      <app-spinner id="grid-spinner" [showSpinner]="isLoading" [message]="infoGridMessage"></app-spinner>
+      <app-spinner id="grid-spinner" [showSpinner]="isWsLoading"></app-spinner>
 
       <app-light-control (gridRequested)="onGridRequested()" *ngIf="displayControl"></app-light-control>
       <div class="button-container">

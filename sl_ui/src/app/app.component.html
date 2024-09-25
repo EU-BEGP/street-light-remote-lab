@@ -1,8 +1,10 @@
-<ng-http-loader [backdrop]="true" backgroundColor="#ffffff" [debounceDelay]="100" [minDuration]="300" opacity="0.7"
-  [backdropBackgroundColor]="'#000000'" [spinner]="spinkit.skSpinnerPulse">
-</ng-http-loader>
+<ngx-http-loader [loader]=" loader.ROLLER" [iconColor]="'#5262BC'" [backdropBackgroundColor]="'#FFFFFF4A'">
+</ngx-http-loader>
 
 <div class="main-container">
+  <div class="countdown-container" *ngIf="hasAccessToLab">
+    <countdown #cd [config]="countdownConfig" (event)="onCountdownFinish($event)"> </countdown>
+  </div>
   <div class="content">
     <router-outlet></router-outlet>
   </div>

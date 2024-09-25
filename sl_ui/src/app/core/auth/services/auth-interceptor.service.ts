@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { catchError } from 'rxjs/operators';
+import { CookieService } from 'ngx-cookie-service';
 import {
   HttpInterceptor,
   HttpRequest,
@@ -6,9 +7,8 @@ import {
   HttpEvent,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { CookieService } from 'ngx-cookie-service';
+import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
@@ -16,12 +16,13 @@ import { ToastrService } from 'ngx-toastr';
   providedIn: 'root',
 })
 export class AuthInterceptorService implements HttpInterceptor {
-  constructor(private router: Router, private cookieService: CookieService, private toastr: ToastrService) { }
+  constructor(
+    private router: Router,
+    private cookieService: CookieService,
+    private toastr: ToastrService,
+  ) { }
 
-  intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token: string | null = localStorage.getItem('token');
     const csrfToken = this.cookieService.get('csrftoken');
 
@@ -42,10 +43,11 @@ export class AuthInterceptorService implements HttpInterceptor {
           // Clear the token from local storage
           localStorage.removeItem('token');
 
-          // Show informational message
-          this.router.navigateByUrl('/access');
-          this.toastr.error(err.error.detail);
+          // Navigate to access route
+          this.router.navigate(['']);
 
+          // Show informational message
+          this.toastr.error(err.error.detail)
         }
 
         // Pass the error along

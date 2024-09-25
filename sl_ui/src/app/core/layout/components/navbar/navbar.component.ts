@@ -57,7 +57,7 @@ export class NavbarComponent implements OnInit {
   }
 
   goToLogin(): void {
-    this.router.navigateByUrl('/access');
+    this.router.navigateByUrl('');
   }
 
   logout(): void {

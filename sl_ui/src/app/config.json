@@ -1,7 +1,7 @@
 {
   "version": "0.1.2",
   "api": {
-    "baseUrl": "",
+    "baseUrl": "http://localhost:8001/",
     "users": {
       "me": "users/me/",
       "login": "users/token/",
@@ -19,7 +19,7 @@
       "experiment": "street-lights/experiments/",
       "grid": "street-lights/grids/"
     },
-    "messagesWS": ""
+    "messagesWS": "ws://localhost:8001/ws/street-lights/messages/"
   },
   "organizationData": {
     "name": "Universidad Privada Boliviana",

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 
 import { AuthService } from '../../services/auth.service';
@@ -27,7 +27,8 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private toastr: ToastrService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void { }
@@ -58,26 +59,19 @@ export class LoginComponent implements OnInit {
     this.authService.login(user).subscribe({
       next: (response: any): void => {
         if (response != undefined) {
+          // Add token to local storage
           localStorage.setItem('token', response.body.token);
-          this.checkReturnUrl();
-          this.router.navigateByUrl('/experiments');
+
           this.toastr.success(`Welcome ${user.email}`);
+
+          // Navigate to remote-lab
+          this.router.navigate(['/remote-lab']);
         }
       }
     });
   }
 
   /*** Internal functions ***/
-
-  checkReturnUrl() {
-    let params = new URLSearchParams(document.location.search);
-    let returnUrl = params.get('return-url');
-
-    if (returnUrl) this.router.navigateByUrl(returnUrl);
-    else {
-      this.router.navigateByUrl('');
-    }
-  }
 
   /* Form manipulation */
 

@@ -81,16 +81,6 @@ export class RegistrationComponent implements OnInit {
 
   /*** Internal functions ***/
 
-  checkReturnUrl() {
-    let params = new URLSearchParams(document.location.search);
-    let returnUrl = params.get('return-url');
-
-    if (returnUrl) this.router.navigateByUrl(returnUrl);
-    else {
-      this.router.navigateByUrl('');
-    }
-  }
-
   /* Form manipulation */
 
   // Getters
