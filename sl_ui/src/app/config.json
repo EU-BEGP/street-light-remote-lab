@@ -1,7 +1,7 @@
 {
   "version": "0.1.2",
   "api": {
-    "baseUrl": "http://localhost:8001/",
+    "baseUrl": "",
     "users": {
       "me": "users/me/",
       "login": "users/token/",
@@ -19,7 +19,14 @@
       "experiment": "street-lights/experiments/",
       "grid": "street-lights/grids/"
     },
-    "messagesWS": "ws://localhost:8001/ws/street-lights/messages/"
+    "messagesWS": ""
+  },
+  "booking": {
+    "accessUrl": "",
+    "urlParams": {
+      "accessKey": "access_key",
+      "password": "pwd"
+    }
   },
   "organizationData": {
     "name": "Universidad Privada Boliviana",

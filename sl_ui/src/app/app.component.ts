@@ -1,21 +1,25 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { NgxLoader } from 'ngx-http-loader';
-import { TimerService } from './core/auth/services/timer.service';
-import { CountdownConfig } from 'ngx-countdown';
-import { Router } from '@angular/router';
+import config from './config.json'
+import { AccessService } from './core/auth/services/access.service';
+import { Booking } from './core/booking/interfaces/booking';
 import { BookingHandlerService } from './core/booking/services/booking-handler.service';
 import { BookingService } from './core/booking/services/booking.service';
-import { Booking } from './core/booking/interfaces/booking';
+import { Component, OnInit } from '@angular/core';
+import { CountdownConfig } from 'ngx-countdown';
+import { Event, Router, RoutesRecognized } from '@angular/router';
+import { NgxLoader } from 'ngx-http-loader';
+import { TimerService } from './core/auth/services/timer.service';
 import { ToastrService } from 'ngx-toastr';
-import config from './config.json'
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit {
   public loader: any = NgxLoader;
+  private accessKeyParam: string = config.booking.urlParams.accessKey;
+  private passwordParam: string = config.booking.urlParams.password;
+  private hasNavigated: boolean = false;
 
   hasAccessToLab: boolean = false;
   countdownConfig: CountdownConfig = {
@@ -25,16 +29,78 @@ export class AppComponent implements OnInit, AfterViewInit {
   };
 
   constructor(
-    private router: Router,
-    private toastr: ToastrService,
-    private timerService: TimerService,
-    private bookingService: BookingService,
+    private accessService: AccessService,
     private bookingHandler: BookingHandlerService,
-  ) { }
+    private bookingService: BookingService,
+    private router: Router,
+    private timerService: TimerService,
+    private toastr: ToastrService,
+  ) {
+  }
 
   ngOnInit(): void {
-    // Subscribe to the countdown observable from the TimerService
-    this.timerService.countdown$.subscribe((time) => {
+    this.router.events.subscribe((event: Event): void => {
+      if (event instanceof RoutesRecognized) {
+        this.handleRoute(event);
+      }
+    });
+  }
+
+  private handleRoute(event: RoutesRecognized): void {
+    const firstChild = event.state.root.firstChild;
+    if (firstChild) {
+      const params = firstChild.queryParams;
+      if (Object.keys(params).length > 0) {
+        this.handleQueryParams(params);
+      } else {
+        this.handleStoredParams();
+      }
+    }
+  }
+
+  private handleQueryParams(params: any): void {
+    const accessKey = params[this.accessKeyParam];
+    const password = params[this.passwordParam] || null;
+
+    if (accessKey) {
+      this.accessService.setAccess(accessKey, password);
+      this.validateBooking(accessKey, password);
+    }
+  }
+
+  private handleStoredParams(): void {
+    const storedParams = this.accessService.getAccess();
+
+    if (Object.keys(storedParams).length > 0) {
+      const accessKey = storedParams.accessKey;
+      const password = storedParams.password || null;
+
+      if (accessKey) {
+        this.validateBooking(accessKey, password);
+      }
+    } else {
+      this.toastr.error("Make a booking to access this laboratory");
+      if (!this.hasNavigated) {
+        this.hasNavigated = true;
+        this.router.navigate(['/lobby']);
+      }
+    }
+  }
+
+  private validateBooking(accessKey: string, password: string | null): void {
+    this.bookingService.getBookingInfo(accessKey, password).subscribe(
+      (response: Booking[]): void => {
+        this.bookingHandler.handleBookingResponse(response);
+        this.subscribeToCountdown();
+      },
+      (error: any): void => {
+        this.bookingHandler.handleErrorResponse(error);
+      }
+    );
+  }
+
+  private subscribeToCountdown(): void {
+    this.timerService.countdown$.subscribe((time: number): void => {
       if (time > 0) {
         this.hasAccessToLab = true;
         this.countdownConfig = {
@@ -50,27 +116,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-    const accessKey: string | null = localStorage.getItem('access_key');
-    const password: string | null = localStorage.getItem('password');
-
-    // Confirm validation of reservation
-    if (accessKey) {
-      this.bookingService.getBookingInfo(accessKey, password).subscribe(
-        (response: Booking[]): void => {
-          this.bookingHandler.handleBookingResponse(response);
-        },
-        (error: any): void => {
-          this.bookingHandler.handleErrorResponse(error);
-        }
-      );
-    }
-  }
-
   onCountdownFinish(event: any): void {
     if (event.action == "done") {
-      localStorage.removeItem('access_key');
-      localStorage.removeItem('password');
+      this.accessService.clearAccess();
       this.hasAccessToLab = false;
       this.router.navigate(['/lobby']);
     }
