@@ -65,6 +65,12 @@ export class AppComponent implements OnInit {
     if (accessKey) {
       this.accessService.setAccess(accessKey, password);
       this.validateBooking(accessKey, password);
+    } else {
+      this.toastr.error("Make a booking to access this laboratory");
+      if (!this.hasNavigated) {
+        this.hasNavigated = true;
+        this.router.navigate(['/lobby']);
+      }
     }
   }
 
@@ -107,6 +113,9 @@ export class AppComponent implements OnInit {
           leftTime: time,
           format: 'HH:mm:ss',
         };
+        if (time < 60) {
+          this.toastr.warning("Your session ends in less than a minute!")
+        }
       } else {
         this.countdownConfig = {
           leftTime: 0,
