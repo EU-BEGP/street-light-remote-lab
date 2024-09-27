@@ -1,21 +1,51 @@
 .navbar-container {
-  margin-bottom: 10px;
+  background-color: var(--main-blue);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
 }
 
 #logo {
   margin-right: 10px;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
+  transition: transform 0.2s;
+}
+
+#logo:hover {
+  transform: scale(1.1);
 }
 
 #main-label {
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
+}
+
+#navbar-title {
+  font-size: 20px;
+  color: white;
+  margin-right: 20px;
+}
+
+.countdown-container {
+  margin-left: 20px;
 }
 
 .icon {
   margin-right: 5px;
+  transition: color 0.2s;
+}
+
+button.mat-button {
+  color: white;
+  font-weight: 500;
+}
+
+button.mat-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 ::ng-deep .mat-menu-panel {
@@ -28,6 +58,15 @@
   }
 
   #navbar-title {
-    font-size: 16px;
+    font-size: 18px;
   }
+
+  button.mat-button {
+    font-size: 14px;
+  }
+}
+
+mat-toolbar {
+  margin: 0;
+  padding: 0;
 }

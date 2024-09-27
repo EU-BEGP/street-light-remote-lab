@@ -1,14 +1,7 @@
-import {
-  BreakpointObserver,
-  Breakpoints,
-  BreakpointState,
-} from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
+import { CountdownConfig } from 'ngx-countdown';
+import { Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { UserService } from 'src/app/core/auth/services/user.service';
-import { Group } from 'src/app/core/auth/enums/group';
-import { User } from 'src/app/core/auth/interfaces/user';
 
 @Component({
   selector: 'app-navbar',
@@ -16,54 +9,48 @@ import { User } from 'src/app/core/auth/interfaces/user';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-  isHandset: Observable<BreakpointState> = this.breakPointObserver.observe(
-    Breakpoints.Handset
-  );
+  @Input() hasAccessToLab: boolean = false;
+  @Input() countdownConfig: CountdownConfig = {
+    leftTime: 0,
+    format: 'HH:mm:ss',
+    demand: true,
+  };
+  @Output() countdownFinish: EventEmitter<void> = new EventEmitter<void>();
 
-  shownMenu: boolean = false;
-  showLabsButton: boolean = false;
+  showMenu: boolean = false;
 
   constructor(
     private router: Router,
-    private breakPointObserver: BreakpointObserver,
-    private userService: UserService
   ) { }
 
   ngOnInit(): void {
     const token = localStorage.getItem('token');
+    this.showMenu = !!token;
+  }
 
-    if (token) {
-      this.userService.getUserData().subscribe(
-        (user: User): void => {
-          user.groups!.forEach((group) => {
-            if (group.name === Group.Instructors) this.showLabsButton = true;
-          });
-        },
-        (err: any): boolean => (this.shownMenu = false)
-      );
-      this.shownMenu = true;
-    } else {
-      this.shownMenu = false;
-      this.showLabsButton = false;
-    }
+  onCountdownFinish(event: any): void {
+    this.countdownFinish.emit(event);
+  }
+
+  goToRemoteLaboratory(): void {
+    this.router.navigate(['/remote-lab']);
   }
 
   goToExperiments(): void {
-    this.router.navigateByUrl('/experiments');
+    this.router.navigate(['/experiments']);
   }
 
   goToMyProfile(): void {
-    this.router.navigateByUrl('/profile');
+    this.router.navigate(['/profile']);
   }
 
   goToLogin(): void {
-    this.router.navigateByUrl('');
+    this.router.navigate(['']);
   }
 
   logout(): void {
     localStorage.removeItem('token');
     this.goToLogin();
-    this.shownMenu = false;
-    this.showLabsButton = false;
+    this.showMenu = false;
   }
 }

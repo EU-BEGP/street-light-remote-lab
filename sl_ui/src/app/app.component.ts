@@ -113,9 +113,6 @@ export class AppComponent implements OnInit {
           leftTime: time,
           format: 'HH:mm:ss',
         };
-        if (time < 60) {
-          this.toastr.warning("Your session ends in less than a minute!")
-        }
       } else {
         this.countdownConfig = {
           leftTime: 0,

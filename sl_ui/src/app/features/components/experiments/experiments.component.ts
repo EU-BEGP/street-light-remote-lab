@@ -1,17 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { MatSort } from '@angular/material/sort';
-import { ToastrService } from 'ngx-toastr';
-
-import { UserService } from 'src/app/core/auth/services/user.service';
-import { ExperimentService } from '../../services/experiment.service';
-import { Experiment } from '../../interfaces/experiment';
-import { ExperimentDialogComponent } from '../experiment-dialog/experiment-dialog.component';
 import { ConfirmationDialogComponent } from 'src/app/core/layout/components/confirmation-dialog/confirmation-dialog.component';
 import { DialogConfigService } from '../../services/dialog-config.service';
+import { Experiment } from '../../interfaces/experiment';
+import { ExperimentDialogComponent } from '../experiment-dialog/experiment-dialog.component';
+import { ExperimentService } from '../../services/experiment.service';
+import { ExperimentStateService } from '../../services/experiment-state.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-experiments',
@@ -34,12 +33,12 @@ export class ExperimentsComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
-    private userService: UserService,
-    private experimentService: ExperimentService,
     private dialog: MatDialog,
+    private dialogConfigService: DialogConfigService,
+    private experimentService: ExperimentService,
+    private experimentStateService: ExperimentStateService,
     private router: Router,
     private toastr: ToastrService,
-    private dialogConfigService: DialogConfigService
   ) { }
 
   ngOnInit(): void {
@@ -88,11 +87,8 @@ export class ExperimentsComponent implements OnInit {
   }
 
   actionGoToLaboratory(experimentId: number): void {
-    this.router.navigate(['/remote-lab'], {
-      queryParams: {
-        experiment: experimentId,
-      },
-    });
+    this.experimentStateService.setExperimentId(experimentId);
+    this.router.navigate(['/remote-lab']);
   }
 
   /* ==========================

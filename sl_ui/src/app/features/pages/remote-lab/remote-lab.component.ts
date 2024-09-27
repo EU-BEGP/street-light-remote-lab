@@ -1,6 +1,6 @@
-import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ExperimentService } from '../../services/experiment.service';
+import { ExperimentStateService } from '../../services/experiment-state.service';
 import { GridService } from '../../services/grid.service';
 import { IntensityChartComponent } from '../../components/intensity-chart/intensity-chart.component';
 import { IntensityGridComponent } from '../../components/intensity-grid/intensity-grid.component';
@@ -19,7 +19,7 @@ export class RemoteLabComponent implements OnInit, OnDestroy {
   @ViewChild(LightControlComponent) lightControlComponent!: LightControlComponent;
 
   displayControl: boolean = true;
-  experimentId: number = 0;
+  experimentId: number | null = null;
   gridDimension: number = 10;
   gridId: number = 0;
   hasUnsavedChanges: boolean = false;
@@ -27,33 +27,30 @@ export class RemoteLabComponent implements OnInit, OnDestroy {
 
   constructor(
     private experimentService: ExperimentService,
+    private experimentStateService: ExperimentStateService,
     private gridService: GridService,
-    private route: ActivatedRoute,
     private toastr: ToastrService,
     private websocketService: WebsocketService,
   ) { }
 
   ngOnInit(): void {
-    // Get experiment grid information
-    this.route.queryParams.subscribe((params): void => {
-      this.experimentId = params['experiment'];
-      if (this.experimentId) {
-        this.experimentService.getExperimentGrid(this.experimentId).subscribe(
-          (response: any): void => {
-            // If the experiment is assigned to any grid
-            if (response.length) {
-              this.displayControl = false;
-              this.gridComponent.setGrid(response[0].grid_messages)
-              this.chartComponent.setGraph(response[0].grid_messages)
-            }
-          },
-          (error: any): void => {
+    this.experimentId = this.experimentStateService.getExperimentId();
+    if (this.experimentId) {
+      this.experimentService.getExperimentGrid(this.experimentId).subscribe(
+        (response: any): void => {
+          // If the experiment is assigned to any grid
+          if (response.length) {
             this.displayControl = false;
-            this.toastr.error(error.error.error);
+            this.gridComponent.setGrid(response[0].grid_messages)
+            this.chartComponent.setGraph(response[0].grid_messages)
           }
-        );
-      }
-    });
+        },
+        (error: any): void => {
+          this.displayControl = false;
+          this.toastr.error(error.error.error);
+        }
+      );
+    }
   }
 
   ngOnDestroy(): void {

@@ -24,7 +24,7 @@ export class CanDeactivateLabGuard implements CanDeactivate<RemoteLabComponent>{
       take(1), // Take only the latest value
       switchMap((time: number) => {
         // If there is no time, allow navigation
-        if (time <= 30) {
+        if (time <= 10) {
           return of(true);
         }
 
