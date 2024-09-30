@@ -1,22 +1,8 @@
 from django.conf import settings
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.mail import EmailMultiAlternatives, BadHeaderError
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-import six
-
-
-class TokenGenerator(PasswordResetTokenGenerator):
-    def _make_hash_value(self, user, timestamp):
-        return (
-            six.text_type(user.pk)
-            + six.text_type(timestamp)
-            + six.text_type(user.is_active)
-        )
-
-
-account_activation_token = TokenGenerator()
 
 
 def send_custom_email(subject, template_name, context, recipient):

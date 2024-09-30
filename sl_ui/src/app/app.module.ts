@@ -21,7 +21,7 @@ import { SpinnerComponent } from './core/layout/components/spinner/spinner.compo
 
 // Auth Components
 import { AccessComponent } from './core/auth/pages/access/access.component';
-import { ActivationComponent } from './core/auth/pages/activation/activation.component';
+import { CodeActivationComponent } from './core/activation/code-activation/code-activation.component';
 import { LoginComponent } from './core/auth/components/login/login.component';
 import { NotFoundComponent } from './core/auth/pages/not-found/not-found.component';
 import { ProfileComponent } from './core/auth/pages/profile/profile.component';
@@ -48,7 +48,6 @@ PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
   declarations: [
     AccessComponent,
-    ActivationComponent,
     AppComponent,
     ConfirmationDialogComponent,
     ExperimentDialogComponent,
@@ -67,6 +66,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     RemoteLabComponent,
     ScrollToTopComponent,
     SpinnerComponent,
+    CodeActivationComponent,
   ],
   imports: [
     AppRoutingModule,

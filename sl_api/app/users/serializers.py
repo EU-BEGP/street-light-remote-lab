@@ -1,10 +1,6 @@
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.models import Group
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
 from rest_framework import serializers
-from utils import send_custom_email, account_activation_token
-import os
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -37,18 +33,6 @@ class UserSerializer(serializers.ModelSerializer):
         user = get_user_model().objects.create_user(**validated_data)
         group = Group.objects.get(name="students")
         user.groups.add(group)
-
-        subject = "Account activation"
-        context = {
-            "user_name": user.name,
-            "ui_base_url": os.environ.get("UI_BASE_URL"),
-            "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-            "token": account_activation_token.make_token(user),
-        }
-        template_name = "account_activation_email_template.html"
-        recipient = [user.email]
-
-        send_custom_email(subject, template_name, context, recipient)
 
         return user
 
@@ -87,3 +71,8 @@ class AuthTokenSerializer(serializers.Serializer):
 
         attrs["user"] = user
         return attrs
+
+
+class AccountActivationSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+    verification_code = serializers.CharField(required=True)

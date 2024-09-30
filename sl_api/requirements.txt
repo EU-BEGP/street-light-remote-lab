@@ -6,6 +6,5 @@ djangorestframework==3.13.1
 gunicorn==23.0.0
 paho-mqtt==2.1.0
 psycopg2==2.9.3
-six==1.16.0
 uuid==1.30
 uvicorn[standard]==0.30.6

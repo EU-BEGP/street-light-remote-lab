@@ -1,0 +1,56 @@
+.activation-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50%;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px
+}
+
+input {
+  width: 30%;
+}
+
+input:focus {
+  outline: none !important;
+  border: 1px solid rgb(35, 140, 175);
+  box-shadow: 0 0 8px var(--main-blue);
+}
+
+a {
+  color: blue;
+  cursor: pointer;
+}
+
+a:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+form {
+  padding: 2rem;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+
+  .form-control {
+    display: block;
+    height: 50px;
+    text-align: center;
+    font-size: 1.25rem;
+    min-width: 0;
+  }
+}

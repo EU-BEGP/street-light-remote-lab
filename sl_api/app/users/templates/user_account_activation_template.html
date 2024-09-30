@@ -1,0 +1,10 @@
+{% extends 'base_email_template.html' %}
+
+{% block content %}
+  <h2>Account activation</h2>
+  <p>Hello {{ user_name }}</p>
+  <p>Thanks for creating an account!</p>
+  <p>To complete the process and validate your user account please enter the following verification code on our website:</p>
+    <h1>{{verification_code}}</h1>
+  <p>Welcome!</p>
+{% endblock %}

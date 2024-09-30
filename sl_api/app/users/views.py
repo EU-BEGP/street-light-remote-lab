@@ -1,13 +1,17 @@
-from django.utils.encoding import force_str
-from django.utils.http import urlsafe_base64_decode
+from django.utils import timezone
 from rest_framework import authentication, generics, permissions, status
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
-
 from users.models import User
-from users.serializers import UserSerializer, AuthTokenSerializer, UserProfileSerializer
-from utils import account_activation_token
+from users.serializers import (
+    UserSerializer,
+    AuthTokenSerializer,
+    UserProfileSerializer,
+    AccountActivationSerializer,
+)
+from utils import send_custom_email
+import random
 
 
 class CreateUserView(generics.CreateAPIView):
@@ -35,34 +39,62 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
         return self.request.user
 
 
-class ActivateAccountView(generics.GenericAPIView):
-    def post(self, request):
-        uid = request.data.get("uid", None)
-        token = request.data.get("token", None)
+class ActivateUserAccount(generics.UpdateAPIView):
+    serializer_class = AccountActivationSerializer
+    queryset = User.objects.all()
 
-        if not uid or not token:
+    def update(self, request, *args, **kwargs):
+        queryset = self.get_queryset().filter(is_active=False)
+        user_id = request.data.get("id", None)
+        entered_code = request.data.get("verification_code", None)
+        current_time = timezone.now()
+
+        try:
+            user = queryset.get(
+                id=user_id,
+                email_verification_code=entered_code,
+                email_expiration_time__gt=current_time,
+            )
+            user.is_active = True
+            user.save()
+            return Response({"message": "User account activated successfully"})
+        except User.DoesNotExist:
             return Response(
-                {"message": "uid and token are required in the request body."},
+                {"error": "Invalid verification code or code has expired"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        try:
-            uid = force_str(urlsafe_base64_decode(uid))
-            user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            user = None
 
-        if user is not None and account_activation_token.check_token(user, token):
-            user.is_active = True
+class RequestVerificationCode(generics.UpdateAPIView):
+    serializer_class = AccountActivationSerializer
+    queryset = User.objects.all()
+
+    def update(self, request, *args, **kwargs):
+        user_id = request.data.get("id", None)
+        verification_code = "".join(random.choices("0123456789", k=6))
+        expiration_time = timezone.now() + timezone.timedelta(minutes=15)
+
+        try:
+            user = User.objects.get(id=user_id)
+            user.email_verification_code = verification_code
+            user.email_expiration_time = expiration_time
+            user.is_active = False
             user.save()
+
+            subject = "User Account Activation"
+
+            context = {
+                "user_name": user.name + " " + user.last_name,
+                "verification_code": verification_code,
+            }
+            template_name = "user_account_activation_template.html"
+            recipient = [user.email]
+
+            send_custom_email(subject, template_name, context, recipient)
+
+            return Response({"message": "Verification code sent successfully"})
+        except User.DoesNotExist:
             return Response(
-                {
-                    "message": "Thank you for your email confirmation. Now you can log in to your account."
-                },
-                status=status.HTTP_200_OK,
-            )
-        else:
-            return Response(
-                {"message": "Activation link is invalid!"},
+                {"error": "User does not exist"},
                 status=status.HTTP_400_BAD_REQUEST,
             )

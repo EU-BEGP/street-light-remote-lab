@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { AccessComponent } from './core/auth/pages/access/access.component';
-import { ActivationComponent } from './core/auth/pages/activation/activation.component';
 import { CanDeactivateLabGuard } from './features/services/guards/can-deactivate-lab.guard';
+import { CodeActivationComponent } from './core/activation/code-activation/code-activation.component';
 import { ExperimentsComponent } from './features/components/experiments/experiments.component';
 import { LobbyComponent } from './core/layout/pages/lobby/lobby.component';
 import { NotFoundComponent } from './core/auth/pages/not-found/not-found.component';
@@ -28,8 +28,8 @@ const routes: Routes = [
     component: ExperimentsComponent,
   },
   {
-    path: 'activate',
-    component: ActivationComponent
+    path: 'account-activation',
+    component: CodeActivationComponent,
   },
   {
     path: 'profile',

@@ -1,15 +1,14 @@
-import { Injectable } from '@angular/core';
+import config from 'src/app/config.json';
 import {
   HttpClient,
   HttpErrorResponse,
   HttpHeaders,
 } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { User } from '../interfaces/user';
-import { ActivationData } from '../interfaces/activation-data';
 import { ToastrService } from 'ngx-toastr';
-import config from 'src/app/config.json';
+import { User } from '../interfaces/user';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -33,13 +32,6 @@ export class AuthService {
       .pipe(catchError(this.handleError<User>('signUp')));
   }
 
-  activate(activationData: ActivationData): Observable<any> {
-    const URL = `${config.api.baseUrl}${config.api.users.activate}`;
-    return this.http
-      .post(URL, activationData, this.httpOptions)
-      .pipe(catchError(this.handleActivationError<ActivationData>('activate')));
-  }
-
   login(user: User): Observable<any> {
     const URL = `${config.api.baseUrl}${config.api.users.login}`;
     return this.http
@@ -51,21 +43,22 @@ export class AuthService {
     return localStorage.getItem('token') ? true : false;
   }
 
+  activateAccount(params: any): Observable<any> {
+    var URL = `${config.api.baseUrl}${config.api.users['account-activation']}`;
+    return this.http.patch(URL, params);
+  }
+
+  requestVerificationCode(id: number): Observable<any> {
+    var URL = `${config.api.baseUrl}${config.api.users['code-request']}`;
+    return this.http.patch(URL, { id: id });
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       if (error && error.error)
         this.toastr.error(this.getServerErrorMessage(error), 'Error');
 
       return of(result as T);
-    };
-  }
-
-  private handleActivationError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-      if (error && error.error)
-        this.toastr.error(this.getServerErrorMessage(error), 'Error');
-
-      throw error;
     };
   }
 

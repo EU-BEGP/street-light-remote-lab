@@ -68,12 +68,15 @@ export class RegistrationComponent implements OnInit {
 
     this.authService.signUp(user).subscribe((response) => {
       if (response.status !== null && response.status === 201) {
+        localStorage.setItem('userId', response.body.id.toString());
+
         this.toastr.success(
           `Welcome ${user.name}`,
           'Successful registration',
         );
-        setTimeout(() => {
-          this.router.navigate(['/activate']);
+
+        setTimeout((): void => {
+          this.router.navigate(['/account-activation'])
         }, 2000);
       }
     });

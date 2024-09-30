@@ -6,8 +6,9 @@
       "me": "users/me/",
       "login": "users/token/",
       "signup": "users/signup/",
-      "activate": "users/activate/",
-      "passwordReset": "accounts/password_reset/"
+      "passwordReset": "accounts/password_reset/",
+      "account-activation": "users/activate-account/",
+      "code-request": "users/request-code/"
     },
     "streetLights": {
       "mqtt": {

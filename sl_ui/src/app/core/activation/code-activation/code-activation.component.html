@@ -1,0 +1,36 @@
+<mat-card class="activation-container">
+  <mat-card-content>
+    <span class="title">Thank you for signing up!</span>
+
+    <div *ngIf="!activationStatus">
+      <br>
+      <span>A verification code has been sent to your email.</span>
+      <br>
+      <span>Please verify your email within 15 minutes.</span>
+
+      <form (ngSubmit)="sendCode()" #verificationForm="ngForm">
+        <h4>Enter your code</h4>
+        <div class="input-container">
+          <input *ngFor="let i of [0,1,2,3,4,5]; let idx = index" type="tel" maxlength="1" pattern="[0-9]"
+            class="form-control" (paste)="handlePaste($event)" (input)="handleInput($event)"
+            (keydown)="handleKeyDown($event)" />
+        </div>
+
+        <p>
+          <a class="mat-caption" (click)="resendCode()">
+            {{ "No email? Resend email" }}
+          </a>
+        </p>
+
+        <button type="submit" mat-raised-button cdkFocusInitial color="primary">
+          {{ "Send" }}
+        </button>
+      </form>
+
+    </div>
+
+    <div *ngIf="activationStatus">
+      <mat-icon style="align-self: center;">checked</mat-icon>
+    </div>
+  </mat-card-content>
+</mat-card>
