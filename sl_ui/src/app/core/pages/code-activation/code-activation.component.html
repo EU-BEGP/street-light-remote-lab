@@ -4,9 +4,10 @@
 
     <div *ngIf="!activationStatus">
       <br>
-      <span>A verification code has been sent to your email.</span>
+      <span>A verification code has been sent to your email. Please check your inbox and spam folder.</span>
       <br>
-      <span>Please verify your email within 15 minutes.</span>
+      <span>Enter the code within 15 minutes to complete the verification.</span>
+      <br>
 
       <form (ngSubmit)="sendCode()" #verificationForm="ngForm">
         <h4>Enter your code</h4>
@@ -18,12 +19,12 @@
 
         <p>
           <a class="mat-caption" (click)="resendCode()">
-            {{ "No email? Resend email" }}
+            {{ "Didn’t receive the email? Click here to resend." }}
           </a>
         </p>
 
         <button type="submit" mat-raised-button cdkFocusInitial color="primary">
-          {{ "Send" }}
+          {{ "Activate Account" }}
         </button>
       </form>
 

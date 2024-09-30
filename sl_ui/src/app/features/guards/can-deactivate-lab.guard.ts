@@ -1,11 +1,11 @@
 import { CanDeactivate } from '@angular/router';
-import { ConfirmationDialogComponent } from 'src/app/core/layout/components/confirmation-dialog/confirmation-dialog.component';
-import { DialogConfigService } from '../dialog-config.service';
+import { ConfirmationDialogComponent } from 'src/app/core/components/confirmation-dialog/confirmation-dialog.component';
+import { DialogConfigService } from '../services/dialog-config.service';
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, of } from 'rxjs';
-import { RemoteLabComponent } from '../../pages/remote-lab/remote-lab.component';
-import { TimerService } from 'src/app/core/auth/services/timer.service';
+import { RemoteLabComponent } from '../pages/remote-lab/remote-lab.component';
+import { TimerService } from 'src/app/core/services/timer.service';
 import { map, switchMap, take } from 'rxjs/operators';
 
 @Injectable({

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { TimerService } from '../../auth/services/timer.service';
+import { TimerService } from './timer.service';
 import { Booking } from '../interfaces/booking';
 
 @Injectable({

@@ -1,13 +1,13 @@
 import config from './config.json'
-import { AccessService } from './core/auth/services/access.service';
-import { Booking } from './core/booking/interfaces/booking';
-import { BookingHandlerService } from './core/booking/services/booking-handler.service';
-import { BookingService } from './core/booking/services/booking.service';
+import { AccessService } from './core/services/access.service';
+import { Booking } from './core/interfaces/booking';
+import { BookingHandlerService } from './core/services/booking-handler.service';
+import { BookingService } from './core/services/booking.service';
 import { Component, OnInit } from '@angular/core';
 import { CountdownConfig } from 'ngx-countdown';
 import { Event, Router, RoutesRecognized } from '@angular/router';
 import { NgxLoader } from 'ngx-http-loader';
-import { TimerService } from './core/auth/services/timer.service';
+import { TimerService } from './core/services/timer.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({

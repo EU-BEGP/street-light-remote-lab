@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ConfirmationDialogComponent } from 'src/app/core/layout/components/confirmation-dialog/confirmation-dialog.component';
+import { ConfirmationDialogComponent } from 'src/app/core/components/confirmation-dialog/confirmation-dialog.component';
 import { DialogConfigService } from '../../services/dialog-config.service';
 import { Experiment } from '../../interfaces/experiment';
-import { ExperimentDialogComponent } from '../experiment-dialog/experiment-dialog.component';
+import { ExperimentDialogComponent } from '../../components/experiment-dialog/experiment-dialog.component';
 import { ExperimentService } from '../../services/experiment.service';
 import { ExperimentStateService } from '../../services/experiment-state.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
