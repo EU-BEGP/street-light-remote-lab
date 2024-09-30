@@ -1,13 +1,13 @@
-from time import sleep
-from street_light_rl.models import Message, Grid, Robot, Lamp
-from django.core.management.base import BaseCommand
-import asyncio
 from channels.layers import get_channel_layer
+from django.core.management.base import BaseCommand
+from street_light_rl.models import Message, Grid, Robot, Lamp
+from time import sleep
+import asyncio
+import django
+import json
+import os
 import paho.mqtt.client as mqtt
 import uuid
-import os
-import json
-import django
 
 # Ensure Django is set up
 django.setup()
@@ -133,10 +133,28 @@ def on_connect(client, userdata, flags, rc):
         print("[MQTT Listener]: Failed to connect to MQTT broker. Error code:", rc)
 
 
+def on_disconnect(self, client, userdata, rc):
+    print("Disconnected from MQTT broker.")
+    while True:
+        try:
+            client.reconnect()
+            print("Reconnected to MQTT broker.")
+            break
+        except Exception as e:
+            print(f"Reconnect failed: {e}. Retrying in 5 seconds...")
+            sleep(5)
+
+
 def on_message(client, userdata, msg):
-    # Get and parse MQTT message
-    mqtt_message = json.loads(msg.payload.decode())
-    process_incoming_message(mqtt_message)
+    try:
+        # Get and parse MQTT message
+        mqtt_message = json.loads(msg.payload.decode())
+        process_incoming_message(mqtt_message)
+
+    except json.JSONDecodeError:
+        print(f"Failed to decode JSON from message: {msg.payload}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 
 # Command
@@ -144,6 +162,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         client = mqtt.Client()
         client.on_connect = on_connect
+        client.on_disconnect = on_disconnect
         client.on_message = on_message
-        client.connect(mqtt_host, int(mqtt_port), 60)
-        client.loop_forever()
+
+        while True:
+            try:
+                client.connect(mqtt_host, int(mqtt_port), 60)
+                client.loop_forever()  # This will block and handle messages
+                break  # Exit the loop if connection is successful
+            except Exception as e:
+                print(f"Connection failed: {e}. Retrying...")
+                sleep(5)
