@@ -12,6 +12,7 @@ import { RemoteLabComponent } from './features/pages/remote-lab/remote-lab.compo
 
 // Guards
 import { AccessGuard } from './core/guards/access.guard';
+import { AuthGuard } from './core/guards/auth.guard';
 import { CanDeactivateLabGuard } from './features/guards/can-deactivate-lab.guard';
 
 const routes: Routes = [
@@ -23,19 +24,23 @@ const routes: Routes = [
   {
     path: 'remote-lab',
     component: RemoteLabComponent,
+    canActivate: [AuthGuard],
     canDeactivate: [CanDeactivateLabGuard]
   },
   {
     path: 'experiments',
     component: ExperimentsComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'account-activation',
     component: CodeActivationComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'profile',
     component: ProfileComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: 'lobby',

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CountdownConfig } from 'ngx-countdown';
 import { Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: 'app-navbar',
@@ -18,15 +19,16 @@ export class NavbarComponent implements OnInit {
   @Output() countdownFinish: EventEmitter<void> = new EventEmitter<void>();
 
   showMenu: boolean = false;
-  showLoginButton: boolean = false;
 
   constructor(
     private router: Router,
+    private tokenService: TokenService,
   ) { }
 
   ngOnInit(): void {
-    const token = localStorage.getItem('token');
-    this.showMenu = !!token;
+    this.tokenService.token$.subscribe(token => {
+      this.showMenu = !!token;
+    });
   }
 
   onCountdownFinish(event: any): void {
@@ -50,9 +52,8 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
+    this.tokenService.clearToken();
     this.showMenu = false;
-    this.showLoginButton = true;
     this.goToLogin();
   }
 }

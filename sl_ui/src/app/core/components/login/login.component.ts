@@ -1,11 +1,11 @@
+import config from 'src/app/config.json'
+import { AuthService } from '../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-
-import { AuthService } from '../../services/auth.service';
+import { TokenService } from '../../services/token.service';
 import { User } from '../../interfaces/user';
-import config from 'src/app/config.json'
 
 @Component({
   selector: 'app-login',
@@ -15,7 +15,7 @@ import config from 'src/app/config.json'
 export class LoginComponent implements OnInit {
 
   hidePassword: boolean = true;
-  passwordResetUrl = `${config.api.baseUrl}${config.api.users.passwordReset}`;
+  passwordResetUrl: string = `${config.api.baseUrl}${config.api.users.passwordReset}`;
 
   loginForm = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
@@ -25,10 +25,10 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private toastr: ToastrService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private route: ActivatedRoute,
+    private toastr: ToastrService,
+    private tokenService: TokenService,
   ) { }
 
   ngOnInit(): void { }
@@ -60,7 +60,7 @@ export class LoginComponent implements OnInit {
       next: (response: any): void => {
         if (response != undefined) {
           // Add token to local storage
-          localStorage.setItem('token', response.body.token);
+          this.tokenService.setToken(response.body.token)
 
           this.toastr.success(`Welcome ${user.email}`);
 

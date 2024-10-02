@@ -39,10 +39,6 @@ export class AuthService {
       .pipe(catchError(this.handleError<User>('login')));
   }
 
-  isLoggedIn(): boolean {
-    return localStorage.getItem('token') ? true : false;
-  }
-
   activateAccount(params: any): Observable<any> {
     var URL = `${config.api.baseUrl}${config.api.users['account-activation']}`;
     return this.http.patch(URL, params);
