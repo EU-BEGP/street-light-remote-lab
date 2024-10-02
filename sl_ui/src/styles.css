@@ -1,34 +1,28 @@
-/* ---------------- General Layout and Utility Styles ---------------- */
 :root {
   --main-blue: #5262BC;
   --secondary-blue: #6371C2;
 }
 
-html,
-body {
+body,
+html {
+  margin: 0;
   height: 100%;
 }
 
 body {
-  margin: 5px;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-.main-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: 100vh;
+.layout {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100vh;
 }
 
 .content {
-  flex: 1;
-  overflow: auto;
+  overflow-y: auto;
 }
 
-* {
-  box-sizing: border-box;
-}
 
 .center {
   margin: 0 auto;
@@ -45,7 +39,6 @@ body {
   font-size: 15px;
 }
 
-/* -------------------------------------------------------------- */
 
 /* ---------------- Float-based Layout Styles ---------------- */
 .column {
@@ -74,8 +67,6 @@ body {
   clear: both;
 }
 
-/* -------------------------------------------------------------- */
-
 /* ---------------- Flexbox and Spacing Utilities ---------------- */
 .spacer {
   flex: 1 1 auto;
@@ -88,8 +79,6 @@ body {
 .toast-container .ngx-toastr {
   box-shadow: 0 0 12px #3b3b3b !important;
 }
-
-/* -------------------------------------------------------------- */
 
 /* ---------------- Form styles ---------------- */
 form {
@@ -111,30 +100,10 @@ input[type="password"]::-ms-clear {
   width: 100%;
 }
 
-.center {
-  margin: 0 auto;
-  display: block;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.title {
-  text-align: center;
-  font-weight: bold;
-  font-size: 18px;
-  padding-top: 0px;
-}
-
-/* ------------------------------------------ */
-
 /* ---------------- Dialog Styles ---------------- */
 .dialog-responsive {
   width: 50%;
 }
-
-/* ------------------------------------------ */
 
 /* ---------------- Card Header Styles ---------------- */
 .card-header {
@@ -152,8 +121,6 @@ input[type="password"]::-ms-clear {
   justify-content: center;
   align-items: center;
 }
-
-/* ------------------------------------------ */
 
 /* ---------------- Table Styles ---------------- */
 .table {
@@ -202,5 +169,3 @@ tr.no-data-row {
 mat-paginator {
   margin-top: 16px;
 }
-
-/* ------------------------------------------ */

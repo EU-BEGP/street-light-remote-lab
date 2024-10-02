@@ -1,5 +1,5 @@
 <mat-toolbar color="primary" class="navbar-container">
-  <div id="main-label">
+  <div class="title-container">
     <img id="logo" src="./assets/logo.png" alt="logo" width="30px" />
     <span id="navbar-title">Street Light Remote Lab</span>
   </div>
@@ -10,8 +10,8 @@
 
   <span class="spacer"></span>
 
-  <ng-container *ngIf="hasAccessToLab">
-    <ng-container *ngIf="showMenu; else showLoginButton">
+  <div *ngIf="hasAccessToLab">
+    <div *ngIf="showMenu">
       <button mat-button aria-label="Experiment button" (click)="goToExperiments()">
         <mat-icon class="icon">widgets</mat-icon>
         <span>Experiments</span>
@@ -31,13 +31,13 @@
         <mat-icon class="icon">logout</mat-icon>
         <span>Logout</span>
       </button>
-    </ng-container>
+    </div>
 
-    <ng-template #showLoginButton>
+    <div *ngIf="showLoginButton">
       <button mat-button aria-label="Login icon" (click)="goToLogin()">
         <mat-icon class="icon">login</mat-icon>
         Login / Sign Up
       </button>
-    </ng-template>
-  </ng-container>
+    </div>
+  </div>
 </mat-toolbar>

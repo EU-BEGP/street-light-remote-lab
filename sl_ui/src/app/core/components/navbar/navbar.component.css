@@ -1,27 +1,21 @@
 .navbar-container {
-  background-color: var(--main-blue);
-  padding: 10px 20px;
   display: flex;
+  justify-content: space-evenly;
   align-items: center;
-  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: var(--main-blue);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
+}
+
+.title-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #logo {
   margin-right: 10px;
   margin-bottom: 2px;
-  transition: transform 0.2s;
-}
-
-#logo:hover {
-  transform: scale(1.1);
-}
-
-#main-label {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 #navbar-title {
@@ -34,11 +28,6 @@
   margin-left: 20px;
 }
 
-.icon {
-  margin-right: 5px;
-  transition: color 0.2s;
-}
-
 button.mat-button {
   color: white;
   font-weight: 500;
@@ -46,27 +35,4 @@ button.mat-button {
 
 button.mat-button:hover {
   background-color: rgba(255, 255, 255, 0.1);
-}
-
-::ng-deep .mat-menu-panel {
-  width: 200px !important;
-}
-
-@media (max-width: 600px) {
-  #logo {
-    width: 25px;
-  }
-
-  #navbar-title {
-    font-size: 18px;
-  }
-
-  button.mat-button {
-    font-size: 14px;
-  }
-}
-
-mat-toolbar {
-  margin: 0;
-  padding: 0;
 }

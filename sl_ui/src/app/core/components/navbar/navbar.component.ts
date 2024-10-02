@@ -18,6 +18,7 @@ export class NavbarComponent implements OnInit {
   @Output() countdownFinish: EventEmitter<void> = new EventEmitter<void>();
 
   showMenu: boolean = false;
+  showLoginButton: boolean = false;
 
   constructor(
     private router: Router,
@@ -50,7 +51,8 @@ export class NavbarComponent implements OnInit {
 
   logout(): void {
     localStorage.removeItem('token');
-    this.goToLogin();
     this.showMenu = false;
+    this.showLoginButton = true;
+    this.goToLogin();
   }
 }
