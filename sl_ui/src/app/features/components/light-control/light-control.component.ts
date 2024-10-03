@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./light-control.component.css']
 })
 export class LightControlComponent implements OnInit {
-  @Output() gridRequested = new EventEmitter<void>();
+  @Output() gridRequested: EventEmitter<void> = new EventEmitter<void>();
   sliderValue: number = 50;
   switchValue: boolean = false;
 
@@ -29,8 +29,8 @@ export class LightControlComponent implements OnInit {
 
   setLightProperties(): void {
     var message = {
-      'state': this.switchValue,
-      'dim': this.sliderValue
+      // 'state': this.switchValue,
+      'pwm': this.sliderValue
     }
 
     this.lightService.setLightProperties(message).subscribe((response) => {

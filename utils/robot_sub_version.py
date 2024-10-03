@@ -2,21 +2,24 @@
 # Purpose: A robot data simulator for UPB remote lab.
 # Author: Maria Fernanda del Granado
 
-import random
-import math
-import json
-import time
-import uuid
-import sys
-import paho.mqtt.client as mqtt
 from time import sleep
+import json
+import math
+import paho.mqtt.client as mqtt
+import random
+import sys
+import uuid
 
 # Define mqtt constants
-MQTT_PORT       = None
-MQTT_HOST       = None
-MQTT_SUB_TOPIC  = None
-MQTT_PUB_TOPIC  = None
-ROBOT_CODE      = None
+MQTT_HOST = None
+MQTT_PORT = None
+MQTT_USER = None
+MQTT_PWD = None
+MQTT_SUB_TOPIC = None
+MQTT_PUB_TOPIC = None
+
+# Define robot_id constant
+ROBOT_CODE = None
 
 """
 Class that allows user to create robot object given the following:
@@ -31,7 +34,13 @@ Class that allows user to create robot object given the following:
 
 class Robot:
     def __init__(
-        self, robot_code, grid_code, width, height, lower_intensity_val, upper_intensity_val
+        self,
+        robot_code,
+        grid_code,
+        width,
+        height,
+        lower_intensity_val,
+        upper_intensity_val,
     ):
         self.width = width
         self.height = height
@@ -83,41 +92,6 @@ class Robot:
             * (self.upper_intensity_val - self.lower_intensity_val)
         )
 
-    """
-    Helper function to print out results as grid.
-    """
-
-    def print_grid(self):
-        grid_tops = "+------" * self.width + "+"
-        sides = "|      " * self.width + "|"
-
-        for i in range(self.height):
-            print(grid_tops)
-            temp_string = ""
-
-            for j in range(self.width):
-                if j == 0:
-                    if self.results[i][j] > 9:
-                        temp_string += f"|  {self.results[i][j]}  |"
-
-                    else:
-                        temp_string += f"|  {self.results[i][j]}   |"
-
-                else:
-                    if self.results[i][j] > 9:
-                        temp_string += f"  {self.results[i][j]}  |"
-                    else:
-                        temp_string += f"   {self.results[i][j]}  |"
-            print(sides)
-            print(temp_string)
-            print(sides)
-
-        print(grid_tops)
-
-    """
-    Function formats strings results.
-    """
-
     def create_result_strings_format(self):
         for i in range(self.height):
             for j in range(self.width):
@@ -126,85 +100,38 @@ class Robot:
                 self.final_result_strings.append(temp_string)
 
     """
-    Prints results.
-    """
-
-    def print_results(self):
-        print("\nData: ")
-
-        for i in range(len(self.final_result_strings)):
-            print(self.final_result_strings[i])
-        print("")
-
-    """
     Function that connects client to mqtt host and port, then publishes data in payloads.
     """
 
     def send_json_data(self):
-        client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
-
-        # Handles connection error case.
-        if client.connect(MQTT_HOST, MQTT_PORT, 40) != 0:
-            print("Could not connect!")
-            sys.exit(-1)
-
         for i in range(self.height):
             for j in range(self.width):
-                if (i == (self.height - 1)) and (j == (self.width - 1)):
-                    # Send the last message with "is_last" set to true.
-                    last_data = {
-                        "robot_code": self.robot_code,
-                        "grid_code": self.grid_code,
-                        "x_pos": self.height - 1,
-                        "y_pos": self.width - 1,
-                        "intensity": self.results[-1][-1],
-                        "is_last": True,
-                    }
-                    sleep(0.2)
-                    client.publish(MQTT_PUB_TOPIC, json.dumps(last_data))
-                    client.disconnect()
-
                 data = {
                     "robot_code": self.robot_code,
                     "grid_code": self.grid_code,
                     "x_pos": i,
                     "y_pos": j,
                     "intensity": self.results[i][j],
-                    "is_last": False,  # Send all messages with "is_last" set to false except for last.
                 }
+
+                if (i == (self.height - 1)) and (j == (self.width - 1)):
+                    # Send the last message with "is_last" set to true.
+                    data["is_last"] = True
+                else:
+                    data["is_last"] = False
+
                 sleep(0.05)
-                client.publish(MQTT_PUB_TOPIC, json.dumps(data))  # Publish to topic.
-
-    def send_one_message(self):
-        client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
-
-        # Handles connection error case
-        if client.connect(MQTT_HOST, MQTT_PORT, 40) != 0:
-            print("Could not connect!")
-            sys.exit(-1)
-
-        single_data = {  # Send one message with is_last set to True if the grid is 1x1.
-            "robot_code": self.robot_code,
-            "grid_code": self.grid_code,
-            "x_pos": self.height - 1,
-            "y_pos": self.width - 1,
-            "intensity": self.results[0][0],
-            "is_last": True,
-        }
-
-        client.publish(MQTT_PUB_TOPIC, json.dumps(single_data))
-        client.disconnect()
-        sys.exit(0)
+                print(data)
+                mqttc.publish(MQTT_PUB_TOPIC, json.dumps(data))
 
 
+# MQTT CALLBACKS
 def on_connect(client, userdata, flags, reason_code, properties):
-    print(f"Connected with result code {reason_code}")
     client.subscribe(MQTT_SUB_TOPIC)
 
 
 def on_message(client, userdata, msg):
     message = json.loads(msg.payload.decode())
-
     if message["message"] == "capture":
         width = 10
         height = 10
@@ -221,8 +148,6 @@ def on_message(client, userdata, msg):
             upper_intensity_val,
         )
         robot.generate_data()
-        robot.print_results()
-        robot.print_grid()
         robot.send_json_data()
 
 
@@ -230,7 +155,6 @@ if __name__ == "__main__":
     mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     mqttc.on_connect = on_connect
     mqttc.on_message = on_message
-
+    mqttc.username_pw_set(MQTT_USER, MQTT_PWD)
     mqttc.connect(MQTT_HOST, int(MQTT_PORT), 60)
-
     mqttc.loop_forever()

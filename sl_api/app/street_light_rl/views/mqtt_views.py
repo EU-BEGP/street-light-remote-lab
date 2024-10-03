@@ -6,10 +6,14 @@ import paho.mqtt.publish as publish
 import json
 import os
 
-grid_topic = os.environ.get("MQTT_PUB_GRID_TOPIC", None)
-light_topic = os.environ.get("MQTT_PUB_LIGHT_TOPIC", None)
-host = os.environ.get("MQTT_HOST", None)
-port = os.environ.get("MQTT_PORT", 1883)
+mqtt_grid_topic = os.environ.get("MQTT_PUB_GRID_TOPIC", None)
+mqtt_light_topic = os.environ.get("MQTT_PUB_LIGHT_TOPIC", None)
+mqtt_host = os.environ.get("MQTT_HOST", None)
+mqtt_port = os.environ.get("MQTT_PORT", 1883)
+mqtt_user = os.environ.get("MQTT_USER", None)
+mqtt_pwd = os.environ.get("MQTT_PWD", None)
+
+mqtt_auth = {"username": mqtt_user, "password": mqtt_pwd}
 
 
 class GetGridMQTT(generics.GenericAPIView):
@@ -20,7 +24,13 @@ class GetGridMQTT(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
         message = {"message": "capture"}
 
-        publish.single(grid_topic, json.dumps(message), hostname=host, port=int(port))
+        publish.single(
+            mqtt_grid_topic,
+            json.dumps(message),
+            hostname=mqtt_host,
+            port=int(mqtt_port),
+            auth=mqtt_auth,
+        )
         return Response(
             {"success": "Request sent successfully"}, status=status.HTTP_200_OK
         )
@@ -32,13 +42,16 @@ class SetLightPropertiesMQTT(generics.GenericAPIView):
 
     # Function to publish a message to indicate the robot to start capturing grid data
     def post(self, request, *args, **kwargs):
-        state = request.data.get("state", None)
-        dim = request.data.get("dim", None)
+        pwm = request.data.get("pwm", None)
 
-        if state is not None and dim is not None:
-            message = {"state": state, "dim": dim}
+        if pwm is not None:
+            message = {"pwm": pwm}
             publish.single(
-                light_topic, json.dumps(message), hostname=host, port=int(port)
+                mqtt_light_topic,
+                json.dumps(message),
+                hostname=mqtt_host,
+                port=int(mqtt_port),
+                auth=mqtt_auth,
             )
 
             return Response(
@@ -46,6 +59,6 @@ class SetLightPropertiesMQTT(generics.GenericAPIView):
             )
         else:
             return Response(
-                {"error": "Please provide the state and dim properties"},
+                {"error": "Please provide the pwm property"},
                 status=status.HTTP_400_BAD_REQUEST,
             )

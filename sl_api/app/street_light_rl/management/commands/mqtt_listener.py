@@ -15,6 +15,8 @@ django.setup()
 mqtt_host = os.environ.get("MQTT_HOST", None)
 mqtt_port = os.environ.get("MQTT_PORT", 1883)
 mqtt_topic = os.environ.get("MQTT_SUB_TOPIC", None)
+mqtt_user = os.environ.get("MQTT_USER", None)
+mqtt_pwd = os.environ.get("MQTT_PWD", None)
 
 channel_layer = get_channel_layer()
 
@@ -138,23 +140,24 @@ def on_disconnect(self, client, userdata, rc):
     while True:
         try:
             client.reconnect()
-            print("Reconnected to MQTT broker.")
+            print("[MQTT Listener]: Reconnected to MQTT broker.")
             break
         except Exception as e:
-            print(f"Reconnect failed: {e}. Retrying in 5 seconds...")
+            print(f"[MQTT Listener]: Reconnect failed: {e}. Retrying in 5 seconds...")
             sleep(5)
 
 
 def on_message(client, userdata, msg):
     try:
+        print("[MQTT Listener]: Message received")
         # Get and parse MQTT message
         mqtt_message = json.loads(msg.payload.decode())
         process_incoming_message(mqtt_message)
 
     except json.JSONDecodeError:
-        print(f"Failed to decode JSON from message: {msg.payload}")
+        print(f"[MQTT Listener]: Failed to decode JSON from message: {msg.payload}")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"[MQTT Listener]: An error occurred: {e}")
 
 
 # Command
@@ -164,6 +167,7 @@ class Command(BaseCommand):
         client.on_connect = on_connect
         client.on_disconnect = on_disconnect
         client.on_message = on_message
+        client.username_pw_set(mqtt_user, mqtt_pwd)
 
         while True:
             try:
