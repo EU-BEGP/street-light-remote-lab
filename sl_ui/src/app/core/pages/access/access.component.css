@@ -1,4 +1,4 @@
-.main-container {
+.access-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,6 +8,5 @@
 
 .card {
   width: 40%;
-  border-color: var(--main-blue);
-  border-style: solid;
+  border: 2px solid var(--main-blue);
 }

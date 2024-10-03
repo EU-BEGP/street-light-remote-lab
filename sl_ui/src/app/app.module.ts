@@ -20,6 +20,7 @@ import { ExperimentsComponent } from './features/pages/experiments/experiments.c
 import { FooterComponent } from './core/components/footer/footer.component';
 import { IntensityChartComponent } from './features/components/intensity-chart/intensity-chart.component';
 import { IntensityGridComponent } from './features/components/intensity-grid/intensity-grid.component';
+import { LaboratoryComponent } from './features/pages/laboratory/laboratory.component';
 import { LightControlComponent } from './features/components/light-control/light-control.component';
 import { LobbyComponent } from './core/pages/lobby/lobby.component';
 import { LoginComponent } from './core/components/login/login.component';
@@ -52,6 +53,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     FooterComponent,
     IntensityChartComponent,
     IntensityGridComponent,
+    LaboratoryComponent,
     LightControlComponent,
     LobbyComponent,
     LoginComponent,

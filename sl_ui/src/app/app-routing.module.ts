@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AccessComponent } from './core/pages/access/access.component';
 import { CodeActivationComponent } from './core/pages/code-activation/code-activation.component';
 import { ExperimentsComponent } from './features/pages/experiments/experiments.component';
+import { LaboratoryComponent } from './features/pages/laboratory/laboratory.component';
 import { LobbyComponent } from './core/pages/lobby/lobby.component';
 import { NotFoundComponent } from './core/pages/not-found/not-found.component';
 import { ProfileComponent } from './core/pages/profile/profile.component';
@@ -20,6 +21,10 @@ const routes: Routes = [
     path: '',
     component: AccessComponent,
     canActivate: [AccessGuard],
+  },
+  {
+    path: 'laboratory',
+    component: LaboratoryComponent,
   },
   {
     path: 'remote-lab',

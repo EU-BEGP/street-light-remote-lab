@@ -1,0 +1,57 @@
+<mat-tab-group mat-align-tabs="center">
+  <mat-tab label="Activity 1">
+    <app-spinner id="grid-spinner" [showSpinner]="isWsLoading"></app-spinner>
+    <div class="laboratory-container">
+      <div class="first-row">
+
+        <div class="robot">
+          <h2 class="title">Robot</h2>
+          <div class="placeholder"></div>
+
+          <div class="controls">
+
+            <div class="control-item">
+              <span class="title">Set Light PWM</span>
+              <div class="slider-container">
+                <span class="slider-label">0</span>
+                <mat-slider class="slider" min="0" max="100" step="1" [(ngModel)]="sliderValue" thumbLabel
+                  tickInterval="10" color="primary"></mat-slider>
+                <span class="slider-label">100</span>
+              </div>
+              <button mat-raised-button color="primary" (click)="setLightProperties()">Send</button>
+            </div>
+
+            <div class="control-item">
+              <span class="title">Control Robot</span>
+              <button mat-raised-button color="primary" (click)="startAction()">Start</button>
+            </div>
+
+            <div class="control-item info">
+              <span class="title">Light Information</span>
+              <p>Info 1: AAA</p>
+              <p>Info 2: BBB</p>
+              <p>Info 3: CCC</p>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="grid">
+          <h2 class="title">Intensity Grid</h2>
+          <mat-grid-list [cols]="this.gridDimension" [rowHeight]="35" gutterSize="10px">
+            <mat-grid-tile *ngFor="let cell of grid.flat()" class="custom-grid-tile">
+              {{ cell }}
+            </mat-grid-tile>
+          </mat-grid-list>
+        </div>
+
+        <div class="chart">
+          <h2 class="title">Intensity Chart</h2>
+          <plotly-plot [data]="graph.data"></plotly-plot>
+        </div>
+
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>
