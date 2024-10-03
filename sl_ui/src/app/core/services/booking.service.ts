@@ -12,7 +12,7 @@ import config from 'src/app/config.json';
 })
 export class BookingService {
   private httpOptions: any = <any>{};
-  URL: string = `${config.booking.accessUrl}`;
+  URL: string = `${config.booking.reservationUrl}`;
 
   constructor(private http: HttpClient) {
     this.httpOptions = {

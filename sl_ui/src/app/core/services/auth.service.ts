@@ -40,12 +40,12 @@ export class AuthService {
   }
 
   activateAccount(params: any): Observable<any> {
-    var URL = `${config.api.baseUrl}${config.api.users['account-activation']}`;
+    var URL = `${config.api.baseUrl}${config.api.users.accountActivation}`;
     return this.http.patch(URL, params);
   }
 
   requestVerificationCode(id: number): Observable<any> {
-    var URL = `${config.api.baseUrl}${config.api.users['code-request']}`;
+    var URL = `${config.api.baseUrl}${config.api.users.codeRequest}`;
     return this.http.patch(URL, { id: id });
   }
 

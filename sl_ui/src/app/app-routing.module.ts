@@ -33,14 +33,13 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'account-activation',
-    component: CodeActivationComponent,
-    canActivate: [AuthGuard],
-  },
-  {
     path: 'profile',
     component: ProfileComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'account-activation',
+    component: CodeActivationComponent,
   },
   {
     path: 'lobby',

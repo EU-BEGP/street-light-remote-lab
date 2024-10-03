@@ -1,5 +1,5 @@
 {
-  "version": "0.1.2",
+  "version": "0.1.3",
   "api": {
     "baseUrl": "",
     "users": {
@@ -7,8 +7,8 @@
       "login": "users/token/",
       "signup": "users/signup/",
       "passwordReset": "accounts/password_reset/",
-      "account-activation": "users/activate-account/",
-      "code-request": "users/request-code/"
+      "accountActivation": "users/activate-account/",
+      "codeRequest": "users/request-code/"
     },
     "streetLights": {
       "mqtt": {
@@ -20,10 +20,10 @@
       "experiment": "street-lights/experiments/",
       "grid": "street-lights/grids/"
     },
-    "messagesWS": ""
+    "wsUrl": ""
   },
   "booking": {
-    "accessUrl": "",
+    "reservationUrl": "",
     "urlParams": {
       "accessKey": "access_key",
       "password": "pwd"
