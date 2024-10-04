@@ -135,7 +135,7 @@ def on_message(client, userdata, msg):
     if message["message"] == "capture":
         width = 10
         height = 10
-        lower_intensity_val = 0
+        lower_intensity_val = 1
         upper_intensity_val = 20
         grid_code_str = str(uuid.uuid4())
 

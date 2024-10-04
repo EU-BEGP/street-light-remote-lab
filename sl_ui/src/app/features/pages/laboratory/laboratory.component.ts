@@ -104,6 +104,23 @@ export class LaboratoryComponent implements OnInit {
       );
     }
   }
+
+  getCellColor(value: number): string {
+    if (value === 0) {
+      return 'white';
+    }
+
+    const max = 20;
+    const ratio = value / max;
+
+    const red = Math.floor(255 * ratio * 0.8);
+    const green = Math.floor(130 * ratio);
+    const blue = Math.floor(255 * (1 - ratio) * 0.7);
+
+    return `rgb(${red}, ${green}, ${blue})`;
+  }
+
+
   // CHART functions
   setGraph(messages: Message[]): void {
     messages.forEach((message: Message): void => {
