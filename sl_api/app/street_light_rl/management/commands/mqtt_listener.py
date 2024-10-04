@@ -135,21 +135,24 @@ def on_connect(client, userdata, flags, rc):
         print("[MQTT Listener]: Failed to connect to MQTT broker. Error code:", rc)
 
 
-def on_disconnect(self, client, userdata, rc):
-    print("Disconnected from MQTT broker.")
-    while True:
-        try:
-            client.reconnect()
-            print("[MQTT Listener]: Reconnected to MQTT broker.")
-            break
-        except Exception as e:
-            print(f"[MQTT Listener]: Reconnect failed: {e}. Retrying in 5 seconds...")
-            sleep(5)
+def on_disconnect(client, userdata, rc):
+    print("Disconnected from MQTT broker. Return code:", rc)
+
+    if rc != 0:  # Non-zero return code indicates abnormal disconnection
+        while True:
+            try:
+                client.reconnect()
+                print("[MQTT Listener]: Reconnected to MQTT broker.")
+                break
+            except Exception as e:
+                print(
+                    f"[MQTT Listener]: Reconnect failed: {e}. Retrying in 5 seconds..."
+                )
+                sleep(5)
 
 
 def on_message(client, userdata, msg):
     try:
-        print("[MQTT Listener]: Message received")
         # Get and parse MQTT message
         mqtt_message = json.loads(msg.payload.decode())
         process_incoming_message(mqtt_message)

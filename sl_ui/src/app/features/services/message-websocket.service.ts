@@ -1,6 +1,6 @@
 import config from 'src/app/config.json';
 import { Injectable } from '@angular/core';
-import { Subject, EMPTY } from 'rxjs';
+import { Subject, EMPTY, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { TokenService } from 'src/app/core/services/token.service';
@@ -11,44 +11,69 @@ export const RECONNECT_INTERVAL = 2000;
 @Injectable({
   providedIn: 'root'
 })
+
 export class WebsocketService {
   private messagesSubject$ = new Subject<any>();
-  private socket$: any;
+  private socket$: WebSocketSubject<any> | null = null;
   public messages$ = this.messagesSubject$.asObservable();
+  private messageSubscription: Subscription | null = null;
+  private _isConnected = false;
+  private shouldReconnect = true;
+  private reconnectAttempts = 0;
+  private maxReconnectAttempts = 5;
 
-  constructor(
-    private tokenService: TokenService,
-  ) { }
+  // Getter for connection status
+  public get isConnected(): boolean {
+    return this._isConnected;
+  }
+
+  constructor(private tokenService: TokenService) { }
 
   public connect(): void {
     const token = this.tokenService.token;
 
-    if (token) {
-      const wsUrl = `${WS_URL}?token=${token}`
-      if (!this.socket$ || this.socket$.closed) {
-        this.socket$ = this.getNewWebSocket(wsUrl);
-
-        this.socket$.pipe(
-          catchError(error => {
-            console.error('[MessageWebsocketService] Error:', error);
-            return EMPTY;
-          })
-        ).subscribe(
-          (message: any) => this.messagesSubject$.next(message),
-          (error: any) => console.error('[MessageWebsocketService] Received error:', error),
-          () => console.log('[MessageWebsocketService] WebSocket connection closed')
-        );
-      }
+    if (!token) {
+      console.error('[WebsocketService] Unable to authenticate user.');
+      return;
     }
-    else {
-      console.error('[MessageWebsocketService] Unable to authenticate user:');
+
+    const wsUrl = `${WS_URL}?token=${token}`;
+
+    if (!this.socket$ || this.socket$.closed) {
+      this.socket$ = this.getNewWebSocket(wsUrl);
+
+      this.messageSubscription = this.socket$.pipe(
+        catchError(error => {
+          console.error('[WebsocketService] Error:', error);
+          return EMPTY;
+        })
+      ).subscribe(
+        message => this.messagesSubject$.next(message),
+        error => console.error('[WebsocketService] Received error:', error),
+        () => {
+          console.log('[WebsocketService] WebSocket connection closed');
+          this._isConnected = false;
+          if (this.shouldReconnect) {
+            this.reconnect();
+          }
+        }
+      );
+
+      this._isConnected = true;
+      this.reconnectAttempts = 0;
     }
   }
 
   public disconnect(): void {
+    this.shouldReconnect = false;
     if (this.socket$) {
       this.socket$.complete();
-      this.socket$ = undefined;
+      this.socket$ = null;
+      this._isConnected = false;
+    }
+    if (this.messageSubscription) {
+      this.messageSubscription.unsubscribe();
+      this.messageSubscription = null;
     }
   }
 
@@ -56,15 +81,27 @@ export class WebsocketService {
     return webSocket({
       url: wsUrl,
       openObserver: {
-        next: () => console.log('[MessageWebsocketService] WebSocket connection established')
+        next: () => console.log('[WebsocketService] WebSocket connection established'),
       },
       closeObserver: {
         next: () => {
-          console.log('[MessageWebsocketService] WebSocket connection closed');
-          this.socket$ = undefined;
-          setTimeout(() => this.connect(), RECONNECT_INTERVAL);
-        }
-      }
+          console.log('[WebsocketService] WebSocket connection closed');
+          this.socket$ = null;
+          if (this.shouldReconnect) {
+            this.reconnect();
+          }
+        },
+      },
     });
+  }
+
+  private reconnect(): void {
+    if (this.reconnectAttempts < this.maxReconnectAttempts) {
+      this.reconnectAttempts++;
+      console.log(`[WebsocketService] Attempting to reconnect... (${this.reconnectAttempts})`);
+      setTimeout(() => this.connect(), RECONNECT_INTERVAL);
+    } else {
+      console.error('[WebsocketService] Max reconnect attempts reached, giving up.');
+    }
   }
 }

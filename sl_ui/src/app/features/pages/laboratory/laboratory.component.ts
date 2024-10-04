@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Message } from '../../interfaces/message';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LightService } from '../../services/light.service';
+import { Message } from '../../interfaces/message';
+import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { WebsocketService } from '../../services/message-websocket.service';
 
@@ -9,8 +10,11 @@ import { WebsocketService } from '../../services/message-websocket.service';
   templateUrl: './laboratory.component.html',
   styleUrls: ['./laboratory.component.css']
 })
-export class LaboratoryComponent implements OnInit {
-  gridId: number = 0;
+export class LaboratoryComponent implements OnInit, OnDestroy {
+  private messageSubscription: Subscription | null = null;
+  private firstSurfaceUpdated: boolean = false;
+
+  gridIds: number[] = [];
   hasUnsavedChanges: boolean = false;
   isWsLoading: boolean = false;
 
@@ -23,6 +27,7 @@ export class LaboratoryComponent implements OnInit {
       y: Array.from({ length: this.gridDimension }, (_, i) => i + 1),
       z: this.generateInitialZValues(this.gridDimension),
       type: 'surface',
+      opacity: 0.8,
     }]
   };
   grid: number[][] = this.generateInitialGrid();
@@ -33,28 +38,49 @@ export class LaboratoryComponent implements OnInit {
     private websocketService: WebsocketService,
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void { }
+
+  ngOnDestroy(): void {
+    if (this.messageSubscription) {
+      this.messageSubscription.unsubscribe();
+    }
+    this.websocketService.disconnect();
   }
 
-  // WEBSOCKET functions
+  // WebSocket functions
   private connectToWebSocket(): void {
-    this.websocketService.connect();
+    if (!this.websocketService.isConnected) {
+      this.websocketService.connect();
 
-    // Connect to websocekts and receive messages
-    this.websocketService.messages$.subscribe((message) => {
-      if (message) {
-        this.isWsLoading = false
-        this.hasUnsavedChanges = true;
-        if (message.is_last) this.gridId = message.grid_id;
-
-        this.refreshGrid(message);
-        this.refreshGraph(message);
+      // Unsubscribe from the previous subscription, if it exists
+      if (this.messageSubscription) {
+        this.messageSubscription.unsubscribe();
       }
-    });
+
+      // Subscribe to WebSocket messages
+      this.messageSubscription = this.websocketService.messages$.subscribe((message) => {
+        if (message) {
+          this.isWsLoading = false;
+          this.hasUnsavedChanges = true;
+          this.refreshGrid(message);
+          this.refreshGraph(message);
+
+          if (message.is_last) {
+            this.gridIds.push(message.grid_id);
+            this.websocketService.disconnect();
+          }
+        }
+      });
+    }
   }
 
-  // ROBOT functions
+  // Robot functions
   startAction(): void {
+    if (this.graph.data.length >= 3) {
+      this.toastr.warning("Maximum number of charts (3) reached. Cannot add more.")
+      return;
+    }
+
     this.lightService.requestGrid().subscribe((response) => {
       if (response.success) {
         this.toastr.success(response.success);
@@ -129,10 +155,36 @@ export class LaboratoryComponent implements OnInit {
   }
 
   refreshGraph(message: Message): void {
-    if (message.x_pos == 0 && message.y_pos == 0) {
-      this.restoreGraph();
+    if (!this.firstSurfaceUpdated && message.x_pos === 0 && message.y_pos === 0) {
+      this.firstSurfaceUpdated = true;
+      this.updateGraphByMessage(message);
+    } else if (message.x_pos === 0 && message.y_pos === 0) {
+      this.addNewSurface();
+    } else {
+      this.updateGraphByMessage(message);
     }
-    this.updateGraphByMessage(message);
+  }
+
+  private availableColorscales = ['Viridis', 'Cividis', 'Plasma', 'Inferno', 'Magma', 'YlGnBu'];
+
+  private getRandomColorscale(): string {
+    const randomIndex = Math.floor(Math.random() * this.availableColorscales.length);
+    return this.availableColorscales[randomIndex];
+  }
+
+  private addNewSurface(): void {
+    const newZ = this.generateInitialZValues(this.gridDimension);
+    const newSurface = {
+      x: Array.from({ length: this.gridDimension }, (_, i) => i + 1),
+      y: Array.from({ length: this.gridDimension }, (_, i) => i + 1),
+      z: newZ,
+      type: 'surface',
+      opacity: 1,
+      colorscale: this.getRandomColorscale(),
+    };
+
+    // Append the new surface to the graph data
+    this.graph.data.push(newSurface);
   }
 
   private generateInitialZValues(gridSize: number): number[][] {
@@ -151,13 +203,14 @@ export class LaboratoryComponent implements OnInit {
 
   private updateGraphByMessage(message: Message): void {
     if (message && message.x_pos >= 0 && message.x_pos < this.gridDimension && message.y_pos >= 0 && message.y_pos < this.gridDimension) {
-      // CREATE a new `z` array with updated values
-      this.graph.data[0].z = this.graph.data[0].z.map((row: number[], rowIndex: number): number[] =>
+      // Update the last surface in the graph data
+      const lastSurfaceIndex = this.graph.data.length - 1;
+
+      this.graph.data[lastSurfaceIndex].z = this.graph.data[lastSurfaceIndex].z.map((row: number[], rowIndex: number): number[] =>
         rowIndex === message.y_pos
           ? [...row.slice(0, message.x_pos), message.intensity, ...row.slice(message.x_pos + 1)]
           : row
       );
     }
   }
-
 }
