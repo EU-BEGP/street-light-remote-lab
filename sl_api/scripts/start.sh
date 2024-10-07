@@ -9,7 +9,7 @@ if [ "$ENVIRONMENT" = "production" ]; then
   python manage.py wait_for_db
 
   # Start the MQTT listener in the background
-  python manage.py mqtt_listener &
+  python manage.py robot_mqtt_listener &
   python manage.py light_mqtt_listener &
 
   # Start Gunicorn with UvicornWorker
@@ -23,7 +23,7 @@ elif [ "$ENVIRONMENT" = "development" ]; then
   python manage.py wait_for_db
 
   # Start the MQTT listener in the background
-  python manage.py mqtt_listener &
+  python manage.py robot_mqtt_listener &
   python manage.py light_mqtt_listener &
 
   # Start Uvicorn with auto-reload

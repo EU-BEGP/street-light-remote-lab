@@ -16,7 +16,7 @@ mqtt_pwd = os.environ.get("MQTT_PWD", None)
 mqtt_auth = {"username": mqtt_user, "password": mqtt_pwd}
 
 
-class GetGridMQTT(generics.GenericAPIView):
+class PublishRobotCommand(generics.GenericAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
@@ -32,11 +32,11 @@ class GetGridMQTT(generics.GenericAPIView):
             auth=mqtt_auth,
         )
         return Response(
-            {"success": "Request sent successfully"}, status=status.HTTP_200_OK
+            {"success": "Command sent successfully"}, status=status.HTTP_200_OK
         )
 
 
-class SetLightPropertiesMQTT(generics.GenericAPIView):
+class PublishLightCommand(generics.GenericAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
@@ -55,7 +55,7 @@ class SetLightPropertiesMQTT(generics.GenericAPIView):
             )
 
             return Response(
-                {"success": "Data sent successfully"}, status=status.HTTP_200_OK
+                {"success": "Command sent successfully"}, status=status.HTTP_200_OK
             )
         else:
             return Response(

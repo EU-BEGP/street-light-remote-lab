@@ -1,24 +1,22 @@
-from channels.layers import get_channel_layer
 from django.core.management.base import BaseCommand
 from street_light_rl.models import Message, Grid, Robot, Lamp
 from time import sleep
-import asyncio
-import django
-import json
+from utils.mqtt_listener import MQTTListener
+from utils.tools import stream_message_over_websocket
 import os
-import paho.mqtt.client as mqtt
 import uuid
 
-# Ensure Django is set up
-django.setup()
+MQTT_LISTENER_NAME = "ROBOT"
 
-mqtt_host = os.environ.get("MQTT_HOST", None)
-mqtt_port = os.environ.get("MQTT_PORT", 1883)
-mqtt_user = os.environ.get("MQTT_USER", None)
-mqtt_pwd = os.environ.get("MQTT_PWD", None)
-mqtt_topic = os.environ.get("MQTT_SUB_GRID_TOPIC", None)
+# MQTT CONSTANTS
+MQTT_HOST = os.environ.get("MQTT_HOST", None)
+MQTT_PORT = os.environ.get("MQTT_PORT", 1883)
+MQTT_USER = os.environ.get("MQTT_USER", None)
+MQTT_PWD = os.environ.get("MQTT_PWD", None)
+MQTT_TOPIC = os.environ.get("MQTT_SUB_GRID_TOPIC", None)
 
-channel_layer = get_channel_layer()
+# CHANNELS CONSTANT
+GROUP_NAME = "robot_group"
 
 
 def get_grid_information(grid):
@@ -51,17 +49,7 @@ def get_grid_information(grid):
     return width, height, not missing_coords
 
 
-def stream_message_over_websocket(message):
-    # Send message data to WebSocket consumer
-    loop = asyncio.get_event_loop()
-    coroutine = channel_layer.group_send(
-        "message_group",
-        {"type": "send_websocket_data", "data": json.dumps(message)},
-    )
-    loop.run_until_complete(coroutine)
-
-
-def process_incoming_message(mqtt_message):
+def process_message(mqtt_message):
     robot_code = mqtt_message["robot_code"]  # Get robot_code from message.
     grid_code = uuid.UUID(
         mqtt_message["grid_code"]
@@ -94,7 +82,7 @@ def process_incoming_message(mqtt_message):
 
         # If the message is the last one, update grid dimension info
         if mqtt_message["is_last"]:
-            print("[MQTT Listener]: Last Message received")
+            print(f"[{MQTT_LISTENER_NAME} MQTT Listener]: Last Message received")
             width, height, is_complete = get_grid_information(grid)
             grid.width = width
             grid.height = height
@@ -103,7 +91,9 @@ def process_incoming_message(mqtt_message):
 
             # Send complete grid information over websockets
             if is_complete:
-                print("[MQTT Listener]: Sending complete grid data")
+                print(
+                    f"[{MQTT_LISTENER_NAME} MQTT Listener]: Sending complete grid data"
+                )
                 grid_messages = Message.objects.filter(grid=grid).order_by("id")
                 for grid_message in grid_messages:
                     message = {
@@ -116,67 +106,26 @@ def process_incoming_message(mqtt_message):
                     if grid_message.is_last:
                         message["is_last"] = True
 
-                    stream_message_over_websocket(message)
+                    stream_message_over_websocket(message, GROUP_NAME)
                     sleep(0.1)
 
     except Robot.DoesNotExist as e:
-        print(f"[MQTT Listener]: Robot is not registered: {e}")
+        print(f"[{MQTT_LISTENER_NAME} MQTT Listener]: Robot is not registered: {e}")
 
     except Lamp.DoesNotExist as e:
-        print(f"[MQTT Listener]: Lamp is not registered: {e}")
+        print(f"[{MQTT_LISTENER_NAME} MQTT Listener]: Lamp is not registered: {e}")
 
 
-# MQTT callbacks
-def on_connect(client, userdata, flags, rc):
-    if rc == 0:
-        print("[MQTT Listener]: Connected to MQTT broker")
-        client.subscribe(mqtt_topic)
-    else:
-        print("[MQTT Listener]: Failed to connect to MQTT broker. Error code:", rc)
-
-
-def on_disconnect(client, userdata, rc):
-    print("Disconnected from MQTT broker. Return code:", rc)
-
-    if rc != 0:  # Non-zero return code indicates abnormal disconnection
-        while True:
-            try:
-                client.reconnect()
-                print("[MQTT Listener]: Reconnected to MQTT broker.")
-                break
-            except Exception as e:
-                print(
-                    f"[MQTT Listener]: Reconnect failed: {e}. Retrying in 5 seconds..."
-                )
-                sleep(5)
-
-
-def on_message(client, userdata, msg):
-    try:
-        # Get and parse MQTT message
-        mqtt_message = json.loads(msg.payload.decode())
-        process_incoming_message(mqtt_message)
-
-    except json.JSONDecodeError:
-        print(f"[MQTT Listener]: Failed to decode JSON from message: {msg.payload}")
-    except Exception as e:
-        print(f"[MQTT Listener]: An error occurred: {e}")
-
-
-# Command
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        client = mqtt.Client()
-        client.on_connect = on_connect
-        client.on_disconnect = on_disconnect
-        client.on_message = on_message
-        client.username_pw_set(mqtt_user, mqtt_pwd)
+        mqtt_listener = MQTTListener(
+            MQTT_LISTENER_NAME,
+            MQTT_HOST,
+            MQTT_PORT,
+            MQTT_USER,
+            MQTT_PWD,
+            MQTT_TOPIC,
+            process_message,
+        )
 
-        while True:
-            try:
-                client.connect(mqtt_host, int(mqtt_port), 60)
-                client.loop_forever()  # This will block and handle messages
-                break  # Exit the loop if connection is successful
-            except Exception as e:
-                print(f"Connection failed: {e}. Retrying...")
-                sleep(5)
+        mqtt_listener.start()

@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit {
 
           this.toastr.success(`Welcome ${user.email}`);
 
-          // Navigate to remote-lab
+          // Navigate to laboratory
           this.router.navigate(['/laboratory']);
         }
       }

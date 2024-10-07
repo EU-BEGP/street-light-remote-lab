@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { GridWebsocketService } from '../../services/grid-websocket.service';
-import { LightService } from '../../services/light.service';
-import { LightWebsocketService } from '../../services/light-websocket.service';
+import { LightWebsocketService } from '../../services/websockets/light-websocket.service';
 import { Message } from '../../interfaces/message';
+import { MqttService } from '../../services/mqtt.service';
+import { RobotWebsocketService } from '../../services/websockets/robot-websocket.service';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./laboratory.component.css']
 })
 export class LaboratoryComponent implements OnInit, OnDestroy {
-  private gridSubscription: Subscription | null = null;
+  private robotSubscription: Subscription | null = null;
   private lightSubscription: Subscription | null = null;
 
   firstSurfaceUpdated: boolean = false;
@@ -27,7 +27,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   hasUnsavedChanges: boolean = false;
   isWsLoading: boolean = false;
 
-  sliderValue: number = 50;
+  sliderValue: number = 0;
   gridDimension: number = 10;
 
   graph = {
@@ -42,9 +42,9 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   grid: number[][] = this.generateInitialGrid();
 
   constructor(
-    private gridWebsocketService: GridWebsocketService,
-    private lightService: LightService,
+    private robotWebsocketService: RobotWebsocketService,
     private lightWebsocketService: LightWebsocketService,
+    private mqttService: MqttService,
     private toastr: ToastrService,
   ) { }
 
@@ -67,23 +67,23 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.gridSubscription) {
-      this.gridSubscription.unsubscribe();
+    if (this.robotSubscription) {
+      this.robotSubscription.unsubscribe();
     }
-    this.gridWebsocketService.disconnect();
+    this.robotWebsocketService.disconnect();
   }
 
   // WebSocket functions
   private connectToWebSocket(): void {
-    this.gridWebsocketService.connect();
+    this.robotWebsocketService.connect();
 
     // Unsubscribe from the previous subscription, if it exists
-    if (this.gridSubscription) {
-      this.gridSubscription.unsubscribe();
+    if (this.robotSubscription) {
+      this.robotSubscription.unsubscribe();
     }
 
     // Subscribe to WebSocket messages
-    this.gridSubscription = this.gridWebsocketService.messages$.subscribe((message) => {
+    this.robotSubscription = this.robotWebsocketService.messages$.subscribe((message) => {
       if (message) {
         this.isWsLoading = false;
         this.hasUnsavedChanges = true;
@@ -92,20 +92,20 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
 
         if (message.is_last) {
           this.gridIds.push(message.grid_id);
-          this.gridWebsocketService.disconnect();
+          this.robotWebsocketService.disconnect();
         }
       }
     });
   }
 
   // Robot functions
-  startAction(): void {
+  sendRobotCommand(): void {
     if (this.graph.data.length >= 3) {
       this.toastr.warning("Maximum number of charts (3) reached. Cannot add more.")
       return;
     }
 
-    this.lightService.requestGrid().subscribe((response) => {
+    this.mqttService.publishRobotCommand().subscribe((response) => {
       if (response.success) {
         this.toastr.success(response.success);
         this.isWsLoading = true;
@@ -114,12 +114,12 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     });
   }
 
-  setLightProperties(): void {
+  sendLightCommand(): void {
     var message = {
       'pwm': this.sliderValue
     }
 
-    this.lightService.setLightProperties(message).subscribe((response) => {
+    this.mqttService.publishLightCommand(message).subscribe((response) => {
       if (response.status !== null && response.status === 200) {
         this.toastr.success(response.body.success);
       }

@@ -2,16 +2,16 @@ import { CanDeactivate } from '@angular/router';
 import { ConfirmationDialogComponent } from 'src/app/core/components/confirmation-dialog/confirmation-dialog.component';
 import { DialogConfigService } from '../services/dialog-config.service';
 import { Injectable } from '@angular/core';
+import { LaboratoryComponent } from '../pages/laboratory/laboratory.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, of } from 'rxjs';
-import { RemoteLabComponent } from '../pages/remote-lab/remote-lab.component';
 import { TimerService } from 'src/app/core/services/timer.service';
 import { map, switchMap, take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class CanDeactivateLabGuard implements CanDeactivate<RemoteLabComponent>{
+export class CanDeactivateLabGuard implements CanDeactivate<LaboratoryComponent>{
 
   constructor(
     private dialog: MatDialog,
@@ -19,7 +19,7 @@ export class CanDeactivateLabGuard implements CanDeactivate<RemoteLabComponent>{
     private timerService: TimerService,
   ) { }
 
-  canDeactivate(component: RemoteLabComponent): Observable<boolean> | Promise<boolean> | boolean {
+  canDeactivate(component: LaboratoryComponent): Observable<boolean> | Promise<boolean> | boolean {
     return this.timerService.countdown$.pipe(
       take(1), // Take only the latest value
       switchMap((time: number) => {

@@ -5,7 +5,7 @@ from django.contrib.auth.models import (
 )
 from django.db import models
 from django.utils import timezone
-from utils import send_custom_email
+from utils.tools import send_custom_email
 import random
 
 

@@ -1,5 +1,5 @@
 {
-  "version": "0.1.4",
+  "version": "0.1.5",
   "api": {
     "baseUrl": "",
     "users": {
@@ -12,8 +12,8 @@
     },
     "streetLights": {
       "mqtt": {
-        "requestGrid": "street-lights/mqtt/grid/",
-        "lightProperties": "street-lights/mqtt/light-properties/"
+        "robotCommand": "street-lights/mqtt/robot/",
+        "lightCommand": "street-lights/mqtt/light/"
       },
       "robot": "street-lights/robots/",
       "lamp": "street-lights/lamps/",
@@ -21,7 +21,7 @@
       "grid": "street-lights/grids/"
     },
     "websocketUrls": {
-      "gridInformation": "",
+      "robotInformation": "",
       "lightInformation": ""
     }
   },

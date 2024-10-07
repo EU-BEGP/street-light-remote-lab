@@ -59,10 +59,14 @@ urlpatterns = [
         message_views.MessageUpdateView.as_view(),
         name="message-update",
     ),
-    path("mqtt/grid/", mqtt_views.GetGridMQTT.as_view(), name="mqtt-get-grid"),
     path(
-        "mqtt/light-properties/",
-        mqtt_views.SetLightPropertiesMQTT.as_view(),
-        name="mqtt-set-light-properties",
+        "mqtt/robot/",
+        mqtt_views.PublishRobotCommand.as_view(),
+        name="mqtt-publish-robot-command",
+    ),
+    path(
+        "mqtt/light/",
+        mqtt_views.PublishLightCommand.as_view(),
+        name="mqtt-publish-light-command",
     ),
 ]

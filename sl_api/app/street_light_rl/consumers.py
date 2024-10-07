@@ -3,7 +3,7 @@ from channels.generic.websocket import WebsocketConsumer
 import json
 
 
-class MessageConsumer(WebsocketConsumer):
+class RobotInformationConsumer(WebsocketConsumer):
     def connect(self):
         self.user = self.scope["user"]
 
@@ -12,19 +12,18 @@ class MessageConsumer(WebsocketConsumer):
         else:
             self.accept()
             async_to_sync(self.channel_layer.group_add)(
-                "message_group", self.channel_name
+                "robot_group", self.channel_name
             )
 
     def disconnect(self, close_code):
         async_to_sync(self.channel_layer.group_discard)(
-            "message_group", self.channel_name
+            "robot_group", self.channel_name
         )
 
     def receive(self, text_data, **kwargs):
         pass
 
     def send_websocket_data(self, event):
-        # Handler method for "send_websocket_data" messages
         data = event["data"]
         self.send(text_data=data)
 
@@ -50,6 +49,5 @@ class LightInformationConsumer(WebsocketConsumer):
         pass
 
     def send_websocket_data(self, event):
-        # Handler method for "send_websocket_data" messages
         data = event["data"]
         self.send(text_data=data)

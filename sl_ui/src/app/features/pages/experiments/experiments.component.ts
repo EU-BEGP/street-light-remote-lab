@@ -88,7 +88,7 @@ export class ExperimentsComponent implements OnInit {
 
   actionGoToLaboratory(experimentId: number): void {
     this.experimentStateService.setExperimentId(experimentId);
-    this.router.navigate(['/remote-lab']);
+    this.router.navigate(['/laboratory']);
   }
 
   /* ==========================

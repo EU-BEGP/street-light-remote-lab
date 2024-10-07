@@ -9,7 +9,7 @@ import config from 'src/app/config.json';
 @Injectable({
   providedIn: 'root'
 })
-export class LightService {
+export class MqttService {
   private httpOptions = <any>{};
 
   constructor(private http: HttpClient) {
@@ -21,13 +21,13 @@ export class LightService {
     };
   }
 
-  requestGrid(): Observable<any> {
-    const URL = `${config.api.baseUrl}${config.api.streetLights.mqtt.requestGrid}`;
+  publishRobotCommand(): Observable<any> {
+    const URL = `${config.api.baseUrl}${config.api.streetLights.mqtt.robotCommand}`;
     return this.http.get<any>(URL)
   }
 
-  setLightProperties(data: any): Observable<any> {
-    const URL = `${config.api.baseUrl}${config.api.streetLights.mqtt.lightProperties}`;
+  publishLightCommand(data: any): Observable<any> {
+    const URL = `${config.api.baseUrl}${config.api.streetLights.mqtt.lightCommand}`;
     return this.http.post(URL, data, this.httpOptions);
   }
 }

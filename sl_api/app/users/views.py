@@ -10,7 +10,7 @@ from users.serializers import (
     UserProfileSerializer,
     AccountActivationSerializer,
 )
-from utils import send_custom_email
+from utils.tools import send_custom_email
 import random
 
 
