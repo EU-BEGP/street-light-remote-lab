@@ -9,7 +9,6 @@ import { LaboratoryComponent } from './features/pages/laboratory/laboratory.comp
 import { LobbyComponent } from './core/pages/lobby/lobby.component';
 import { NotFoundComponent } from './core/pages/not-found/not-found.component';
 import { ProfileComponent } from './core/pages/profile/profile.component';
-import { RemoteLabComponent } from './features/pages/remote-lab/remote-lab.component';
 
 // Guards
 import { AccessGuard } from './core/guards/access.guard';
@@ -25,10 +24,6 @@ const routes: Routes = [
   {
     path: 'laboratory',
     component: LaboratoryComponent,
-  },
-  {
-    path: 'remote-lab',
-    component: RemoteLabComponent,
     canActivate: [AuthGuard],
     canDeactivate: [CanDeactivateLabGuard]
   },

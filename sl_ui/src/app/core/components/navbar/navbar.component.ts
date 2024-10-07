@@ -36,7 +36,7 @@ export class NavbarComponent implements OnInit {
   }
 
   goToRemoteLaboratory(): void {
-    this.router.navigate(['/remote-lab']);
+    this.router.navigate(['/laboratory']);
   }
 
   goToExperiments(): void {

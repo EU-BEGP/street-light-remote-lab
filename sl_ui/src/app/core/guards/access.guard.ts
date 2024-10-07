@@ -15,8 +15,8 @@ export class AccessGuard implements CanActivate {
     const token = this.tokenService.token;
 
     if (token) {
-      // If the user is logged in, redirect to the Remote Lab
-      this.router.navigate(['/remote-lab']);
+      // If the user is logged in, redirect to the Laboratory
+      this.router.navigate(['/laboratory']);
       return false; // Prevent access to the AccessComponent
     } else {
       // If the user is not logged in, allow access to the AccessComponent

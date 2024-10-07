@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { GridWebsocketService } from '../../services/grid-websocket.service';
 import { LightService } from '../../services/light.service';
+import { LightWebsocketService } from '../../services/light-websocket.service';
 import { Message } from '../../interfaces/message';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import { WebsocketService } from '../../services/message-websocket.service';
 
 @Component({
   selector: 'app-laboratory',
@@ -11,8 +12,16 @@ import { WebsocketService } from '../../services/message-websocket.service';
   styleUrls: ['./laboratory.component.css']
 })
 export class LaboratoryComponent implements OnInit, OnDestroy {
-  private messageSubscription: Subscription | null = null;
-  private firstSurfaceUpdated: boolean = false;
+  private gridSubscription: Subscription | null = null;
+  private lightSubscription: Subscription | null = null;
+
+  firstSurfaceUpdated: boolean = false;
+
+  batteryInformation = {
+    voltage: 0,
+    current: 0,
+    power: 0
+  }
 
   gridIds: number[] = [];
   hasUnsavedChanges: boolean = false;
@@ -27,51 +36,66 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
       y: Array.from({ length: this.gridDimension }, (_, i) => i + 1),
       z: this.generateInitialZValues(this.gridDimension),
       type: 'surface',
-      opacity: 0.8,
     }]
   };
+
   grid: number[][] = this.generateInitialGrid();
 
   constructor(
+    private gridWebsocketService: GridWebsocketService,
     private lightService: LightService,
+    private lightWebsocketService: LightWebsocketService,
     private toastr: ToastrService,
-    private websocketService: WebsocketService,
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.lightWebsocketService.connect();
+
+    // Unsubscribe from the previous subscription, if it exists
+    if (this.lightSubscription) {
+      this.lightSubscription.unsubscribe();
+    }
+
+    // Subscribe to WebSocket messages
+    this.lightSubscription = this.lightWebsocketService.messages$.subscribe((message) => {
+      if (message) {
+        this.batteryInformation.voltage = message.voltage
+        this.batteryInformation.current = message.current
+        this.batteryInformation.power = message.power
+      }
+    });
+  }
 
   ngOnDestroy(): void {
-    if (this.messageSubscription) {
-      this.messageSubscription.unsubscribe();
+    if (this.gridSubscription) {
+      this.gridSubscription.unsubscribe();
     }
-    this.websocketService.disconnect();
+    this.gridWebsocketService.disconnect();
   }
 
   // WebSocket functions
   private connectToWebSocket(): void {
-    if (!this.websocketService.isConnected) {
-      this.websocketService.connect();
+    this.gridWebsocketService.connect();
 
-      // Unsubscribe from the previous subscription, if it exists
-      if (this.messageSubscription) {
-        this.messageSubscription.unsubscribe();
-      }
-
-      // Subscribe to WebSocket messages
-      this.messageSubscription = this.websocketService.messages$.subscribe((message) => {
-        if (message) {
-          this.isWsLoading = false;
-          this.hasUnsavedChanges = true;
-          this.refreshGrid(message);
-          this.refreshGraph(message);
-
-          if (message.is_last) {
-            this.gridIds.push(message.grid_id);
-            this.websocketService.disconnect();
-          }
-        }
-      });
+    // Unsubscribe from the previous subscription, if it exists
+    if (this.gridSubscription) {
+      this.gridSubscription.unsubscribe();
     }
+
+    // Subscribe to WebSocket messages
+    this.gridSubscription = this.gridWebsocketService.messages$.subscribe((message) => {
+      if (message) {
+        this.isWsLoading = false;
+        this.hasUnsavedChanges = true;
+        this.refreshGrid(message);
+        this.refreshGraph(message);
+
+        if (message.is_last) {
+          this.gridIds.push(message.grid_id);
+          this.gridWebsocketService.disconnect();
+        }
+      }
+    });
   }
 
   // Robot functions
@@ -165,22 +189,13 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     }
   }
 
-  private availableColorscales = ['Viridis', 'Cividis', 'Plasma', 'Inferno', 'Magma', 'YlGnBu'];
-
-  private getRandomColorscale(): string {
-    const randomIndex = Math.floor(Math.random() * this.availableColorscales.length);
-    return this.availableColorscales[randomIndex];
-  }
-
   private addNewSurface(): void {
     const newZ = this.generateInitialZValues(this.gridDimension);
     const newSurface = {
       x: Array.from({ length: this.gridDimension }, (_, i) => i + 1),
       y: Array.from({ length: this.gridDimension }, (_, i) => i + 1),
       z: newZ,
-      type: 'surface',
-      opacity: 1,
-      colorscale: this.getRandomColorscale(),
+      type: 'surface'
     };
 
     // Append the new surface to the graph data

@@ -1,5 +1,5 @@
 {
-  "version": "0.1.3",
+  "version": "0.1.4",
   "api": {
     "baseUrl": "",
     "users": {
@@ -20,7 +20,10 @@
       "experiment": "street-lights/experiments/",
       "grid": "street-lights/grids/"
     },
-    "wsUrl": ""
+    "websocketUrls": {
+      "gridInformation": "",
+      "lightInformation": ""
+    }
   },
   "booking": {
     "reservationUrl": "",

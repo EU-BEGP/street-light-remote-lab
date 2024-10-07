@@ -14,9 +14,9 @@ django.setup()
 
 mqtt_host = os.environ.get("MQTT_HOST", None)
 mqtt_port = os.environ.get("MQTT_PORT", 1883)
-mqtt_topic = os.environ.get("MQTT_SUB_TOPIC", None)
 mqtt_user = os.environ.get("MQTT_USER", None)
 mqtt_pwd = os.environ.get("MQTT_PWD", None)
+mqtt_topic = os.environ.get("MQTT_SUB_GRID_TOPIC", None)
 
 channel_layer = get_channel_layer()
 
@@ -55,7 +55,7 @@ def stream_message_over_websocket(message):
     # Send message data to WebSocket consumer
     loop = asyncio.get_event_loop()
     coroutine = channel_layer.group_send(
-        "data_group",
+        "message_group",
         {"type": "send_websocket_data", "data": json.dumps(message)},
     )
     loop.run_until_complete(coroutine)

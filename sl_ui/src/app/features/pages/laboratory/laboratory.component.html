@@ -5,11 +5,10 @@
       <div class="first-row">
 
         <div class="robot">
+
           <h2 class="title">Robot</h2>
           <div class="placeholder"></div>
-
           <div class="controls">
-
             <div class="control-item">
               <span class="title">Set Light PWM</span>
               <div class="slider-container">
@@ -26,15 +25,31 @@
               <button mat-raised-button color="primary" (click)="startAction()">Start</button>
             </div>
 
-            <div class="control-item info">
-              <span class="title">Light Information</span>
-              <p>Info 1: AAA</p>
-              <p>Info 2: BBB</p>
-              <p>Info 3: CCC</p>
+            <div class="control-item">
+              <span class="title">Battery Information</span>
+              <div class="battery-info-item">
+                <span>Voltage:</span>
+                <span class="{{this.batteryInformation.voltage < 0 ? 'discharging' : ''}}">
+                  {{this.batteryInformation.voltage}}
+                </span>
+                <span>[V]</span>
+              </div>
+              <div class="battery-info-item">
+                <span>Current:</span>
+                <span class="{{this.batteryInformation.current < 0 ? 'discharging' : ''}}">
+                  {{this.batteryInformation.current}}
+                </span>
+                <span>[A]</span>
+              </div>
+              <div class="battery-info-item">
+                <span>Power:</span>
+                <span class="{{this.batteryInformation.power < 0 ? 'discharging' : ''}}">
+                  {{this.batteryInformation.power}}
+                </span>
+                <span>[W]</span>
+              </div>
             </div>
-
           </div>
-
         </div>
 
         <div class="grid">
