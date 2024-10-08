@@ -1,37 +1,35 @@
-<mat-card class="activation-container">
-  <mat-card-content>
-    <span class="title">Thank you for signing up!</span>
+<div class="activation-container">
+  <mat-card class="card">
+    <mat-card-content>
 
-    <div *ngIf="!activationStatus">
-      <br>
-      <span>A verification code has been sent to your email. Please check your inbox and spam folder.</span>
-      <br>
-      <span>Enter the code within 15 minutes to complete the verification.</span>
-      <br>
+      <h2>Thank you for signing up!</h2>
 
-      <form (ngSubmit)="sendCode()" #verificationForm="ngForm">
-        <h4>Enter your code</h4>
-        <div class="input-container">
-          <input *ngFor="let i of [0,1,2,3,4,5]; let idx = index" type="tel" maxlength="1" pattern="[0-9]"
-            class="form-control" (paste)="handlePaste($event)" (input)="handleInput($event)"
-            (keydown)="handleKeyDown($event)" />
-        </div>
+      <div *ngIf="!activationStatus">
+        <span>A verification code has been sent to your email (Check inbox and spam)</span>
+        <br>
+        <span>Enter the code within 15 minutes to complete the verification.</span>
 
-        <p>
-          <a class="mat-caption" (click)="resendCode()">
-            {{ "Didn’t receive the email? Click here to resend." }}
-          </a>
-        </p>
+        <form (ngSubmit)="sendCode()" #verificationForm="ngForm">
+          <div class="input-container">
+            <input *ngFor="let i of [0,1,2,3,4,5]; let idx = index" type="tel" maxlength="1" pattern="[0-9]"
+              class="input-element" (paste)="handlePaste($event)" (input)="handleInput($event)"
+              (keydown)="handleKeyDown($event)" />
+          </div>
 
-        <button type="submit" mat-raised-button cdkFocusInitial color="primary">
-          {{ "Activate Account" }}
-        </button>
-      </form>
+          <p>
+            <a class="mat-caption" (click)="resendCode()">
+              {{ "Didn’t receive the email? Click here to resend." }}
+            </a>
+          </p>
 
-    </div>
-
-    <div *ngIf="activationStatus">
-      <mat-icon style="align-self: center;">checked</mat-icon>
-    </div>
-  </mat-card-content>
-</mat-card>
+          <button type="submit" mat-raised-button cdkFocusInitial color="primary">
+            {{ "Activate Account" }}
+          </button>
+        </form>
+      </div>
+      <div *ngIf="activationStatus">
+        <mat-icon style="align-self: center;">checked</mat-icon>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

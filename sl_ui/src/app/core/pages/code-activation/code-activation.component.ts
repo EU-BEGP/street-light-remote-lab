@@ -2,6 +2,7 @@ import { AuthService } from '../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: 'app-code-activation',
@@ -16,10 +17,17 @@ export class CodeActivationComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private toastr: ToastrService,
+    private tokenService: TokenService,
   ) { }
 
   ngOnInit(): void {
-    this.userId = Number(localStorage.getItem("userId"))
+    const token = this.tokenService.token;
+    if (token) {
+      // User already logged in, no activation needed
+      this.router.navigate(['']);
+    } else {
+      this.userId = Number(localStorage.getItem("userId"))
+    }
   }
 
   handleKeyDown(e: any): void {
