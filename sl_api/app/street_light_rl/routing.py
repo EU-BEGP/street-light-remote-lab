@@ -10,4 +10,5 @@ websocket_urlpatterns = [
         r"street-lights/light-information/$",
         consumers.LightInformationConsumer.as_asgi(),
     ),
+    re_path(r"street-lights/camera-stream/$", consumers.CameraStreamConsumer.as_asgi()),
 ]

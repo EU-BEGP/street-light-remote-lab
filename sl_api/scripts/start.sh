@@ -13,7 +13,7 @@ if [ "$ENVIRONMENT" = "production" ]; then
   python manage.py light_mqtt_listener &
 
   # Start Gunicorn with UvicornWorker
-  gunicorn app.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --workers 2
+  gunicorn app.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --workers 4
 
 elif [ "$ENVIRONMENT" = "development" ]; then
 
@@ -27,5 +27,5 @@ elif [ "$ENVIRONMENT" = "development" ]; then
   python manage.py light_mqtt_listener &
 
   # Start Uvicorn with auto-reload
-  uvicorn app.asgi:application --reload --host 0.0.0.0 --port 8000
+  uvicorn app.asgi:application --reload --host 0.0.0.0 --port 8000 --workers 4
 fi

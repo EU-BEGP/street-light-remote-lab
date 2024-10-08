@@ -5,16 +5,17 @@
       <div class="first-row">
 
         <div class="robot">
-
           <h2 class="title">Robot</h2>
-          <div class="placeholder"></div>
+          <div class="video-container">
+            <img *ngIf="frame" [src]="frame" alt="Video Stream" />
+          </div>
           <div class="controls">
             <div class="control-item">
               <span class="title">Set Light PWM</span>
               <div class="slider-container">
                 <span class="slider-label">0</span>
-                <mat-slider class="slider" min="0" max="100" step="1" [(ngModel)]="sliderValue" thumbLabel
-                  tickInterval="10" color="primary"></mat-slider>
+                <mat-slider class="slider" min="0" max="100" step="10" [(ngModel)]="sliderValue" thumbLabel
+                  color="primary"></mat-slider>
                 <span class="slider-label">100</span>
               </div>
               <button mat-raised-button color="primary" (click)="sendLightCommand()">Send</button>
@@ -29,21 +30,21 @@
               <span class="title">Battery Information</span>
               <div class="battery-info-item">
                 <span>Voltage:</span>
-                <span class="{{this.batteryInformation.voltage < 0 ? 'discharging' : ''}}">
+                <span class="battery-label {{this.batteryInformation.voltage < 0 ? 'discharging' : ''}}">
                   {{this.batteryInformation.voltage}}
                 </span>
                 <span>[V]</span>
               </div>
               <div class="battery-info-item">
                 <span>Current:</span>
-                <span class="{{this.batteryInformation.current < 0 ? 'discharging' : ''}}">
+                <span class="battery-label {{this.batteryInformation.current < 0 ? 'discharging' : ''}}">
                   {{this.batteryInformation.current}}
                 </span>
                 <span>[A]</span>
               </div>
               <div class="battery-info-item">
                 <span>Power:</span>
-                <span class="{{this.batteryInformation.power < 0 ? 'discharging' : ''}}">
+                <span class="battery-label {{this.batteryInformation.power < 0 ? 'discharging' : ''}}">
                   {{this.batteryInformation.power}}
                 </span>
                 <span>[W]</span>
@@ -55,7 +56,7 @@
         <div class="grid">
           <h2 class="title">Intensity Grid</h2>
           <mat-grid-list [cols]="this.gridDimension" [rowHeight]="35" gutterSize="10px">
-            <mat-grid-tile *ngFor="let cell of grid.flat()" class="custom-grid-tile"
+            <mat-grid-tile class="custom-grid-tile" *ngFor="let cell of grid.flat()"
               [style.backgroundColor]="getCellColor(cell)" [ngClass]="cell > 0 ? 'text-white' : 'text-black'">
               {{ cell }}
             </mat-grid-tile>
@@ -69,5 +70,8 @@
 
       </div>
     </div>
+  </mat-tab>
+
+  <mat-tab label="Activity 2">
   </mat-tab>
 </mat-tab-group>

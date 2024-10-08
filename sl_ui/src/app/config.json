@@ -22,7 +22,8 @@
     },
     "websocketUrls": {
       "robotInformation": "",
-      "lightInformation": ""
+      "lightInformation": "",
+      "camera": ""
     }
   },
   "booking": {

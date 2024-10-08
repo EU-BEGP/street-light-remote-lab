@@ -1,29 +1,22 @@
 .laboratory-container {
   display: grid;
-  grid-template-rows: auto auto;
-  grid-template-columns: repeat(3, 1fr);
-  height: 100%;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   padding: 10px;
 }
+
+/*** Begin First Row ***/
 
 .first-row {
   display: contents;
   padding: 10px;
 }
 
-.robot:hover,
-.grid:hover,
-.chart:hover {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
+/* Robot component css configuration */
 
-.grid,
-.chart {
-  margin: 5px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s;
+.robot:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transform: scale(1.02);
 }
 
 .robot {
@@ -37,19 +30,34 @@
   transition: box-shadow 0.3s;
 }
 
-/* Robot component css configuration */
-.placeholder {
+.video-container {
   width: 100%;
-  height: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  /* 16:9 aspect ratio */
   background-color: #f0f0f0;
   border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.video-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .controls {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
-  padding: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-x: auto;
+  flex-wrap: wrap;
 }
 
 .control-item {
@@ -68,6 +76,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 5px;
+  gap: 5px;
 }
 
 .slider-label {
@@ -85,11 +94,41 @@
   gap: 5px;
 }
 
+.battery-label {
+  font-weight: 500;
+}
+
 .discharging {
   color: #fa8072;
 }
 
 /* Grid component css configuration */
+
+.grid:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transform: scale(1.02);
+}
+
+.grid {
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mat-grid-list {
+  width: 80%;
+  margin: auto;
+}
+
+.custom-grid-tile:hover {
+  transform: scale(1.1);
+}
+
 .custom-grid-tile {
   display: flex;
   justify-content: center;
@@ -111,11 +150,33 @@
   color: black;
 }
 
-.custom-grid-tile:hover {
-  transform: scale(1.1);
+/* Chart component css configuration */
+
+.chart:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transform: scale(1.02);
 }
 
-/* SECOND ROW */
+.chart {
+  margin: 5px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
+  height: auto;
+}
+
+.plotly-plot {
+  width: 80%;
+}
+
+/*** End First Row ***/
+
+
+/*** Begin Second Row ***/
+
 .second-row {
   display: contents;
 }
+
+/*** End Second Row ***/

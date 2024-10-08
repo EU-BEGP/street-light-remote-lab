@@ -1,3 +1,4 @@
+import { CameraWebsocketService } from '../../services/websockets/camera-websocket.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { LightWebsocketService } from '../../services/websockets/light-websocket.service';
 import { Message } from '../../interfaces/message';
@@ -12,23 +13,27 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./laboratory.component.css']
 })
 export class LaboratoryComponent implements OnInit, OnDestroy {
+  private cameraSubscription: Subscription | null = null;
   private robotSubscription: Subscription | null = null;
   private lightSubscription: Subscription | null = null;
 
-  firstSurfaceUpdated: boolean = false;
+  private firstSurfaceUpdated: boolean = false;
+  private gridIds: number[] = [];
 
+  hasUnsavedChanges: boolean = false;
+  isWsLoading: boolean = false;
+
+  gridDimension: number = 10;
+
+  frame: string = "";
+  sliderValue: number = 0;
   batteryInformation = {
     voltage: 0,
     current: 0,
     power: 0
   }
 
-  gridIds: number[] = [];
-  hasUnsavedChanges: boolean = false;
-  isWsLoading: boolean = false;
-
-  sliderValue: number = 0;
-  gridDimension: number = 10;
+  grid: number[][] = this.generateInitialGrid();
 
   graph = {
     data: [{
@@ -36,19 +41,36 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
       y: Array.from({ length: this.gridDimension }, (_, i) => i + 1),
       z: this.generateInitialZValues(this.gridDimension),
       type: 'surface',
+      opacity: 0.6,
     }]
   };
 
-  grid: number[][] = this.generateInitialGrid();
-
   constructor(
-    private robotWebsocketService: RobotWebsocketService,
+    private cameraWebsocketService: CameraWebsocketService,
     private lightWebsocketService: LightWebsocketService,
     private mqttService: MqttService,
+    private robotWebsocketService: RobotWebsocketService,
     private toastr: ToastrService,
   ) { }
 
   ngOnInit(): void {
+    this.connectLightWebsocket();
+    this.connectCameraWebsocket();
+  }
+
+  ngOnDestroy(): void {
+    if (this.robotSubscription) this.robotSubscription.unsubscribe();
+    this.robotWebsocketService.disconnect();
+
+    if (this.lightSubscription) this.lightSubscription.unsubscribe();
+    this.lightWebsocketService.disconnect();
+
+    if (this.cameraSubscription) this.cameraSubscription.unsubscribe();
+    this.cameraWebsocketService.disconnect();
+  }
+
+  // WebSocket functions
+  private connectLightWebsocket(): void {
     this.lightWebsocketService.connect();
 
     // Unsubscribe from the previous subscription, if it exists
@@ -66,15 +88,23 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    if (this.robotSubscription) {
-      this.robotSubscription.unsubscribe();
+  private connectCameraWebsocket(): void {
+    this.cameraWebsocketService.connect();
+
+    // Unsubscribe from the previous subscription, if it exists
+    if (this.cameraSubscription) {
+      this.cameraSubscription.unsubscribe();
     }
-    this.robotWebsocketService.disconnect();
+
+    // Subscribe to WebSocket messages
+    this.cameraSubscription = this.cameraWebsocketService.messages$.subscribe((message) => {
+      if (message) {
+        this.frame = `data:image/jpeg;base64,${message.frame}`;
+      }
+    });
   }
 
-  // WebSocket functions
-  private connectToWebSocket(): void {
+  private connectRobotWebSocket(): void {
     this.robotWebsocketService.connect();
 
     // Unsubscribe from the previous subscription, if it exists
@@ -109,7 +139,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
       if (response.success) {
         this.toastr.success(response.success);
         this.isWsLoading = true;
-        this.connectToWebSocket();
+        this.connectRobotWebSocket();
       }
     });
   }
@@ -190,12 +220,15 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   }
 
   private addNewSurface(): void {
+    const colorscales = ['Blackbody', 'Viridis']
     const newZ = this.generateInitialZValues(this.gridDimension);
     const newSurface = {
       x: Array.from({ length: this.gridDimension }, (_, i) => i + 1),
       y: Array.from({ length: this.gridDimension }, (_, i) => i + 1),
       z: newZ,
-      type: 'surface'
+      type: 'surface',
+      opacity: 0.6,
+      colorscale: colorscales[this.graph.data.length - 1],
     };
 
     // Append the new surface to the graph data

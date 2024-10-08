@@ -28,6 +28,8 @@ export class GeneralWebsocketService {
   }
 
   public connect(wsUrl: string): void {
+    this.disconnect();
+
     const token = this.tokenService.token;
 
     if (!token) return;
@@ -39,7 +41,12 @@ export class GeneralWebsocketService {
 
       this.messageSubscription = this.socket$.pipe(
         catchError(error => {
-          this.log(`Error: ${error}`);
+          if (error instanceof Event) {
+            const ws = error.target as WebSocket; // Type assertion
+            this.log(`Error! Type: ${error.type}, Target: ${ws}, ReadyState: ${ws.readyState}`);
+          } else {
+            this.log(`Error!: ${JSON.stringify(error)}`);
+          }
           return EMPTY;
         })
       ).subscribe(
