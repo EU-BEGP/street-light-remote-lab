@@ -13,18 +13,19 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./laboratory.component.css']
 })
 export class LaboratoryComponent implements OnInit, OnDestroy {
+  // Component status variables
+  hasUnsavedChanges: boolean = false;
+  isWsLoading: boolean = false;
+
+  // Websockets subscriptions
   private cameraSubscription: Subscription | null = null;
   private robotSubscription: Subscription | null = null;
   private lightSubscription: Subscription | null = null;
 
-  private firstSurfaceUpdated: boolean = false;
   private gridIds: number[] = [];
-
-  hasUnsavedChanges: boolean = false;
-  isWsLoading: boolean = false;
-
   gridDimension: number = 10;
 
+  // Robot cell variables
   frame: string = "";
   sliderValue: number = 0;
   batteryInformation = {
@@ -33,7 +34,34 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     power: 0
   }
 
+  // Grid cell variables
   grid: number[][] = this.generateInitialGrid();
+
+  // Chart cell variables
+  private firstSurfaceUpdated: boolean = false;
+  chartsSaved: boolean = false;
+
+  chartInitialLayout = {
+    autosize: true,
+    height: 300,
+    width: 300,
+    showlegend: false,
+    margin: {
+      l: 0,
+      r: 0,
+      b: 0,
+      t: 0
+    }, // No margins
+    scene: {
+      camera: {
+        eye: {
+          x: 1.5,
+          y: 1.5,
+          z: 1.5
+        }
+      }, // Camera position for better view
+    },
+  }
 
   graph = {
     data: [{
@@ -42,7 +70,65 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
       z: this.generateInitialZValues(this.gridDimension),
       type: 'surface',
       opacity: 0.6,
-    }]
+      showscale: false,
+    }],
+  };
+
+  // Simulation variables
+  selectedChart: number = 0;
+  selectedDistance: number = 5;
+
+  chartSimulationLayout = {
+    ...this.chartInitialLayout,
+    hovermode: false, // Disable hover interactions
+    dragmode: false, // Disable dragging
+    // Additional options to make it more static
+    xaxis: {
+      fixedrange: true, // Disable zooming on x-axis
+    },
+    yaxis: {
+      fixedrange: true, // Disable zooming on y-axis
+    },
+  }
+
+  chartSimulationConfig = {
+    displayModeBar: true,
+    modeBarButtonsToRemove: [
+      // 2D buttons
+      'zoom2d',
+      'pan2d',
+      'select2d',
+      'lasso2d',
+      'zoomIn2d',
+      'zoomOut2d',
+      'autoScale2d',
+      'resetScale2d',
+      // 3D buttons
+      'zoom3d',
+      'pan3d',
+      'orbitRotation',
+      'tableRotation',
+      'handleDrag3d',
+      'resetCameraDefault3d',
+      'resetCameraLastSave3d',
+      'hoverClosest3d',
+      // Cartesian buttons
+      'hoverClosestCartesian',
+      'hoverCompareCartesian',
+      // Geo buttons
+      'zoomInGeo',
+      'zoomOutGeo',
+      'resetGeo',
+      'hoverClosestGeo',
+      // Other buttons
+      'hoverClosestGl2d',
+      'hoverClosestPie',
+      'toggleHover',
+      'resetViews',
+      'sendDataToCloud',
+      'toggleSpikelines',
+      'resetViewMapbox',
+    ],
   };
 
   constructor(
@@ -228,6 +314,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
       z: newZ,
       type: 'surface',
       opacity: 0.6,
+      showscale: false,
       colorscale: colorscales[this.graph.data.length - 1],
     };
 
@@ -260,5 +347,21 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
           : row
       );
     }
+  }
+
+  getZArrayStatus(): boolean {
+    let zeroFlag = false;
+    if (this.graph.data && this.graph.data.length > 0) {
+      const zArray = this.graph.data[0].z;
+      zArray.forEach(array => {
+        if (array.includes(0)) zeroFlag = true;
+      });
+    }
+
+    return zeroFlag;
+  }
+
+  saveCharts(): void {
+    this.chartsSaved = true;
   }
 }

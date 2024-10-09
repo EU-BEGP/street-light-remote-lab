@@ -1,13 +1,11 @@
 .laboratory-container {
   display: grid;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 1fr auto;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   padding: 10px;
 }
 
-/*** Begin First Row ***/
-
-.first-row {
+.contents {
   display: contents;
   padding: 10px;
 }
@@ -16,7 +14,6 @@
 
 .robot:hover {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  transform: scale(1.02);
 }
 
 .robot {
@@ -106,7 +103,6 @@
 
 .grid:hover {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  transform: scale(1.02);
 }
 
 .grid {
@@ -154,7 +150,6 @@
 
 .chart:hover {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  transform: scale(1.02);
 }
 
 .chart {
@@ -164,19 +159,60 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s;
   height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
 }
 
-.plotly-plot {
-  width: 80%;
+button {
+  align-self: center;
+  margin-bottom: 10px;
 }
 
-/*** End First Row ***/
+.simulation {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin: 5px;
 
-
-/*** Begin Second Row ***/
-
-.second-row {
-  display: contents;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/*** End Second Row ***/
+.selection {
+  flex: 0 0 20%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px;
+  gap: 10px;
+}
+
+.charts-row {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chart-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.simulation-plot {
+  padding-bottom: 10px;
+}
+
+.pole {
+  height: 120px;
+  width: auto;
+}

@@ -2,8 +2,9 @@
   <mat-tab label="Activity 1">
     <app-spinner id="grid-spinner" [showSpinner]="isWsLoading"></app-spinner>
     <div class="laboratory-container">
-      <div class="first-row">
+      <div class="contents">
 
+        <!-- ROBOT cell-->
         <div class="robot">
           <h2 class="title">Robot</h2>
           <div class="video-container">
@@ -53,6 +54,7 @@
           </div>
         </div>
 
+        <!-- GRID cell -->
         <div class="grid">
           <h2 class="title">Intensity Grid</h2>
           <mat-grid-list [cols]="this.gridDimension" [rowHeight]="35" gutterSize="10px">
@@ -63,15 +65,56 @@
           </mat-grid-list>
         </div>
 
+
+        <!-- CHART cell -->
         <div class="chart">
           <h2 class="title">Intensity Chart</h2>
-          <plotly-plot [data]="graph.data"></plotly-plot>
+          <plotly-plot [data]="graph.data" [layout]="chartInitialLayout"></plotly-plot>
+          <button mat-raised-button color="primary" [disabled]="getZArrayStatus()" (click)="saveCharts()">
+            Save Chart Data
+          </button>
         </div>
 
+
+        <!-- SIMULATION cells -->
+        <div class="simulation" *ngIf="chartsSaved">
+
+          <div class="selection">
+            <h2>Pole Simulation</h2>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Charts</mat-label>
+              <select matNativeControl required [(ngModel)]="selectedChart">
+                <option *ngFor="let index of [].constructor(graph.data.length); let i = index" [value]="i">Chart {{ i +
+                  1 }}</option>
+              </select>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+              <mat-label>Distance</mat-label>
+              <select matNativeControl required [(ngModel)]="selectedDistance">
+                <option value="5">5 [m]</option>
+                <option value="10">10 [m]</option>
+                <option value="15">15 [m]</option>
+              </select>
+            </mat-form-field>
+          </div>
+
+          <div class="charts-row" [ngStyle]="{'gap': selectedDistance * 10 + 'px'}">
+            <div class="chart-container" *ngFor="let chart of [1, 2, 3]; let i = index">
+              <img class="pole" src="./assets/no_background_pole.png" alt="Pole">
+              <plotly-plot [data]="[graph.data[selectedChart]]" [layout]="chartSimulationLayout"
+                [config]="chartSimulationConfig" class="simulation-plot"></plotly-plot>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
+
   </mat-tab>
 
   <mat-tab label="Activity 2">
+
   </mat-tab>
 </mat-tab-group>
