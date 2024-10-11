@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CountdownConfig } from 'ngx-countdown';
 import { Input, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { TokenService } from '../../services/token.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   @Input() hasAccessToLab: boolean = false;
   @Input() countdownConfig: CountdownConfig = {
     leftTime: 0,
@@ -19,6 +21,8 @@ export class NavbarComponent implements OnInit {
   @Output() countdownFinish: EventEmitter<void> = new EventEmitter<void>();
 
   showMenu: boolean = false;
+  currentRoute: string = '';
+  private subscription?: Subscription;
 
   constructor(
     private router: Router,
@@ -26,17 +30,24 @@ export class NavbarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.subscription = this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.currentRoute = this.router.url;
+      });
+
     this.tokenService.token$.subscribe(token => {
       this.showMenu = !!token;
     });
   }
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
 
   onCountdownFinish(event: any): void {
     this.countdownFinish.emit(event);
-  }
-
-  goToRemoteLaboratory(): void {
-    this.router.navigate(['/laboratory']);
   }
 
   goToExperiments(): void {
@@ -55,5 +66,12 @@ export class NavbarComponent implements OnInit {
     this.tokenService.clearToken();
     this.showMenu = false;
     this.goToLogin();
+  }
+
+  showNavbarItem(routeName: string): boolean {
+    if (this.currentRoute == routeName) {
+      return false;
+    }
+    return true;
   }
 }

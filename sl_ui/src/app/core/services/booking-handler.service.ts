@@ -24,13 +24,13 @@ export class BookingHandlerService {
       localStorage.removeItem('access_key');
       localStorage.removeItem('password');
 
-      this.toastr.error("You can't access right now, your booking is invalid.");
+      this.toastr.error('You can not access right now, your booking is invalid.');
       this.router.navigate(['/lobby']);
     }
   }
 
   handleErrorResponse(error: any): void {
-    this.toastr.error("You can't access right now, please try again later.");
+    this.toastr.error('You can not access right now, please try again later.');
     this.router.navigate(['/lobby']);
   }
 

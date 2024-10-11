@@ -11,17 +11,13 @@
   <span class="spacer"></span>
 
   <div *ngIf="hasAccessToLab && showMenu">
-    <button mat-button aria-label="Experiment button" (click)="goToExperiments()">
+    <button mat-button aria-label="Experiment button" (click)="goToExperiments()"
+      *ngIf="showNavbarItem('/experiments')">
       <mat-icon class="icon">widgets</mat-icon>
       <span>Experiments</span>
     </button>
 
-    <button mat-button aria-label="Remote Lab button" (click)="goToRemoteLaboratory()">
-      <mat-icon class="icon">science</mat-icon>
-      <span>Laboratory</span>
-    </button>
-
-    <button mat-button aria-label="Profile list button" (click)="goToMyProfile()">
+    <button mat-button aria-label="Profile list button" (click)="goToMyProfile()" *ngIf="showNavbarItem('/profile')">
       <mat-icon class="icon">person</mat-icon>
       <span>Profile</span>
     </button>

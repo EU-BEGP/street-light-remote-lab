@@ -26,7 +26,7 @@ def process_message(mqtt_message):
     # Capture light properties
     light_code = mqtt_message["light_code"]
     type = mqtt_message["type"]
-    pwm = mqtt_message["pwm"]
+    pwm = mqtt_message["PWM"]
     battery_voltage = mqtt_message["voltage"]
     battery_current = mqtt_message["current"]
     time_interval = mqtt_message["time_interval"]

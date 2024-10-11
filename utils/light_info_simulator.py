@@ -21,7 +21,7 @@ if __name__ == "__main__":
         light_information = {
             "light_code": LIGHT_CODE,
             "type": "DC",
-            "pwm": random.randint(0, 100),
+            "PWM": random.randint(0, 100),
             "voltage": random.randint(11000, 15000),
             "current": random.randint(14000, 20500),
             "time_interval": TIME_INTERVAL,

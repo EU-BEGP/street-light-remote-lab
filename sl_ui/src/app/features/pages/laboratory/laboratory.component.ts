@@ -1,13 +1,13 @@
 import { CameraWebsocketService } from '../../services/websockets/camera-websocket.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ExperimentService } from '../../services/experiment.service';
-import { ExperimentStateService } from '../../services/experiment-state.service';
 import { Grid } from '../../interfaces/grid';
 import { GridService } from '../../services/grid.service';
 import { LightWebsocketService } from '../../services/websockets/light-websocket.service';
 import { Message } from '../../interfaces/message';
 import { MqttService } from '../../services/mqtt.service';
 import { RobotWebsocketService } from '../../services/websockets/robot-websocket.service';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs';
@@ -33,7 +33,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   private lightSubscription: Subscription | null = null;
 
   // Robot cell variables
-  frame: string = "";
+  frame: string = '';
   sliderValue: number = 0;
   batteryInformation = {
     voltage: 0.0,
@@ -143,17 +143,16 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   constructor(
     private cameraWebsocketService: CameraWebsocketService,
     private experimentService: ExperimentService,
-    private experimentStateService: ExperimentStateService,
     private gridService: GridService,
     private lightWebsocketService: LightWebsocketService,
     private mqttService: MqttService, private robotWebsocketService: RobotWebsocketService,
+    private router: Router,
     private toastr: ToastrService,
   ) { }
 
   ngOnInit(): void {
-    // this.experimentId = this.experimentStateService.getExperimentId()
-    this.experimentId = Number(localStorage.getItem("experimentId"));
-    if (this.experimentId) {
+    this.experimentId = Number(localStorage.getItem('experimentId'));
+    if (!isNaN(this.experimentId) && this.experimentId > 0) {
       this.experimentService.getExperimentGrids(this.experimentId).subscribe((grids: Grid[]): void => {
         if (grids !== undefined && grids.length !== 0) {
           this.chartsSaved = true;
@@ -166,13 +165,17 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
               });
             }
           });
-
         }
       })
+      this.connectLightWebsocket();
+      this.connectCameraWebsocket();
     }
-
-    this.connectLightWebsocket();
-    this.connectCameraWebsocket();
+    else {
+      this.toastr.error('No experiment ID provided')
+      setTimeout((): void => {
+        this.router.navigate(['/experiments']);
+      }, 50) //TODO: Get rid of timeout
+    }
   }
 
   ngOnDestroy(): void {
@@ -185,7 +188,9 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     if (this.cameraSubscription) this.cameraSubscription.unsubscribe();
     this.cameraWebsocketService.disconnect();
 
-    localStorage.removeItem("experimentId");
+    localStorage.removeItem('experimentId');
+
+    this.sendLightCommand(true);
   }
 
   // WebSocket functions
@@ -251,7 +256,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   // Robot functions
   sendRobotCommand(): void {
     if (this.graph.data.length >= this.maxNumbercharts) {
-      this.toastr.warning("Maximum number of charts (3) reached. Cannot add more.")
+      this.toastr.warning('Maximum number of charts (3) reached. Cannot add more.')
       return;
     }
 
@@ -264,14 +269,13 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     });
   }
 
-  sendLightCommand(): void {
-    var message = {
-      'pwm': this.sliderValue
-    }
+  sendLightCommand(turnOff: boolean): void {
+    var message = { 'pwm': this.sliderValue }
+    if (turnOff) message['pwm'] = 0;
 
     this.mqttService.publishLightCommand(message).subscribe((response) => {
       if (response.status !== null && response.status === 200) {
-        this.toastr.success(response.body.success);
+        if (!turnOff) this.toastr.success(response.body.success);
       }
     });
   }
@@ -399,13 +403,13 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     forkJoin(
       this.gridIds.map(gridId =>
         this.gridService.updateGrid(
-          { "experiment": this.experimentId },
+          { 'experiment': this.experimentId },
           gridId
         )
       )
     ).subscribe({
       next: () => {
-        this.toastr.success("All grids and charts saved successfully")
+        this.toastr.success('All grids and charts saved successfully')
         this.chartsSaved = true;
         this.hasUnsavedChanges = false;
       },

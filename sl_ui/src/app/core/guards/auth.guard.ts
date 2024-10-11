@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
     if (!token) {
       // If the user is not logged in, redirect to the AccessComponent
       this.router.navigate(['']);
-      this.toastr.error("You must be logged in to view this page.", "Access Denied");
+      this.toastr.error('You must be logged in to view this page.', 'Access Denied');
       return false; // Prevent access to the protected route
     }
 

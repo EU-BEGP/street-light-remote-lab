@@ -26,7 +26,7 @@ export class CodeActivationComponent implements OnInit {
       // User already logged in, no activation needed
       this.router.navigate(['']);
     } else {
-      this.userId = Number(localStorage.getItem("userId"))
+      this.userId = Number(localStorage.getItem('userId'))
     }
   }
 

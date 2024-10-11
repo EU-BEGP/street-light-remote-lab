@@ -4,7 +4,6 @@ import { DialogConfigService } from '../../services/dialog-config.service';
 import { Experiment } from '../../interfaces/experiment';
 import { ExperimentDialogComponent } from '../../components/experiment-dialog/experiment-dialog.component';
 import { ExperimentService } from '../../services/experiment.service';
-import { ExperimentStateService } from '../../services/experiment-state.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -36,7 +35,6 @@ export class ExperimentsComponent implements OnInit {
     private dialog: MatDialog,
     private dialogConfigService: DialogConfigService,
     private experimentService: ExperimentService,
-    private experimentStateService: ExperimentStateService,
     private router: Router,
     private toastr: ToastrService,
   ) { }
@@ -87,8 +85,7 @@ export class ExperimentsComponent implements OnInit {
   }
 
   actionGoToLaboratory(experimentId: number): void {
-    // this.experimentStateService.setExperimentId(experimentId);
-    localStorage.setItem("experimentId", experimentId.toString());
+    localStorage.setItem('experimentId', experimentId.toString());
     this.router.navigate(['/laboratory']);
   }
 

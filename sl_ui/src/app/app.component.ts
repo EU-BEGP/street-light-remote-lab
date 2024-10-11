@@ -66,7 +66,7 @@ export class AppComponent implements OnInit {
       this.accessService.setAccess(accessKey, password);
       this.validateBooking(accessKey, password);
     } else {
-      this.toastr.error("Make a booking to access this laboratory");
+      this.toastr.error('Make a booking to access this laboratory');
       if (!this.hasNavigated) {
         this.hasNavigated = true;
         this.router.navigate(['/lobby']);
@@ -85,7 +85,7 @@ export class AppComponent implements OnInit {
         this.validateBooking(accessKey, password);
       }
     } else {
-      this.toastr.error("Make a booking to access this laboratory");
+      this.toastr.error('Make a booking to access this laboratory');
       if (!this.hasNavigated) {
         this.hasNavigated = true;
         this.router.navigate(['/lobby']);
@@ -123,7 +123,7 @@ export class AppComponent implements OnInit {
   }
 
   onCountdownFinish(event: any): void {
-    if (event.action == "done") {
+    if (event.action == 'done') {
       this.accessService.clearAccess();
       this.hasAccessToLab = false;
       this.router.navigate(['/lobby']);

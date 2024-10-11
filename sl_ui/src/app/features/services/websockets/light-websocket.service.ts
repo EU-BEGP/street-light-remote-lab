@@ -1,4 +1,4 @@
-import config from "../../../config.json"
+import config from '../../../config.json'
 import { Injectable } from '@angular/core';
 import { GeneralWebsocketService } from './general-websocket.service';
 import { TokenService } from 'src/app/core/services/token.service';
