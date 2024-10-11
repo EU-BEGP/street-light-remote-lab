@@ -24,7 +24,8 @@
 
             <div class="control-item">
               <span class="title">Control Robot</span>
-              <button mat-raised-button color="primary" (click)="sendRobotCommand()">Start</button>
+              <button mat-raised-button color="primary" (click)="sendRobotCommand()"
+                [disabled]="chartsSaved && !(graph.data.length < maxNumbercharts)">Start</button>
             </div>
 
             <div class="control-item">
@@ -50,6 +51,13 @@
                 </span>
                 <span>[W]</span>
               </div>
+              <div class="battery-info-item">
+                <span>Battery Level:</span>
+                <span class="battery-label">
+                  {{this.batteryInformation.level}}
+                </span>
+                <span>%</span>
+              </div>
             </div>
           </div>
         </div>
@@ -70,7 +78,9 @@
         <div class="chart">
           <h2 class="title">Intensity Chart</h2>
           <plotly-plot [data]="graph.data" [layout]="chartInitialLayout"></plotly-plot>
-          <button mat-raised-button color="primary" [disabled]="getZArrayStatus()" (click)="saveCharts()">
+          <button mat-raised-button color="primary"
+            [disabled]="getZArrayStatus() || (!(graph.data.length < maxNumbercharts) && chartsSaved) "
+            (click)="saveCharts()">
             Save Chart Data
           </button>
         </div>

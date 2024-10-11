@@ -6,7 +6,7 @@ import paho.mqtt.publish as publish
 import json
 import os
 
-mqtt_grid_topic = os.environ.get("MQTT_PUB_GRID_TOPIC", None)
+mqtt_grid_topic = os.environ.get("MQTT_PUB_ROBOT_TOPIC", None)
 mqtt_light_topic = os.environ.get("MQTT_PUB_LIGHT_TOPIC", None)
 mqtt_host = os.environ.get("MQTT_HOST", None)
 mqtt_port = os.environ.get("MQTT_PORT", 1883)

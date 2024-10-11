@@ -1,6 +1,6 @@
-from street_light_rl.models import Lamp, Grid, Experiment
+from street_light_rl.models import Light, Grid, Experiment
 from street_light_rl.serializers import (
-    LampSerializer,
+    LightSerializer,
     GridSerializer,
     ExperimentSerializer,
 )
@@ -11,12 +11,12 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 
-## LIST | CREATE Lamp
-class LampListCreateView(generics.ListCreateAPIView):
-    serializer_class = LampSerializer
+## LIST | CREATE Light
+class LightListCreateView(generics.ListCreateAPIView):
+    serializer_class = LightSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
-    queryset = Lamp.objects.all().order_by("id")
+    queryset = Light.objects.all().order_by("id")
 
     def create(self, request, *args, **kwargs):
         # Gets data from POST request in json format.
@@ -32,23 +32,23 @@ class LampListCreateView(generics.ListCreateAPIView):
             return Response(serializer.errors)
 
 
-## UPDATE Lamp
-class LampUpdateView(generics.UpdateAPIView):
-    serializer_class = LampSerializer
+## UPDATE Light
+class LightUpdateView(generics.UpdateAPIView):
+    serializer_class = LightSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get_object(self):
-        queryset = Lamp.objects.all()
-        lamp_id = self.kwargs.get("id")
-        lamp = queryset.get(id=lamp_id)
-        return lamp
+        queryset = Light.objects.all()
+        light_id = self.kwargs.get("id")
+        light = queryset.get(id=light_id)
+        return light
 
     def patch(self, request, *args, **kwargs):
         object = self.get_object()
         serializer = self.serializer_class(object, data=request.data, partial=True)
         if serializer.is_valid():
-            # If the serializer is valid, the lamp object is updated.
+            # If the serializer is valid, the light object is updated.
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -56,27 +56,27 @@ class LampUpdateView(generics.UpdateAPIView):
             return Response(serializer.errors)
 
 
-## Get experiments related to a Lamp
-class LampExperimentsListView(generics.ListAPIView):
+## Get experiments related to a Light
+class LightExperimentsListView(generics.ListAPIView):
     serializer_class = ExperimentSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        lamp_id = self.kwargs["id"]
-        experiments = Experiment.objects.filter(experiment_grid__lamp=lamp_id)
+        light_id = self.kwargs["id"]
+        experiments = Experiment.objects.filter(light=light_id)
         return experiments
 
 
-## Get grids related to a Lamp
-class LampGridsListView(generics.ListAPIView):
+## Get grids related to a Light
+class LightGridsListView(generics.ListAPIView):
     serializer_class = GridSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        lamp_id = self.kwargs["id"]
-        grids = Grid.objects.filter(lamp=lamp_id).prefetch_related("grid_messages")
+        light_id = self.kwargs["id"]
+        grids = Grid.objects.filter(light=light_id).prefetch_related("grid_messages")
         return grids
 
     def list(self, request, *args, **kwargs):

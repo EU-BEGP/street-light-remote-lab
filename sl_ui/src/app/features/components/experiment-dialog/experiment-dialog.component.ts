@@ -3,6 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Experiment } from '../../interfaces/experiment';
 import { ExperimentService } from '../../services/experiment.service';
+import { Light } from '../../interfaces/light';
+import { LightService } from '../../services/light.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -15,31 +17,38 @@ export class ExperimentDialogComponent implements OnInit {
   title: string = '';
   selectedExperimentId: number = 0;
 
+  lights?: Light[];
+
   experimentForm = this.formBuilder.group({
-    name: ['', Validators.required]
+    name: ['', Validators.required],
+    light: ['', Validators.required]
   })
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public dialogData: Experiment,
     private dialogRef: MatDialogRef<ExperimentDialogComponent>,
+    private experimentService: ExperimentService,
     private formBuilder: FormBuilder,
+    private lightService: LightService,
     private toastr: ToastrService,
-    private experimentService: ExperimentService
   ) { }
 
 
   ngOnInit(): void {
-    // Check if dialogData is provided. If it is, this indicates that an update action is being performed on an existing experiment.
-    if (this.dialogData) {
-      this.title = 'Update Experiment';
-      const experiment = this.dialogData;
-      this.selectedExperimentId = experiment.id!;
-      // Populate the form with the existing values of the experiment for editing.
-      this.patchFormValues(experiment);
-    } else {
-      // If dialogData is not provided, this indicates that a new experiment is being created.
-      this.title = 'Create Experiment';
-    }
+    this.lightService.getLights().subscribe((lights: Light[]): void => {
+      this.lights = lights
+      // Check if dialogData is provided. If it is, this indicates that an update action is being performed on an existing experiment.
+      if (this.dialogData) {
+        this.title = 'Update Experiment';
+        const experiment = this.dialogData;
+        this.selectedExperimentId = experiment.id!;
+        // Populate the form with the existing values of the experiment for editing.
+        this.patchFormValues(experiment);
+      } else {
+        // If dialogData is not provided, this indicates that a new experiment is being created.
+        this.title = 'Create Experiment';
+      }
+    })
   }
 
   /*** HTML interaction functions ***/
@@ -68,7 +77,6 @@ export class ExperimentDialogComponent implements OnInit {
 
   createExperiment(): void {
     const experiment = this.experimentForm.value as Experiment;
-
     this.experimentService.createExperiment(experiment).subscribe({
       next: (_) => {
         this.resetDialog('The experiment has been created successfully.');
@@ -104,9 +112,16 @@ export class ExperimentDialogComponent implements OnInit {
   /* Form manipulation */
 
   patchFormValues(experiment: Experiment): void {
-    this.experimentForm.patchValue({
-      name: experiment.name
-    })
+    if (experiment) {
+      const light = this.lights?.find(light => light.id == experiment.light);
+      const lightCode = light?.code;
+      const lightType = light?.type;
+
+      this.experimentForm.patchValue({
+        name: experiment.name,
+        light: `${lightCode} (${lightType})`
+      })
+    }
   }
 
   // Getters

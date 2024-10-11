@@ -1,11 +1,16 @@
 import { CameraWebsocketService } from '../../services/websockets/camera-websocket.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ExperimentService } from '../../services/experiment.service';
+import { ExperimentStateService } from '../../services/experiment-state.service';
+import { Grid } from '../../interfaces/grid';
+import { GridService } from '../../services/grid.service';
 import { LightWebsocketService } from '../../services/websockets/light-websocket.service';
 import { Message } from '../../interfaces/message';
 import { MqttService } from '../../services/mqtt.service';
 import { RobotWebsocketService } from '../../services/websockets/robot-websocket.service';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-laboratory',
@@ -13,6 +18,11 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./laboratory.component.css']
 })
 export class LaboratoryComponent implements OnInit, OnDestroy {
+  // General variables
+  private gridIds: number[] = [];
+  gridDimension: number = 10;
+  experimentId?: number | null;
+
   // Component status variables
   hasUnsavedChanges: boolean = false;
   isWsLoading: boolean = false;
@@ -22,16 +32,14 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   private robotSubscription: Subscription | null = null;
   private lightSubscription: Subscription | null = null;
 
-  private gridIds: number[] = [];
-  gridDimension: number = 10;
-
   // Robot cell variables
   frame: string = "";
   sliderValue: number = 0;
   batteryInformation = {
-    voltage: 0,
-    current: 0,
-    power: 0
+    voltage: 0.0,
+    current: 0.0,
+    power: 0.0,
+    level: 0.0,
   }
 
   // Grid cell variables
@@ -40,6 +48,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   // Chart cell variables
   private firstSurfaceUpdated: boolean = false;
   chartsSaved: boolean = false;
+  maxNumbercharts: number = 3;
 
   chartInitialLayout = {
     autosize: true,
@@ -133,13 +142,35 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
 
   constructor(
     private cameraWebsocketService: CameraWebsocketService,
+    private experimentService: ExperimentService,
+    private experimentStateService: ExperimentStateService,
+    private gridService: GridService,
     private lightWebsocketService: LightWebsocketService,
-    private mqttService: MqttService,
-    private robotWebsocketService: RobotWebsocketService,
+    private mqttService: MqttService, private robotWebsocketService: RobotWebsocketService,
     private toastr: ToastrService,
   ) { }
 
   ngOnInit(): void {
+    // this.experimentId = this.experimentStateService.getExperimentId()
+    this.experimentId = Number(localStorage.getItem("experimentId"));
+    if (this.experimentId) {
+      this.experimentService.getExperimentGrids(this.experimentId).subscribe((grids: Grid[]): void => {
+        if (grids !== undefined && grids.length !== 0) {
+          this.chartsSaved = true;
+          grids.forEach(grid => {
+            const messages = grid.grid_messages;
+            if (messages) {
+              messages.forEach(message => {
+                this.refreshGrid(message);
+                this.refreshGraph(message);
+              });
+            }
+          });
+
+        }
+      })
+    }
+
     this.connectLightWebsocket();
     this.connectCameraWebsocket();
   }
@@ -153,6 +184,8 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
 
     if (this.cameraSubscription) this.cameraSubscription.unsubscribe();
     this.cameraWebsocketService.disconnect();
+
+    localStorage.removeItem("experimentId");
   }
 
   // WebSocket functions
@@ -167,9 +200,10 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     // Subscribe to WebSocket messages
     this.lightSubscription = this.lightWebsocketService.messages$.subscribe((message) => {
       if (message) {
-        this.batteryInformation.voltage = message.voltage
-        this.batteryInformation.current = message.current
-        this.batteryInformation.power = message.power
+        this.batteryInformation.voltage = message.battery_voltage
+        this.batteryInformation.current = message.battery_current
+        this.batteryInformation.power = message.battery_power
+        this.batteryInformation.level = message.battery_level
       }
     });
   }
@@ -216,7 +250,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
 
   // Robot functions
   sendRobotCommand(): void {
-    if (this.graph.data.length >= 3) {
+    if (this.graph.data.length >= this.maxNumbercharts) {
       this.toastr.warning("Maximum number of charts (3) reached. Cannot add more.")
       return;
     }
@@ -362,6 +396,22 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   }
 
   saveCharts(): void {
-    this.chartsSaved = true;
+    forkJoin(
+      this.gridIds.map(gridId =>
+        this.gridService.updateGrid(
+          { "experiment": this.experimentId },
+          gridId
+        )
+      )
+    ).subscribe({
+      next: () => {
+        this.toastr.success("All grids and charts saved successfully")
+        this.chartsSaved = true;
+        this.hasUnsavedChanges = false;
+      },
+      error: (e) => {
+        this.toastr.error('There was an error saving one or more grids.');
+      },
+    });
   }
 }

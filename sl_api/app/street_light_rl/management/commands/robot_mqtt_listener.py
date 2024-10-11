@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from street_light_rl.models import Message, Grid, Robot, Lamp
+from street_light_rl.models import Message, Grid, Robot, Light
 from time import sleep
 from utils.mqtt_listener import MQTTListener
 from utils.tools import stream_message_over_websocket
@@ -13,7 +13,7 @@ MQTT_HOST = os.environ.get("MQTT_HOST", None)
 MQTT_PORT = os.environ.get("MQTT_PORT", 1883)
 MQTT_USER = os.environ.get("MQTT_USER", None)
 MQTT_PWD = os.environ.get("MQTT_PWD", None)
-MQTT_TOPIC = os.environ.get("MQTT_SUB_GRID_TOPIC", None)
+MQTT_TOPIC = os.environ.get("MQTT_SUB_ROBOT_TOPIC", None)
 
 # CHANNELS CONSTANT
 GROUP_NAME = "robot_group"
@@ -55,11 +55,11 @@ def process_message(mqtt_message):
         mqtt_message["grid_code"]
     )  # Get grid code and converting to a uuid object.
 
-    # Approach: Get robot code and relate them to a lamp
+    # Approach: Get robot code and relate them to a light
     try:
         # Retrieving robot object.
         robot = Robot.objects.get(code=robot_code)
-        lamp = Lamp.objects.get(robot=robot)
+        light = Light.objects.get(id=robot.light.id)
 
         try:
             # Get existing Grid
@@ -67,7 +67,7 @@ def process_message(mqtt_message):
 
         except Grid.DoesNotExist:
             # Crete new Grid
-            grid = Grid(code=grid_code, lamp=lamp)
+            grid = Grid(code=grid_code, light=light)
             grid.save()
 
         # Save message
@@ -112,8 +112,8 @@ def process_message(mqtt_message):
     except Robot.DoesNotExist as e:
         print(f"[{MQTT_LISTENER_NAME} MQTT Listener]: Robot is not registered: {e}")
 
-    except Lamp.DoesNotExist as e:
-        print(f"[{MQTT_LISTENER_NAME} MQTT Listener]: Lamp is not registered: {e}")
+    except Light.DoesNotExist as e:
+        print(f"[{MQTT_LISTENER_NAME} MQTT Listener]: Light is not registered: {e}")
 
 
 class Command(BaseCommand):

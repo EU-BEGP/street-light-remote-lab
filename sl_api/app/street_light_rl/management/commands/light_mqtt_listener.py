@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from utils.mqtt_listener import MQTTListener
 from utils.tools import stream_message_over_websocket
+from street_light_rl.models import Light
 import os
 
 MQTT_LISTENER_NAME = "LIGHT"
@@ -22,14 +23,47 @@ GROUP_NAME = "light_group"
 
 
 def process_message(mqtt_message):
-    voltage = mqtt_message["voltage"]
-    current = mqtt_message["current"]
+    # Capture light properties
+    light_code = mqtt_message["light_code"]
+    type = mqtt_message["type"]
+    pwm = mqtt_message["pwm"]
+    battery_voltage = mqtt_message["voltage"]
+    battery_current = mqtt_message["current"]
+    time_interval = mqtt_message["time_interval"]
 
-    voltage = round(voltage * VOLTAGE_CONSTANT, 2)
-    current = round(CURRENT_CONSTANT * (current - OFFSET), 2)
-    power = round(voltage * current, 2)
+    # Apply formulas
+    battery_voltage = round(battery_voltage * VOLTAGE_CONSTANT, 2)
+    battery_current = round(CURRENT_CONSTANT * (battery_current - OFFSET), 2)
+    battery_power = round(battery_voltage * battery_current, 2)
+    battery_level = round(((battery_voltage - 2.60) / 1.05) * 100)
+    battery_energy = (
+        0.0  # TODO: Define a proper formula to calculate the batttery energy
+    )
 
-    message = {"voltage": voltage, "current": current, "power": power}
+    # Prepare dictionary with the light values for the update or creation
+    light_defaults = {
+        "code": light_code,
+        "type": type,
+        "pwm": pwm,
+        "battery_voltage": battery_voltage,
+        "battery_current": battery_current,
+        "battery_power": battery_power,
+        "battery_level": battery_level,
+        "battery_energy": battery_energy,
+        "time_interval": time_interval,
+    }
+
+    _, _ = Light.objects.update_or_create(
+        code=light_code,
+        defaults=light_defaults,
+    )
+
+    ## Prepare the message object and sent it via websockets
+    message = {
+        k: light_defaults[k]
+        for k in light_defaults.keys() - {"code", "type", "pwm", "battery_energy"}
+    }
+
     stream_message_over_websocket(message, GROUP_NAME)
 
 

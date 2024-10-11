@@ -1,5 +1,5 @@
 from street_light_rl.views import robot_views
-from street_light_rl.views import lamp_views
+from street_light_rl.views import light_views
 from street_light_rl.views import experiment_views
 from street_light_rl.views import grid_views
 from street_light_rl.views import message_views
@@ -15,17 +15,21 @@ urlpatterns = [
     path(
         "robots/<int:id>/", robot_views.RobotUpdateView.as_view(), name="robot-update"
     ),
-    path("lamps/", lamp_views.LampListCreateView.as_view(), name="lamp-list-create"),
-    path("lamps/<int:id>/", lamp_views.LampUpdateView.as_view(), name="lamp-update"),
     path(
-        "lamps/<int:id>/experiments/",
-        lamp_views.LampExperimentsListView.as_view(),
-        name="lamp-experiments-list",
+        "lights/", light_views.LightListCreateView.as_view(), name="light-list-create"
     ),
     path(
-        "lamps/<int:id>/grids/",
-        lamp_views.LampGridsListView.as_view(),
-        name="lamp-grids-list",
+        "lights/<int:id>/", light_views.LightUpdateView.as_view(), name="light-update"
+    ),
+    path(
+        "lights/<int:id>/experiments/",
+        light_views.LightExperimentsListView.as_view(),
+        name="light-experiments-list",
+    ),
+    path(
+        "lights/<int:id>/grids/",
+        light_views.LightGridsListView.as_view(),
+        name="light-grids-list",
     ),
     path(
         "experiments/",
@@ -43,7 +47,7 @@ urlpatterns = [
         name="experiment-delete",
     ),
     path(
-        "experiments/<int:id>/grid/",
+        "experiments/<int:id>/grids/",
         experiment_views.ExperimentGridListView.as_view(),
         name="experiment-grids-list",
     ),

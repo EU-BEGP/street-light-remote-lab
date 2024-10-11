@@ -2,18 +2,25 @@ from django.conf import settings
 from django.db import models
 
 
+class Light(models.Model):
+    code = models.CharField(max_length=50, unique=True)
+    type = models.CharField(
+        max_length=2, choices=(("AC", "Alternating Current"), ("DC", "Direct Current"))
+    )
+    pwm = models.FloatField(default=0.0)
+    time_interval = models.FloatField(default=0.0)
+    battery_voltage = models.FloatField(default=0.0)
+    battery_current = models.FloatField(default=0.0)
+    battery_power = models.FloatField(default=0.0)
+    battery_level = models.FloatField(default=0.0)
+    battery_energy = models.FloatField(default=0.0)
+
+
 class Robot(models.Model):
     code = models.CharField(max_length=50, unique=True)
-    description = models.CharField(max_length=250, default="", blank=True)
-
-
-class Lamp(models.Model):
-    code = models.CharField(max_length=50, unique=True)
-    dim_level = models.FloatField(default=0.0)
-    state = models.BooleanField(default=False)
-    robot = models.OneToOneField(
-        Robot,
-        related_name="lamp_robot",
+    light = models.OneToOneField(
+        Light,
+        related_name="light_robot",
         on_delete=models.CASCADE,
         null=True,
         blank=True,
@@ -28,6 +35,9 @@ class Experiment(models.Model):
         related_name="owner_experiments",
         on_delete=models.CASCADE,
     )
+    light = models.ForeignKey(
+        Light, related_name="light_experiments", on_delete=models.CASCADE
+    )
 
 
 class Grid(models.Model):
@@ -36,13 +46,15 @@ class Grid(models.Model):
     height = models.IntegerField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False)
-    lamp = models.ForeignKey(Lamp, related_name="lamp_grids", on_delete=models.CASCADE)
-    experiment = models.OneToOneField(
+    experiment = models.ForeignKey(
         Experiment,
-        related_name="experiment_grid",
+        related_name="experiment_grids",
         on_delete=models.CASCADE,
         null=True,
         blank=True,
+    )
+    light = models.ForeignKey(
+        Light, related_name="light_grids", on_delete=models.CASCADE
     )
 
 

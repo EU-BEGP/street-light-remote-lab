@@ -10,7 +10,7 @@ import random
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
+    def create_user(self, email, password=None, superuser=False, **extra_fields):
         """Create a new user and validate email"""
         if not email:
             raise ValueError("Email address required")
@@ -19,21 +19,22 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.is_active = False
 
-        # Generate random verification code for the new user
-        verification_code = "".join(random.choices("0123456789", k=6))
-        user.email_verification_code = verification_code
+        if not superuser:
+            # Generate random verification code for the new user
+            verification_code = "".join(random.choices("0123456789", k=6))
+            user.email_verification_code = verification_code
 
-        # Send account activation email
-        subject = "User Account Activation"
+            # Send account activation email
+            subject = "User Account Activation"
 
-        context = {
-            "user_name": user.name + " " + user.last_name,
-            "verification_code": verification_code,
-        }
-        template_name = "user_account_activation_template.html"
-        recipient = [user.email]
+            context = {
+                "user_name": user.name + " " + user.last_name,
+                "verification_code": verification_code,
+            }
+            template_name = "user_account_activation_template.html"
+            recipient = [user.email]
 
-        send_custom_email(subject, template_name, context, recipient)
+            send_custom_email(subject, template_name, context, recipient)
 
         user.save(using=self._db)
 
@@ -41,7 +42,7 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, password):
         """Creates and saves a new super user"""
-        user = self.create_user(email, password)
+        user = self.create_user(email, password, superuser=True)
         user.is_staff = True
         user.is_superuser = True
         user.is_active = True

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Robot, Lamp, Experiment, Message, Grid
+from .models import Robot, Light, Experiment, Message, Grid
 
 
 class RobotSerializer(serializers.ModelSerializer):
@@ -8,9 +8,9 @@ class RobotSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class LampSerializer(serializers.ModelSerializer):
+class LightSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Lamp
+        model = Light
         fields = "__all__"
 
 

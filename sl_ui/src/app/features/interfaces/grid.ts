@@ -1,5 +1,6 @@
 import { Experiment } from './experiment';
-import { Lamp } from './lamp';
+import { Light } from './light';
+import { Message } from './message';
 
 export interface Grid {
   id?: number;
@@ -7,6 +8,7 @@ export interface Grid {
   width?: number;
   height?: number;
   complete?: boolean;
-  lamp?: Lamp;
   experiment?: Experiment;
+  light?: Light;
+  grid_messages?: Message[];
 }

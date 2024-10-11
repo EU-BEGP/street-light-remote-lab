@@ -9,6 +9,23 @@
         Name is required.
       </mat-error>
     </mat-form-field>
+
+    <div *ngIf="!dialogData">
+      <mat-form-field appearance="fill" class="select-field">
+        <mat-label>Light</mat-label>
+        <select matNativeControl required formControlName="light">
+          <option *ngFor="let index of (lights ? [].constructor(lights.length) : []); let i = index"
+            [value]="lights? lights[i].id: 0">
+            {{lights? lights[i].code: ''}} ({{lights? lights[i].type : ''}})</option>
+        </select>
+      </mat-form-field>
+    </div>
+    <div *ngIf="dialogData">
+      <mat-form-field appearance="fill" class="input-field" disabled>
+        <mat-label>Light</mat-label>
+        <input matInput formControlName="light" readonly />
+      </mat-form-field>
+    </div>
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">

@@ -87,7 +87,8 @@ export class ExperimentsComponent implements OnInit {
   }
 
   actionGoToLaboratory(experimentId: number): void {
-    this.experimentStateService.setExperimentId(experimentId);
+    // this.experimentStateService.setExperimentId(experimentId);
+    localStorage.setItem("experimentId", experimentId.toString());
     this.router.navigate(['/laboratory']);
   }
 

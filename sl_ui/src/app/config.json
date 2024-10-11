@@ -1,5 +1,5 @@
 {
-  "version": "0.1.6",
+  "version": "0.1.7",
   "api": {
     "baseUrl": "",
     "users": {
@@ -16,7 +16,7 @@
         "lightCommand": "street-lights/mqtt/light/"
       },
       "robot": "street-lights/robots/",
-      "lamp": "street-lights/lamps/",
+      "light": "street-lights/lights/",
       "experiment": "street-lights/experiments/",
       "grid": "street-lights/grids/"
     },
