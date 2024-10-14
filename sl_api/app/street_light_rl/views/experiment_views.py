@@ -1,5 +1,9 @@
 from street_light_rl.models import Experiment, Grid
-from street_light_rl.serializers import ExperimentSerializer, GridSerializer
+from street_light_rl.serializers import (
+    ExperimentWriteSerializer,
+    ExperimentReadSerializer,
+    GridSerializer,
+)
 from street_light_rl.views.utilities import handle_date_params
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -10,10 +14,15 @@ from rest_framework.exceptions import NotFound
 
 ## LIST | CREATE Experiment
 class ExperimentListCreateView(generics.ListCreateAPIView):
-    serializer_class = ExperimentSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
     queryset = Experiment.objects.all().order_by("id")
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return ExperimentReadSerializer
+
+        return ExperimentWriteSerializer
 
     def get_queryset(self):
         user = self.request.user
@@ -41,7 +50,7 @@ class ExperimentListCreateView(generics.ListCreateAPIView):
         data = request.data.copy()
         data["owner"] = user.id
 
-        serializer = self.serializer_class(data=data)
+        serializer = self.get_serializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -52,9 +61,14 @@ class ExperimentListCreateView(generics.ListCreateAPIView):
 
 ## UPDATE Experiment
 class ExperimentRetrieveUpdateView(generics.RetrieveUpdateAPIView):
-    serializer_class = ExperimentSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return ExperimentReadSerializer
+
+        return ExperimentWriteSerializer
 
     def get_object(self):
         user = self.request.user
@@ -76,7 +90,7 @@ class ExperimentRetrieveUpdateView(generics.RetrieveUpdateAPIView):
 
     def patch(self, request, *args, **kwargs):
         experiment = self.get_object()
-        serializer = self.serializer_class(experiment, data=request.data, partial=True)
+        serializer = self.get_serializer(experiment, data=request.data, partial=True)
         if serializer.is_valid():
             # If the serializer is valid, the experiment object is updated.
             serializer.save()
@@ -87,7 +101,7 @@ class ExperimentRetrieveUpdateView(generics.RetrieveUpdateAPIView):
 
 ## DELETE Experiment
 class ExperimentDeleteView(generics.DestroyAPIView):
-    serializer_class = ExperimentSerializer
+    serializer_class = ExperimentWriteSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 

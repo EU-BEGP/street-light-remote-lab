@@ -2,7 +2,7 @@ from street_light_rl.models import Light, Grid, Experiment
 from street_light_rl.serializers import (
     LightSerializer,
     GridSerializer,
-    ExperimentSerializer,
+    ExperimentReadSerializer,
 )
 from street_light_rl.views.utilities import handle_grid_param, handle_date_params
 from rest_framework import generics, status
@@ -58,7 +58,7 @@ class LightUpdateView(generics.UpdateAPIView):
 
 ## Get experiments related to a Light
 class LightExperimentsListView(generics.ListAPIView):
-    serializer_class = ExperimentSerializer
+    serializer_class = ExperimentReadSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 

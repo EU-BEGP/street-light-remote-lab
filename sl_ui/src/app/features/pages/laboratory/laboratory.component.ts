@@ -22,6 +22,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   private gridIds: number[] = [];
   gridDimension: number = 10;
   experimentId?: number | null;
+  lightCode?: string | null;
 
   // Component status variables
   hasUnsavedChanges: boolean = false;
@@ -34,7 +35,11 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
 
   // Robot cell variables
   frame: string = '';
-  sliderValue: number = 0;
+  pwmValue: number = 0;
+  pwmCurrentValue: number = 0
+  timeIntervalValue: number = 0;
+  timeIntervalCurrentValue: number = 0
+
   batteryInformation = {
     voltage: 0.0,
     current: 0.0,
@@ -151,7 +156,9 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.experimentId = Number(localStorage.getItem('experimentId'));
+    this.experimentId = Number(localStorage.getItem('experiment_id'));
+    this.lightCode = localStorage.getItem("light_code");
+
     if (!isNaN(this.experimentId) && this.experimentId > 0) {
       this.experimentService.getExperimentGrids(this.experimentId).subscribe((grids: Grid[]): void => {
         if (grids !== undefined && grids.length !== 0) {
@@ -205,6 +212,8 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     // Subscribe to WebSocket messages
     this.lightSubscription = this.lightWebsocketService.messages$.subscribe((message) => {
       if (message) {
+        this.pwmCurrentValue = message.pwm
+        this.timeIntervalCurrentValue = message.time_interval
         this.batteryInformation.voltage = message.battery_voltage
         this.batteryInformation.current = message.battery_current
         this.batteryInformation.power = message.battery_power
@@ -260,9 +269,13 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.mqttService.publishRobotCommand().subscribe((response) => {
-      if (response.success) {
-        this.toastr.success(response.success);
+    var data = {
+      'light_code': this.lightCode
+    }
+
+    this.mqttService.publishRobotCommand(data).subscribe((response) => {
+      if (response.status !== null && response.status === 200) {
+        this.toastr.success(response.body.success);
         this.isWsLoading = true;
         this.connectRobotWebSocket();
       }
@@ -270,10 +283,14 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   }
 
   sendLightCommand(turnOff: boolean): void {
-    var message = { 'pwm': this.sliderValue }
-    if (turnOff) message['pwm'] = 0;
+    var data = {
+      'light_code': this.lightCode,
+      'PWM': this.pwmValue,
+      'time_interval': this.timeIntervalValue,
+    }
+    if (turnOff) data['PWM'] = 0;
 
-    this.mqttService.publishLightCommand(message).subscribe((response) => {
+    this.mqttService.publishLightCommand(data).subscribe((response) => {
       if (response.status !== null && response.status === 200) {
         if (!turnOff) this.toastr.success(response.body.success);
       }

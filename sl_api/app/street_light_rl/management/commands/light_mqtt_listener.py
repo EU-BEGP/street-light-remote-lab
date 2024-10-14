@@ -61,7 +61,7 @@ def process_message(mqtt_message):
     ## Prepare the message object and sent it via websockets
     message = {
         k: light_defaults[k]
-        for k in light_defaults.keys() - {"code", "type", "pwm", "battery_energy"}
+        for k in light_defaults.keys() - {"code", "type", "battery_energy"}
     }
 
     stream_message_over_websocket(message, GROUP_NAME)

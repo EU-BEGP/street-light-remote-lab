@@ -68,7 +68,7 @@ export class RegistrationComponent implements OnInit {
 
     this.authService.signUp(user).subscribe((response) => {
       if (response.status !== null && response.status === 201) {
-        localStorage.setItem('userId', response.body.id.toString());
+        localStorage.setItem('user_id', response.body.id.toString());
 
         this.toastr.success(
           `Welcome ${user.name}`,

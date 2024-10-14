@@ -44,8 +44,8 @@ class Grid(models.Model):
     code = models.UUIDField(unique=True)
     width = models.IntegerField(null=True, blank=True)
     height = models.IntegerField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
     experiment = models.ForeignKey(
         Experiment,
         related_name="experiment_grids",

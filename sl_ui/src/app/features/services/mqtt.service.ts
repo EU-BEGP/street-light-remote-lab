@@ -21,9 +21,9 @@ export class MqttService {
     };
   }
 
-  publishRobotCommand(): Observable<any> {
+  publishRobotCommand(data: any): Observable<any> {
     const URL = `${config.api.baseUrl}${config.api.streetLights.mqtt.robotCommand}`;
-    return this.http.get<any>(URL)
+    return this.http.post(URL, data, this.httpOptions);
   }
 
   publishLightCommand(data: any): Observable<any> {

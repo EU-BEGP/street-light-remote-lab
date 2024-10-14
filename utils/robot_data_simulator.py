@@ -1,21 +1,21 @@
 # File: robot_simulator.py
 # Purpose: A robot data simulator for UPB remote lab.
 # Author: Maria Fernanda del Granado
+# Few adaptations made by Boris Pedraza
 
-import random
-import math
-import json
-import time
-import uuid
-import sys
-import paho.mqtt.client as mqtt
 from time import sleep
+import json
+import math
+import paho.mqtt.client as mqtt
+import random
+import sys
+import uuid
 
 # Define mqtt constants
-MQTT_PORT  = None
-MQTT_HOST  = None
-MQTT_TOPIC = None
-ROBOT_CODE = None
+MQTT_PORT = ""
+MQTT_HOST = ""
+MQTT_TOPIC = ""
+ROBOT_CODE = ""
 
 """
 Class that allows user to create robot object given the following:
@@ -30,7 +30,13 @@ Class that allows user to create robot object given the following:
 
 class Robot:
     def __init__(
-        self, robot_code, grid_code, width, height, lower_intensity_val, upper_intensity_val
+        self,
+        robot_code,
+        grid_code,
+        width,
+        height,
+        lower_intensity_val,
+        upper_intensity_val,
     ):
         self.width = width
         self.height = height
@@ -221,6 +227,7 @@ if __name__ == "__main__":
         robot.print_results()
         robot.print_grid()
         robot.send_json_data()
+
     except:
         print(
             "Arguments must be as follows: width height lower_intensity_val upper_intensity_val. Only ints."

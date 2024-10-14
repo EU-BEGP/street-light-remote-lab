@@ -1,25 +1,22 @@
-# File: robot_simulator.py
-# Purpose: A robot data simulator for UPB remote lab.
-# Author: Maria Fernanda del Granado
+# Purpose: A dynamic robot data simulator based on requests.
+# Main Author: Maria Fernanda del Granado
+# Few adaptations made by Boris Pedraza
 
 from time import sleep
 import json
 import math
 import paho.mqtt.client as mqtt
 import random
-import sys
 import uuid
 
-# Define mqtt constants
-MQTT_HOST = None
-MQTT_PORT = None
-MQTT_USER = None
-MQTT_PWD = None
-MQTT_SUB_TOPIC = None
-MQTT_PUB_TOPIC = None
+MQTT_HOST = ""
+MQTT_PORT = 1883
+MQTT_USER = ""
+MQTT_PWD = ""
+MQTT_SUB_TOPIC = ""
+MQTT_PUB_TOPIC = ""
 
-# Define robot_id constant
-ROBOT_CODE = None
+ROBOT_CODE = ""
 
 """
 Class that allows user to create robot object given the following:
@@ -48,7 +45,7 @@ class Robot:
         self.grid_code = str(grid_code)
         self.upper_intensity_val = upper_intensity_val
         self.lower_intensity_val = lower_intensity_val
-        self.results = []  # 2D list.
+        self.results = []
 
     """
     Function calculates intensity of the distance.
@@ -113,22 +110,21 @@ class Robot:
                     data["is_last"] = False
 
                 sleep(0.05)
-                # print(data)
                 mqttc.publish(MQTT_PUB_TOPIC, json.dumps(data))
 
-        print("Data sent successfully\n")
+        print("[Robot Data Simulator]: All messages sent successfully\n")
 
 
 # MQTT CALLBACKS
 def on_connect(client, userdata, flags, reason_code, properties):
     client.subscribe(MQTT_SUB_TOPIC)
+    print("[Robot Data Simulator]: Connected to mqtt broker and topic")
 
 
 def on_message(client, userdata, msg):
+    print("[Robot Data Simulator]: Captured request")
     message = json.loads(msg.payload.decode())
-    if message["message"] == "capture":
-        print("Capture of grid requested")
-
+    if message["robot_code"] == ROBOT_CODE and message["capture"]:
         robot = Robot(
             robot_code=ROBOT_CODE,
             grid_code=str(uuid.uuid4()),
@@ -142,6 +138,7 @@ def on_message(client, userdata, msg):
 
 
 if __name__ == "__main__":
+    print("[Robot Data Simulator]: Initialized")
     mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     mqttc.on_connect = on_connect
     mqttc.on_message = on_message

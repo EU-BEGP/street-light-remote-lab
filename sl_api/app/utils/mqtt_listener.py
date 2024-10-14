@@ -54,8 +54,10 @@ class MQTTListener:
             print(
                 f"{self.name} MQTT Listener]: Failed to decode JSON from message: {msg.payload}"
             )
+            client.reconnect()
         except Exception as e:
             print(f"[{self.name} MQTT Listener]: An error occurred: {e}")
+            client.reconnect()
 
     def start(self):
         while True:
