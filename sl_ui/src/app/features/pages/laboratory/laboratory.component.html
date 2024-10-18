@@ -2,78 +2,59 @@
   <mat-tab label="Activity 1">
     <app-spinner id="grid-spinner" [showSpinner]="isWsLoading"></app-spinner>
     <div class="laboratory-container">
+
+      <!-- LIGHT INFORMATION -->
       <div class="contents">
-
-        <!-- ROBOT cell-->
-        <div class="robot">
-          <h2 class="title">Robot</h2>
-          <div class="video-container">
-            <img *ngIf="frame" [src]="frame" alt="Video Stream" />
+        <div class="light-info">
+          <span class="title">{{lightCode?.toUpperCase()}} Information ({{lightType}})</span>
+          <div class="light-info-item">
+            <span>PWM:</span>
+            <span class="light-label">
+              {{lightInformation.pwm}}
+            </span>
+            <span>%</span>
           </div>
-          <div class="controls">
-            <div class="control-item">
-              <span class="title">Set Light Properties</span>
-              <span>PWM (Current : {{pwmCurrentValue}})</span>
-              <div class="slider-container">
-                <span class="slider-label">0</span>
-                <mat-slider class="slider" min="0" max="100" step="10" [(ngModel)]="pwmValue" thumbLabel
-                  color="primary"></mat-slider>
-                <span class="slider-label">100</span>
-              </div>
-              <span>Time Interval (Current: {{timeIntervalCurrentValue}})</span>
-              <div class="slider-container">
-                <span class="slider-label">0</span>
-                <mat-slider class="slider" min="0" max="60" step="1" [(ngModel)]="timeIntervalValue" thumbLabel
-                  color="primary"></mat-slider>
-                <span class="slider-label">60</span>
-              </div>
-              <button mat-raised-button color="primary" (click)="sendLightCommand(false)">Send</button>
-            </div>
-
-            <div class="control-item">
-              <span class="title">Control Robot</span>
-              <button mat-raised-button color="primary" (click)="sendRobotCommand()"
-                [disabled]="chartsSaved && !(graph.data.length < maxNumbercharts)">Start</button>
-            </div>
-
-            <div class="control-item">
-              <span class="title">Battery Information</span>
-              <div class="battery-info-item">
-                <span>Voltage:</span>
-                <span class="battery-label {{this.batteryInformation.voltage < 0 ? 'discharging' : ''}}">
-                  {{this.batteryInformation.voltage}}
-                </span>
-                <span>[V]</span>
-              </div>
-              <div class="battery-info-item">
-                <span>Current:</span>
-                <span class="battery-label {{this.batteryInformation.current < 0 ? 'discharging' : ''}}">
-                  {{this.batteryInformation.current}}
-                </span>
-                <span>[A]</span>
-              </div>
-              <div class="battery-info-item">
-                <span>Power:</span>
-                <span class="battery-label {{this.batteryInformation.power < 0 ? 'discharging' : ''}}">
-                  {{this.batteryInformation.power}}
-                </span>
-                <span>[W]</span>
-              </div>
-              <div class="battery-info-item">
-                <span>Battery Level:</span>
-                <span class="battery-label">
-                  {{this.batteryInformation.level}}
-                </span>
-                <span>%</span>
-              </div>
-            </div>
+          <div class="light-info-item">
+            <span>Time Interval:</span>
+            <span class="light-label">
+              {{lightInformation.timeInterval}}
+            </span>
+            <span>[s]</span>
+          </div>
+          <div class="light-info-item">
+            <span>Battery Voltage:</span>
+            <span class="light-label {{lightInformation.battery.voltage < 0 ? 'discharging' : ''}}">
+              {{lightInformation.battery.voltage}}
+            </span>
+            <span>[V]</span>
+          </div>
+          <div class="light-info-item">
+            <span>Battery Current:</span>
+            <span class="light-label {{lightInformation.battery.current < 0 ? 'discharging' : ''}}">
+              {{lightInformation.battery.current}}
+            </span>
+            <span>[A]</span>
+          </div>
+          <div class="light-info-item">
+            <span>Battery Power:</span>
+            <span class="light-label {{lightInformation.battery.power < 0 ? 'discharging' : ''}}">
+              {{lightInformation.battery.power}}
+            </span>
+            <span>[W]</span>
+          </div>
+          <div class="light-info-item">
+            <span>Battery Level:</span>
+            <span class="light-label">
+              {{lightInformation.battery.level}}
+            </span>
+            <span>%</span>
           </div>
         </div>
 
         <!-- GRID cell -->
         <div class="grid">
-          <h2 class="title">Intensity Grid</h2>
-          <mat-grid-list [cols]="this.gridDimension" [rowHeight]="35" gutterSize="10px">
+          <h2>Intensity Grid</h2>
+          <mat-grid-list [cols]="this.gridDimension" [rowHeight]="30" gutterSize="10px">
             <mat-grid-tile class="custom-grid-tile" *ngFor="let cell of grid.flat()"
               [style.backgroundColor]="getCellColor(cell)" [ngClass]="cell > 0 ? 'text-white' : 'text-black'">
               {{ cell }}
@@ -81,18 +62,66 @@
           </mat-grid-list>
         </div>
 
+        <!-- ROBOT cell-->
+        <div class="robot">
+          <h2>Robot Camera</h2>
+          <div class="video-container">
+            <img *ngIf="frame" [src]="frame" alt="Video Stream" />
+          </div>
+        </div>
+
 
         <!-- CHART cell -->
         <div class="chart">
-          <h2 class="title">Intensity Chart</h2>
+          <h2>Intensity Chart</h2>
           <plotly-plot [data]="graph.data" [layout]="chartInitialLayout"></plotly-plot>
+        </div>
+
+
+        <!-- CONTROLS -->
+        <div class="light-control">
+          <span class="title">Light Properties</span>
+          <div class="light-interaction">
+            <div class="pwm">
+              <span id="pwm-label">PWM</span>
+              <div class="slider">
+                <span class="slider-label">0</span>
+                <mat-slider min="0" max="100" step="10" [(ngModel)]="pwmValue" thumbLabel color="primary"></mat-slider>
+                <span class="slider-label">100</span>
+              </div>
+            </div>
+
+            <div class="time-interval">
+              <mat-form-field appearance="fill">
+                <mat-label>Time Interval</mat-label>
+                <select matNativeControl required [(ngModel)]="timeIntervalValue">
+                  <option value="5">5 [s]</option>
+                  <option value="10">10 [s]</option>
+                  <option value="15">15 [s]</option>
+                  <option value="30">30 [s]</option>
+                  <option value="60">60 [s]</option>
+                </select>
+              </mat-form-field>
+            </div>
+          </div>
+          <button mat-raised-button color="primary" (click)="sendLightCommand(false)">Send</button>
+        </div>
+
+        <div class="robot-control">
+          <span class="title">Control Robot</span>
+          <button mat-raised-button color="primary" (click)="sendRobotCommand()"
+            [disabled]="chartsSaved && !(graph.data.length < maxNumbercharts)">
+            Capture Grid
+          </button>
+        </div>
+
+        <div class="chart-control">
           <button mat-raised-button color="primary"
             [disabled]="getZArrayStatus() || (!(graph.data.length < maxNumbercharts) && chartsSaved) "
             (click)="saveCharts()">
             Save Chart Data
           </button>
         </div>
-
 
         <!-- SIMULATION cells -->
         <div class="simulation" *ngIf="chartsSaved">

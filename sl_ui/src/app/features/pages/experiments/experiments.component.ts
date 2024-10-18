@@ -88,6 +88,7 @@ export class ExperimentsComponent implements OnInit {
     if (experiment) {
       if (experiment.id) localStorage.setItem('experiment_id', experiment.id.toString());
       if (experiment.light) if (experiment.light.code) localStorage.setItem('light_code', experiment.light.code.toString());
+      if (experiment.light) if (experiment.light.type) localStorage.setItem('light_type', experiment.light.type.toString());
       this.router.navigate(['/laboratory']);
     }
   }

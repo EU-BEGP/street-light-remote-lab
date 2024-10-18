@@ -25,6 +25,7 @@ class ReducedLightSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "code",
+            "type",
         ]
 
 

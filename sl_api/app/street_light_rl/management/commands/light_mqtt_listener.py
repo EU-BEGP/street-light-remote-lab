@@ -63,6 +63,9 @@ def process_message(mqtt_message):
         k: light_defaults[k]
         for k in light_defaults.keys() - {"code", "type", "battery_energy"}
     }
+    message["time_interval"] = (
+        message["time_interval"] / 1000
+    )  # Send the time interval in seconds
 
     stream_message_over_websocket(message, GROUP_NAME)
 

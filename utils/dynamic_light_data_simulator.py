@@ -5,7 +5,7 @@ import paho.mqtt.publish as publish
 import random
 import threading
 
-MQTT_PORT = 1884
+MQTT_PORT = 1883
 MQTT_HOST = ""
 MQTT_USER = ""
 MQTT_PWD = ""

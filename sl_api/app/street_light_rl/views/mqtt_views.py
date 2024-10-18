@@ -65,14 +65,14 @@ class PublishLightCommand(generics.GenericAPIView):
     # Function to publish a message to indicate the robot to start capturing grid data
     def post(self, request, *args, **kwargs):
         light_code = request.data.get("light_code", None)
-        pwm = request.data.get("PWM", None)
-        time_interval = request.data.get("time_interval", None)
+        pwm = int(request.data.get("PWM", None))
+        time_interval = int(request.data.get("time_interval", None))
 
         if light_code is not None and pwm is not None and time_interval is not None:
             message = {
                 "light_code": light_code,
                 "PWM": pwm,
-                "time_interval": time_interval,
+                "time_interval": time_interval * 1000,  # Convert to miliseconds
             }
             publish.single(
                 mqtt_light_topic,

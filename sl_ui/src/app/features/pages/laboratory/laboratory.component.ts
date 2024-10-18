@@ -23,6 +23,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   gridDimension: number = 10;
   experimentId?: number | null;
   lightCode?: string | null;
+  lightType?: string | null;
 
   // Component status variables
   hasUnsavedChanges: boolean = false;
@@ -36,15 +37,18 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   // Robot cell variables
   frame: string = '';
   pwmValue: number = 0;
-  pwmCurrentValue: number = 0
-  timeIntervalValue: number = 0;
-  timeIntervalCurrentValue: number = 0
+  timeIntervalValue: number = 15;
 
-  batteryInformation = {
-    voltage: 0.0,
-    current: 0.0,
-    power: 0.0,
-    level: 0.0,
+  lightInformation = {
+    lightCode: this.lightCode,
+    pwm: 0.0,
+    timeInterval: 0.0,
+    battery: {
+      voltage: 0.0,
+      current: 0.0,
+      power: 0.0,
+      level: 0.0,
+    }
   }
 
   // Grid cell variables
@@ -158,6 +162,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.experimentId = Number(localStorage.getItem('experiment_id'));
     this.lightCode = localStorage.getItem("light_code");
+    this.lightType = localStorage.getItem("light_type");
 
     if (!isNaN(this.experimentId) && this.experimentId > 0) {
       this.experimentService.getExperimentGrids(this.experimentId).subscribe((grids: Grid[]): void => {
@@ -212,12 +217,12 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     // Subscribe to WebSocket messages
     this.lightSubscription = this.lightWebsocketService.messages$.subscribe((message) => {
       if (message) {
-        this.pwmCurrentValue = message.pwm
-        this.timeIntervalCurrentValue = message.time_interval
-        this.batteryInformation.voltage = message.battery_voltage
-        this.batteryInformation.current = message.battery_current
-        this.batteryInformation.power = message.battery_power
-        this.batteryInformation.level = message.battery_level
+        this.lightInformation.pwm = message.pwm;
+        this.lightInformation.timeInterval = Number(message.time_interval);
+        this.lightInformation.battery.voltage = message.battery_voltage;
+        this.lightInformation.battery.current = message.battery_current;
+        this.lightInformation.battery.power = message.battery_power;
+        this.lightInformation.battery.level = message.battery_level;
       }
     });
   }
