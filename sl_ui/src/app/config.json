@@ -12,13 +12,13 @@
     },
     "streetLights": {
       "mqtt": {
-        "robotCommand": "street-lights/mqtt/robot/",
-        "lightCommand": "street-lights/mqtt/light/"
+        "robotCommand": "mqtt/robot/",
+        "lightCommand": "mqtt/light/"
       },
-      "robot": "street-lights/robots/",
-      "light": "street-lights/lights/",
-      "experiment": "street-lights/experiments/",
-      "grid": "street-lights/grids/"
+      "robot": "robots/",
+      "light": "lights/",
+      "experiment": "experiments/",
+      "grid": "grids/"
     },
     "websocketUrls": {
       "robotInformation": "",
