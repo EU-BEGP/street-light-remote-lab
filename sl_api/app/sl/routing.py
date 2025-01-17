@@ -10,5 +10,4 @@ websocket_urlpatterns = [
         r"sl/light-information/$",
         consumers.LightInformationConsumer.as_asgi(),
     ),
-    re_path(r"sl/camera-stream/$", consumers.CameraStreamConsumer.as_asgi()),
 ]

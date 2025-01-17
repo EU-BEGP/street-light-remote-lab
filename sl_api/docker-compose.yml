@@ -1,6 +1,13 @@
 version: "3"
 
 services:
+  camera_stream:
+    build:
+      context: ./camera_server
+    ports:
+      - "6003:6003"
+    env_file: .env
+    restart: ${RESTART_POLICY}
   db:
     image: postgres:15-alpine
     env_file: .env
