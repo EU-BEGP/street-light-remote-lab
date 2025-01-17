@@ -1,12 +1,12 @@
-from street_light_rl.views import robot_views
-from street_light_rl.views import light_views
-from street_light_rl.views import experiment_views
-from street_light_rl.views import grid_views
-from street_light_rl.views import message_views
-from street_light_rl.views import mqtt_views
+from sl.views import robot_views
+from sl.views import light_views
+from sl.views import experiment_views
+from sl.views import grid_views
+from sl.views import message_views
+from sl.views import mqtt_views
 from django.urls import path
 
-app_name = "street_light_rl"
+app_name = "sl"
 
 urlpatterns = [
     path(

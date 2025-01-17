@@ -1,10 +1,10 @@
-from street_light_rl.models import Experiment, Grid
-from street_light_rl.serializers import (
+from sl.models import Experiment, Grid
+from sl.serializers import (
     ExperimentWriteSerializer,
     ExperimentReadSerializer,
     GridSerializer,
 )
-from street_light_rl.views.utilities import handle_date_params
+from sl.views.utilities import handle_date_params
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication

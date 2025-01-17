@@ -65,12 +65,12 @@ DEBUG=0
 SECRET_KEY='<secret_key:string>'
 TRUSTED_HOSTS=<domain_name_hosts:string>
 TRUSTED_ORIGINS=<full_url_origins:string>
-FORCE_SCRIPT_NAME=/street-light-rl/api
+FORCE_SCRIPT_NAME=/sl/api
 DB_HOST=db
 DB_NAME=<db_name:string>
 DB_USER=<db_user:string>
 DB_PASSWORD=<db_password:string>
-STATIC_URL=/street-light-rl/api/static/
+STATIC_URL=/sl/api/static/
 EMAIL_HOST_USER=<email_host:string>
 EMAIL_HOST_PASSWORD=<email_passwod:string>
 
@@ -105,8 +105,8 @@ The environment variables used for the project are explained in the following ta
 | `SECRET_KEY`        | Secret key used for cryptographic operations and security purposes. Must be kept confidential. |
 | `TRUSTED_HOSTS`     | Comma-separated list of domain names or IP addresses allowed to access the Django application (e.g., `example.com,www.example.com`). |
 | `TRUSTED_ORIGINS`   | Comma-separated list of full URLs (including `http://` or `https://`) allowed for cross-origin requests and trusted for CSRF protection (e.g., `https://example.com,https://sub.example.com`). |
-| `FORCE_SCRIPT_NAME` | URL prefix for the application, useful when the application is served from a subpath (e.g., `/street-light-rl/api`). |
-| `STATIC_URL`        | Base URL for serving static files (e.g., `/street-light-rl/api/static/`). |
+| `FORCE_SCRIPT_NAME` | URL prefix for the application, useful when the application is served from a subpath (e.g., `/sl/api`). |
+| `STATIC_URL`        | Base URL for serving static files (e.g., `/sl/api/static/`). |
 | `UI_BASE_URL`       | Base URL for the application's user interface (e.g., `https://example.com/ui/`). |
 | `DB_HOST`           | Hostname or IP address of the database server (e.g., `db`). |
 | `DB_NAME`           | Name of the database to connect to within the database server (e.g., `mydatabase`). |

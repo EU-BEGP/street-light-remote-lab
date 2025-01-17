@@ -1,5 +1,5 @@
-from street_light_rl.models import Grid
-from street_light_rl.serializers import GridSerializer
+from sl.models import Grid
+from sl.serializers import GridSerializer
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication

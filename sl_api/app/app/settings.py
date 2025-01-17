@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     "channels",
     "app",
     "users",
-    "street_light_rl",
+    "sl",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

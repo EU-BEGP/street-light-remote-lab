@@ -1,5 +1,5 @@
-from street_light_rl.models import Message
-from street_light_rl.serializers import MessageSerializer
+from sl.models import Message
+from sl.serializers import MessageSerializer
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication

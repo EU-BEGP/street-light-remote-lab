@@ -8,12 +8,17 @@ class Light(models.Model):
         max_length=2, choices=(("AC", "Alternating Current"), ("DC", "Direct Current"))
     )
     pwm = models.FloatField(default=0.0)
+    voltage = models.FloatField(default=0.0)
+    current = models.FloatField(default=0.0)
     time_interval = models.FloatField(default=0.0)
-    battery_voltage = models.FloatField(default=0.0)
-    battery_current = models.FloatField(default=0.0)
-    battery_power = models.FloatField(default=0.0)
-    battery_level = models.FloatField(default=0.0)
-    battery_energy = models.FloatField(default=0.0)
+    power = models.FloatField(default=0.0)
+    energy = models.FloatField(default=0.0)
+    frequency = models.FloatField(default=0.0)
+    factor = models.FloatField(default=0.0)
+    power_consumption = models.FloatField(default=0.0)
+    power_charge = models.FloatField(default=0.0)
+    energy_consumption = models.FloatField(default=0.0)
+    energy_charge = models.FloatField(default=0.0)
 
 
 class Robot(models.Model):

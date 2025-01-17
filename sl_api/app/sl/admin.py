@@ -9,12 +9,17 @@ class LightAdmin(admin.ModelAdmin):
         "code",
         "type",
         "pwm",
+        "voltage",
+        "current",
         "time_interval",
-        "battery_current",
-        "battery_voltage",
-        "battery_power",
-        "battery_level",
-        "battery_energy",
+        "power",
+        "energy",
+        "frequency",
+        "factor",
+        "power_consumption",
+        "power_charge",
+        "energy_consumption",
+        "energy_charge",
     ]
 
 

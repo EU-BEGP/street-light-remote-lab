@@ -10,12 +10,17 @@ class LightSerializer(serializers.ModelSerializer):
             "code",
             "type",
             "pwm",
+            "voltage",
+            "current",
             "time_interval",
-            "battery_voltage",
-            "battery_current",
-            "battery_power",
-            "battery_level",
-            "battery_energy",
+            "power",
+            "energy",
+            "frequency",
+            "factor",
+            "power_consumption",
+            "power_charge",
+            "energy_consumption",
+            "energy_charge",
         ]
 
 

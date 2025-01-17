@@ -14,7 +14,7 @@ MQTT_PUB_TOPIC = ""
 MQTT_AUTH = {"username": MQTT_USER, "password": MQTT_PWD}
 
 LIGHT_CODE = ""
-DEFAULT_TIME_INTERVAL = 5
+DEFAULT_TIME_INTERVAL = 5000
 
 pwm = random.randint(0, 100)
 time_interval = DEFAULT_TIME_INTERVAL
@@ -68,4 +68,4 @@ if __name__ == "__main__":
             port=int(MQTT_PORT),
             auth=MQTT_AUTH,
         )
-        sleep(time_interval)
+        sleep(time_interval / 1000)

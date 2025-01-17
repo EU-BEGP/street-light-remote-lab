@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from street_light_rl.models import Message, Grid, Robot, Light
+from sl.models import Message, Grid, Robot, Light
 from time import sleep
 from utils.mqtt_listener import MQTTListener
 from utils.tools import stream_message_over_websocket

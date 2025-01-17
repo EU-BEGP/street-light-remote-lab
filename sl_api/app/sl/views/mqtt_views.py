@@ -2,7 +2,7 @@ from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from street_light_rl.models import Robot
+from sl.models import Robot
 import json
 import os
 import paho.mqtt.publish as publish

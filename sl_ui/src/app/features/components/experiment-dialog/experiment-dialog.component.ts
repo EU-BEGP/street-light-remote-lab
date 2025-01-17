@@ -113,7 +113,7 @@ export class ExperimentDialogComponent implements OnInit {
 
   patchFormValues(experiment: Experiment): void {
     if (experiment) {
-      const light = this.lights?.find(light => light.id == experiment.light);
+      const light = this.lights?.find(light => light.id == experiment.light?.id);
       const lightCode = light?.code;
       const lightType = light?.type;
 
