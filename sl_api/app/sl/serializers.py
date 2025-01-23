@@ -5,23 +5,7 @@ from .models import Robot, Light, Experiment, Message, Grid
 class LightSerializer(serializers.ModelSerializer):
     class Meta:
         model = Light
-        fields = [
-            "id",
-            "code",
-            "type",
-            "pwm",
-            "voltage",
-            "current",
-            "time_interval",
-            "power",
-            "energy",
-            "frequency",
-            "factor",
-            "power_consumption",
-            "power_charge",
-            "energy_consumption",
-            "energy_charge",
-        ]
+        fields = "__all__"
 
 
 class ReducedLightSerializer(serializers.ModelSerializer):

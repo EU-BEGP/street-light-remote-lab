@@ -5,20 +5,31 @@ from django.db import models
 class Light(models.Model):
     code = models.CharField(max_length=50, unique=True)
     type = models.CharField(
-        max_length=2, choices=(("AC", "Alternating Current"), ("DC", "Direct Current"))
+        max_length=10,
+        choices=(
+            ("DC", "Direct Current"),
+            ("AC", "Alternating Current"),
+            ("AC_INV", "Alternating Current with Inverter"),
+        ),
     )
     pwm = models.FloatField(default=0.0)
-    voltage = models.FloatField(default=0.0)
-    current = models.FloatField(default=0.0)
     time_interval = models.FloatField(default=0.0)
-    power = models.FloatField(default=0.0)
-    energy = models.FloatField(default=0.0)
-    frequency = models.FloatField(default=0.0)
+
+    # DC-specific fields
+    dc_voltage = models.FloatField(default=0.0, null=True, blank=True)
+    dc_current = models.FloatField(default=0.0, null=True, blank=True)
+    dc_power = models.FloatField(default=0.0, null=True, blank=True)
+    dc_energy_consumption = models.FloatField(default=0.0, null=True, blank=True)
+    dc_energy_charge = models.FloatField(default=0.0, null=True, blank=True)
+    dc_level = models.FloatField(default=0.0, null=True, blank=True)
+
+    # AC-specific fields
+    ac_voltage = models.FloatField(default=0.0, null=True, blank=True)
+    ac_current = models.FloatField(default=0.0, null=True, blank=True)
+    ac_power = models.FloatField(default=0.0, null=True, blank=True)
+    ac_energy = models.FloatField(default=0.0, null=True, blank=True)
+    frequency = models.FloatField(default=0.0, null=True, blank=True)
     factor = models.FloatField(default=0.0)
-    power_consumption = models.FloatField(default=0.0)
-    power_charge = models.FloatField(default=0.0)
-    energy_consumption = models.FloatField(default=0.0)
-    energy_charge = models.FloatField(default=0.0)
 
 
 class Robot(models.Model):

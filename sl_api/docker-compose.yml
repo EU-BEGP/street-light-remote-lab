@@ -29,6 +29,25 @@ services:
     image: redis:latest
     volumes:
       - redis_data:/data
+  influxdb:
+    image: influxdb:2.7-alpine
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2:rw
+      - influxdb_config:/etc/influxdb2:rw
+    env_file: .env
+    restart: ${RESTART_POLICY}
+  telegraf:
+    image: telegraf:1.30-alpine
+    depends_on:
+      - influxdb
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    env_file: .env
+    restart: ${RESTART_POLICY}
 volumes:
   postgres_data:
   redis_data:
+  influxdb_data:
+  influxdb_config:

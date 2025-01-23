@@ -22,32 +22,47 @@ def process_message(mqtt_message):
     code = mqtt_message["code"]
     type = mqtt_message["type"]
     pwm = mqtt_message["pwm"]
-    voltage = mqtt_message["voltage"]
-    current = mqtt_message["current"]
     time_interval = mqtt_message["time_interval"]
 
     light_object = {
         "code": code,
         "type": type,
         "pwm": pwm,
-        "voltage": voltage,
-        "current": current,
         "time_interval": time_interval,
     }
 
-    if type == "AC":
+    if type == "DC":
+        # Capture DC only data and store it in the light object
+        light_object["dc_voltage"] = mqtt_message["dc_voltage"]
+        light_object["dc_current"] = mqtt_message["dc_current"]
+        light_object["dc_power"] = mqtt_message["dc_power"]
+        light_object["dc_energy_consumption"] = mqtt_message["dc_energy_consumption"]
+        light_object["dc_energy_charge"] = mqtt_message["dc_energy_charge"]
+        light_object["dc_level"] = mqtt_message["dc_level"]
+
+    elif type == "AC":
         # Capture AC only data and store it in the light object
-        light_object["power"] = mqtt_message["power"]
-        light_object["energy"] = mqtt_message["energy"]
+        light_object["ac_voltage"] = mqtt_message["ac_voltage"]
+        light_object["ac_current"] = mqtt_message["ac_current"]
+        light_object["ac_power"] = mqtt_message["ac_power"]
+        light_object["ac_energy"] = mqtt_message["ac_energy"]
         light_object["frequency"] = mqtt_message["frequency"]
         light_object["factor"] = mqtt_message["factor"]
 
-    elif type == "DC":
-        # Capture DC only data and store it in the light object
-        light_object["power_consumption"] = mqtt_message["power_consumption"]
-        light_object["power_charge"] = mqtt_message["power_charge"]
-        light_object["energy_consumption"] = mqtt_message["energy_consumption"]
-        light_object["energy_charge"] = mqtt_message["energy_charge"]
+    elif type == "AC_INV":
+        # Capture data combination of both types of lights
+        light_object["ac_voltage"] = mqtt_message["ac_voltage"]
+        light_object["ac_current"] = mqtt_message["ac_current"]
+        light_object["ac_power"] = mqtt_message["ac_power"]
+        light_object["ac_energy"] = mqtt_message["ac_energy"]
+        light_object["frequency"] = mqtt_message["frequency"]
+        light_object["factor"] = mqtt_message["factor"]
+        light_object["dc_voltage"] = mqtt_message["dc_voltage"]
+        light_object["dc_current"] = mqtt_message["dc_current"]
+        light_object["dc_power"] = mqtt_message["dc_power"]
+        light_object["dc_energy_consumption"] = mqtt_message["dc_energy_consumption"]
+        light_object["dc_energy_charge"] = mqtt_message["dc_energy_charge"]
+        light_object["dc_level"] = mqtt_message["dc_level"]
 
     _, _ = Light.objects.update_or_create(
         code=code,
