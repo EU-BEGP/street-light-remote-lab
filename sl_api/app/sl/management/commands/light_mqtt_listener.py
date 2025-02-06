@@ -19,13 +19,12 @@ GROUP_NAME = "light_group"
 
 def process_message(mqtt_message):
     # Capture light properties
-    code = mqtt_message["code"]
+    light_code = mqtt_message["light_code"]
     type = mqtt_message["type"]
     pwm = mqtt_message["pwm"]
     time_interval = mqtt_message["time_interval"]
 
     light_object = {
-        "code": code,
         "type": type,
         "pwm": pwm,
         "time_interval": time_interval,
@@ -65,10 +64,11 @@ def process_message(mqtt_message):
         light_object["dc_level"] = mqtt_message["dc_level"]
 
     _, _ = Light.objects.update_or_create(
-        code=code,
+        code=light_code,
         defaults=light_object,
     )
 
+    light_object = dict({"light_code": light_code}, **light_object)
     stream_message_over_websocket(light_object, GROUP_NAME)
 
 

@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs';
+import { Light } from '../../interfaces/light';
 
 @Component({
   selector: 'app-laboratory',
@@ -20,7 +21,7 @@ import { forkJoin } from 'rxjs';
 export class LaboratoryComponent implements OnInit, OnDestroy {
   // General variables
   private gridIds: number[] = [];
-  gridDimension: number = 10;
+  gridDimension: number = 8;
   experimentId?: number | null;
   lightCode?: string | null;
   lightType?: string | null;
@@ -39,17 +40,10 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   pwmValue: number = 0;
   timeIntervalValue: number = 15;
 
-  lightInformation = {
-    lightCode: this.lightCode,
-    pwm: 0.0,
-    timeInterval: 0.0,
-    battery: {
-      voltage: 0.0,
-      current: 0.0,
-      power: 0.0,
-      level: 0.0,
-    }
-  }
+  light: Light = {
+    code: this.lightCode!,
+    type: this.lightType!
+  };
 
   // Grid cell variables
   grid: number[][] = this.generateInitialGrid();
@@ -215,14 +209,54 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     }
 
     // Subscribe to WebSocket messages
-    this.lightSubscription = this.lightWebsocketService.messages$.subscribe((message) => {
-      if (message) {
-        this.lightInformation.pwm = message.pwm;
-        this.lightInformation.timeInterval = Number(message.time_interval);
-        this.lightInformation.battery.voltage = message.battery_voltage;
-        this.lightInformation.battery.current = message.battery_current;
-        this.lightInformation.battery.power = message.battery_power;
-        this.lightInformation.battery.level = message.battery_level;
+    this.lightSubscription = this.lightWebsocketService.messages$.subscribe((light_msg) => {
+      if (light_msg.light_code == this.lightCode) {
+        this.pwmValue = light_msg.pwm;
+        this.timeIntervalValue = (Number(light_msg.time_interval) / 1000);
+        this.light.pwm = light_msg.pwm;
+        this.light.timeInterval = (Number(light_msg.time_interval) / 1000);
+
+        if (light_msg.type == this.lightType) {
+          if (this.lightType == "DC") {
+            this.light = {
+              ...this.light,
+              dcVoltage: light_msg.dc_voltage,
+              dcCurrent: light_msg.dc_current,
+              dcPower: light_msg.dc_power,
+              dcEnergyConsumption: light_msg.dc_energy_consumption,
+              dcEnergyCharge: light_msg.dc_energy_charge,
+              dcLevel: light_msg.dc_level
+            };
+          }
+          if (this.lightType == "AC") {
+            this.light = {
+              ...this.light,
+              acVoltage: light_msg.ac_voltage,
+              acCurrent: light_msg.ac_current,
+              acPower: light_msg.ac_power,
+              acEnergy: light_msg.ac_energy,
+              frequency: light_msg.frequency,
+              factor: light_msg.factor
+            };
+          }
+          if (this.lightType == "AC_INV") {
+            this.light = {
+              ...this.light,
+              dcVoltage: light_msg.dc_voltage,
+              dcCurrent: light_msg.dc_current,
+              dcPower: light_msg.dc_power,
+              dcEnergyConsumption: light_msg.dc_energy_consumption,
+              dcEnergyCharge: light_msg.dc_energy_charge,
+              dcLevel: light_msg.dc_level,
+              acVoltage: light_msg.ac_voltage,
+              acCurrent: light_msg.ac_current,
+              acPower: light_msg.ac_power,
+              acEnergy: light_msg.ac_energy,
+              frequency: light_msg.frequency,
+              factor: light_msg.factor
+            };
+          }
+        }
       }
     });
   }
@@ -236,9 +270,9 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     }
 
     // Subscribe to WebSocket messages
-    this.cameraSubscription = this.cameraWebsocketService.messages$.subscribe((message) => {
-      if (message) {
-        this.frame = `data:image/jpeg;base64,${message.frame}`;
+    this.cameraSubscription = this.cameraWebsocketService.messages$.subscribe((camera_msg) => {
+      if (camera_msg) {
+        this.frame = `data:image/jpeg;base64,${camera_msg.frame}`;
       }
     });
   }
@@ -252,15 +286,15 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     }
 
     // Subscribe to WebSocket messages
-    this.robotSubscription = this.robotWebsocketService.messages$.subscribe((message) => {
-      if (message) {
+    this.robotSubscription = this.robotWebsocketService.messages$.subscribe((robot_msg) => {
+      if (robot_msg) {
         this.isWsLoading = false;
         this.hasUnsavedChanges = true;
-        this.refreshGrid(message);
-        this.refreshGraph(message);
+        this.refreshGrid(robot_msg);
+        this.refreshGraph(robot_msg);
 
-        if (message.is_last) {
-          this.gridIds.push(message.grid_id);
+        if (robot_msg.is_last) {
+          this.gridIds.push(robot_msg.grid_id);
           this.robotWebsocketService.disconnect();
         }
       }
@@ -290,10 +324,10 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   sendLightCommand(turnOff: boolean): void {
     var data = {
       'light_code': this.lightCode,
-      'PWM': this.pwmValue,
+      'pwm': this.pwmValue,
       'time_interval': this.timeIntervalValue,
     }
-    if (turnOff) data['PWM'] = 0;
+    if (turnOff) data['pwm'] = 0;
 
     this.mqttService.publishLightCommand(data).subscribe((response) => {
       if (response.status !== null && response.status === 200) {

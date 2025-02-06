@@ -89,25 +89,28 @@ def process_message(mqtt_message):
             grid.complete = is_complete
             grid.save()
 
-            # Send complete grid information over websockets
+            # Send grid information over websockets
+            websocket_message = {}
             if is_complete:
                 print(
                     f"[{MQTT_LISTENER_NAME} MQTT Listener]: Sending complete grid data"
                 )
                 grid_messages = Message.objects.filter(grid=grid).order_by("id")
                 for grid_message in grid_messages:
-                    message = {
-                        "grid_id": grid_message.grid.id,
-                        "x_pos": grid_message.x_pos,
-                        "y_pos": grid_message.y_pos,
-                        "intensity": grid_message.intensity,
-                    }
+                    websocket_message["grid_id"] = str(grid_message.grid.id)
+                    websocket_message["grid_code"] = str(grid_message.grid.code)
+                    websocket_message["x_pos"] = grid_message.x_pos
+                    websocket_message["y_pos"] = grid_message.y_pos
+                    websocket_message["intensity"] = grid_message.intensity
 
                     if grid_message.is_last:
-                        message["is_last"] = True
+                        websocket_message["is_last"] = True
 
-                    stream_message_over_websocket(message, GROUP_NAME)
+                    stream_message_over_websocket(websocket_message, GROUP_NAME)
                     sleep(0.1)
+            else:
+                websocket_message["error"] = "The grid contains missing messages"
+                stream_message_over_websocket(websocket_message, GROUP_NAME)
 
     except Robot.DoesNotExist as e:
         print(f"[{MQTT_LISTENER_NAME} MQTT Listener]: Robot is not registered: {e}")

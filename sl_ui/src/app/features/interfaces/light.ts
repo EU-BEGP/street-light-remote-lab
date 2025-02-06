@@ -1,11 +1,19 @@
 export interface Light {
   id?: number;
-  code?: string;
-  type?: string;
+  code: string;
+  type: string;
   pwm?: number;
-  battery_current?: number;
-  battery_voltage?: number;
-  battery_power?: number;
-  battery_level?: number;
-  battery_energy?: number;
+  timeInterval?: number;
+  dcVoltage?: number;
+  dcCurrent?: number;
+  dcPower?: number;
+  dcEnergyConsumption?: number;
+  dcEnergyCharge?: number;
+  dcLevel?: number;
+  acVoltage?: number;
+  acCurrent?: number;
+  acPower?: number;
+  acEnergy?: number;
+  frequency?: number;
+  factor?: number;
 }

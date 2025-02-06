@@ -6,46 +6,111 @@
       <!-- LIGHT INFORMATION -->
       <div class="contents">
         <div class="light-info">
-          <span class="title">{{lightCode?.toUpperCase()}} Information ({{lightType}})</span>
+          <span class="title">{{lightCode?.toUpperCase()}} ({{lightType}})</span>
+
+          <!-- Common fields for all light types -->
           <div class="light-info-item">
             <span>PWM:</span>
             <span class="light-label">
-              {{lightInformation.pwm}}
+              {{light.pwm}}
             </span>
             <span>%</span>
           </div>
           <div class="light-info-item">
             <span>Time Interval:</span>
             <span class="light-label">
-              {{lightInformation.timeInterval}}
+              {{light.timeInterval}}
             </span>
             <span>[s]</span>
           </div>
+        </div>
+
+        <div class="light-info" *ngIf="lightType === 'AC' || lightType === 'AC_INV'">
+          <!-- AC and AC_INV specific fields -->
           <div class="light-info-item">
-            <span>Battery Voltage:</span>
-            <span class="light-label {{lightInformation.battery.voltage < 0 ? 'discharging' : ''}}">
-              {{lightInformation.battery.voltage}}
+            <span>AC Voltage:</span>
+            <span class="light-label">
+              {{light.acVoltage}}
             </span>
             <span>[V]</span>
           </div>
           <div class="light-info-item">
-            <span>Battery Current:</span>
-            <span class="light-label {{lightInformation.battery.current < 0 ? 'discharging' : ''}}">
-              {{lightInformation.battery.current}}
+            <span>AC Current:</span>
+            <span class="light-label">
+              {{light.acCurrent}}
             </span>
             <span>[A]</span>
           </div>
           <div class="light-info-item">
-            <span>Battery Power:</span>
-            <span class="light-label {{lightInformation.battery.power < 0 ? 'discharging' : ''}}">
-              {{lightInformation.battery.power}}
+            <span>AC Power:</span>
+            <span class="light-label">
+              {{light.acPower}}
             </span>
             <span>[W]</span>
           </div>
           <div class="light-info-item">
-            <span>Battery Level:</span>
+            <span>AC Energy:</span>
             <span class="light-label">
-              {{lightInformation.battery.level}}
+              {{light.acEnergy}}
+            </span>
+            <span>[kWh]</span>
+          </div>
+          <div class="light-info-item">
+            <span>Frequency:</span>
+            <span class="light-label">
+              {{light.frequency}}
+            </span>
+            <span>[Hz]</span>
+          </div>
+          <div class="light-info-item">
+            <span>Factor:</span>
+            <span class="light-label">
+              {{light.factor}}
+            </span>
+          </div>
+        </div>
+
+        <div class="light-info" *ngIf="lightType === 'DC' || lightType === 'AC_INV'">
+          <!-- DC and AC_INV specific fields -->
+          <div class="light-info-item">
+            <span>DC Voltage:</span>
+            <span class="light-label">
+              {{light.dcVoltage}}
+            </span>
+            <span>[V]</span>
+          </div>
+          <div class="light-info-item">
+            <span>DC Current:</span>
+            <span class="light-label">
+              {{light.dcCurrent}}
+            </span>
+            <span>[A]</span>
+          </div>
+          <div class="light-info-item">
+            <span>DC Power:</span>
+            <span class="light-label">
+              {{light.dcPower}}
+            </span>
+            <span>[W]</span>
+          </div>
+          <div class="light-info-item">
+            <span>DC Energy Consumption:</span>
+            <span class="light-label">
+              {{light.dcEnergyConsumption}}
+            </span>
+            <span>[kWh]</span>
+          </div>
+          <div class="light-info-item">
+            <span>DC Energy Charge:</span>
+            <span class="light-label">
+              {{light.dcEnergyCharge}}
+            </span>
+            <span>[kWh]</span>
+          </div>
+          <div class="light-info-item">
+            <span>DC Level:</span>
+            <span class="light-label">
+              {{light.dcLevel}}
             </span>
             <span>%</span>
           </div>
@@ -55,8 +120,8 @@
         <div class="grid">
           <h2>Intensity Grid</h2>
           <mat-grid-list [cols]="this.gridDimension" [rowHeight]="30" gutterSize="10px">
-            <mat-grid-tile class="custom-grid-tile" *ngFor="let cell of grid.flat()"
-              [style.backgroundColor]="getCellColor(cell)" [ngClass]="cell > 0 ? 'text-white' : 'text-black'">
+            <mat-grid-tile class="custom-grid-tile" *ngFor="let cell of grid.flat()">
+              <!-- [style.backgroundColor]="getCellColor(cell)" [ngClass]="cell > 0 ? 'text-white' : 'text-black'" -->
               {{ cell }}
             </mat-grid-tile>
           </mat-grid-list>

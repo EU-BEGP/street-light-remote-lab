@@ -27,7 +27,7 @@ def on_message(client, userdata, msg):
 
     time_interval = int(message["time_interval"])  # Update global time_interval
     if message["light_code"] == userdata["light_code"]:  # Update global light_object
-        light_object["pwm"] = message["PWM"]
+        light_object["pwm"] = message["pwm"]
         light_object["time_interval"] = message["time_interval"]
 
 
@@ -90,7 +90,7 @@ if __name__ == "__main__":
     time_interval = get_time_interval()
 
     light_object = {
-        "code": light_code,
+        "light_code": light_code,
         "type": light_type,
         "pwm": pwm,
         "time_interval": time_interval,  # Convert to ms
@@ -152,5 +152,7 @@ if __name__ == "__main__":
             port=int(MQTT_PORT),
             auth=MQTT_AUTH,
         )
-        print("[Light Data Simulator]: Light information sent successfully.")
+        print(
+            f"[Light Data Simulator]: Light information for {light_code} sent successfully (Time interval of {time_interval} [ms])"
+        )
         sleep(time_interval / 1000)

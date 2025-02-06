@@ -46,6 +46,12 @@ services:
       - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
     env_file: .env
     restart: ${RESTART_POLICY}
+  grafana:
+    image: grafana/grafana:9.0.4
+    ports:
+      - 3003:3000
+    env_file: .env
+    restart: ${RESTART_POLICY}
 volumes:
   postgres_data:
   redis_data:

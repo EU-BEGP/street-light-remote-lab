@@ -16,8 +16,6 @@ MQTT_PWD = ""
 MQTT_SUB_TOPIC = ""
 MQTT_PUB_TOPIC = ""
 
-ROBOT_CODE = ""
-
 """
 Class that allows user to create robot object given the following:
 -A robot code
@@ -122,14 +120,15 @@ def on_connect(client, userdata, flags, reason_code, properties):
 
 
 def on_message(client, userdata, msg):
+    global robot_code, width, height
     print("[Robot Data Simulator]: Captured request")
     message = json.loads(msg.payload.decode())
-    if message["robot_code"] == ROBOT_CODE and message["capture"]:
+    if message["robot_code"] == robot_code and message["start"]:
         robot = Robot(
-            robot_code=ROBOT_CODE,
+            robot_code=robot_code,
             grid_code=str(uuid.uuid4()),
-            width=10,
-            height=10,
+            width=int(width),
+            height=int(height),
             lower_intensity_val=1,
             upper_intensity_val=20,
         )
@@ -137,7 +136,28 @@ def on_message(client, userdata, msg):
         robot.send_json_data()
 
 
+# User interactions
+def get_robot_code():
+    """Prompt the user to enter the robot code."""
+    return input("Enter the robot code: ")
+
+
+def get_width():
+    """Prompt the user to enter the grid width."""
+    return input("Enter the grid width: ")
+
+
+def get_height():
+    """Prompt the user to enter the grid height."""
+    return input("Enter the grid height: ")
+
+
 if __name__ == "__main__":
+    global robot_code, width, height
+    robot_code = get_robot_code()
+    width = get_width()
+    height = get_height()
+
     print("[Robot Data Simulator]: Initialized")
     mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
     mqttc.on_connect = on_connect
