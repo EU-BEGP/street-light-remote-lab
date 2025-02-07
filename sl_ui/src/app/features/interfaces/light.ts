@@ -14,6 +14,6 @@ export interface Light {
   acCurrent?: number;
   acPower?: number;
   acEnergy?: number;
-  frequency?: number;
-  factor?: number;
+  acFrequency?: number;
+  acFactor?: number;
 }

@@ -28,8 +28,8 @@ class Light(models.Model):
     ac_current = models.FloatField(default=0.0, null=True, blank=True)
     ac_power = models.FloatField(default=0.0, null=True, blank=True)
     ac_energy = models.FloatField(default=0.0, null=True, blank=True)
-    frequency = models.FloatField(default=0.0, null=True, blank=True)
-    factor = models.FloatField(default=0.0)
+    ac_frequency = models.FloatField(default=0.0, null=True, blank=True)
+    ac_factor = models.FloatField(default=0.0)
 
 
 class Robot(models.Model):

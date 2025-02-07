@@ -45,8 +45,8 @@ def process_message(mqtt_message):
         light_object["ac_current"] = mqtt_message["ac_current"]
         light_object["ac_power"] = mqtt_message["ac_power"]
         light_object["ac_energy"] = mqtt_message["ac_energy"]
-        light_object["frequency"] = mqtt_message["frequency"]
-        light_object["factor"] = mqtt_message["factor"]
+        light_object["ac_frequency"] = mqtt_message["ac_frequency"]
+        light_object["ac_factor"] = mqtt_message["ac_factor"]
 
     elif type == "AC_INV":
         # Capture data combination of both types of lights
@@ -54,8 +54,8 @@ def process_message(mqtt_message):
         light_object["ac_current"] = mqtt_message["ac_current"]
         light_object["ac_power"] = mqtt_message["ac_power"]
         light_object["ac_energy"] = mqtt_message["ac_energy"]
-        light_object["frequency"] = mqtt_message["frequency"]
-        light_object["factor"] = mqtt_message["factor"]
+        light_object["ac_frequency"] = mqtt_message["ac_frequency"]
+        light_object["ac_factor"] = mqtt_message["ac_factor"]
         light_object["dc_voltage"] = mqtt_message["dc_voltage"]
         light_object["dc_current"] = mqtt_message["dc_current"]
         light_object["dc_power"] = mqtt_message["dc_power"]

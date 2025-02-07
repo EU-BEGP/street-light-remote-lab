@@ -235,8 +235,8 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
               acCurrent: light_msg.ac_current,
               acPower: light_msg.ac_power,
               acEnergy: light_msg.ac_energy,
-              frequency: light_msg.frequency,
-              factor: light_msg.factor
+              acFrequency: light_msg.ac_frequency,
+              acFactor: light_msg.ac_factor
             };
           }
           if (this.lightType == "AC_INV") {
@@ -252,8 +252,8 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
               acCurrent: light_msg.ac_current,
               acPower: light_msg.ac_power,
               acEnergy: light_msg.ac_energy,
-              frequency: light_msg.frequency,
-              factor: light_msg.factor
+              acFrequency: light_msg.ac_frequency,
+              acFactor: light_msg.ac_factor
             };
           }
         }

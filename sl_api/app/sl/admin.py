@@ -20,8 +20,8 @@ class LightAdmin(admin.ModelAdmin):
         "ac_current",
         "ac_power",
         "ac_energy",
-        "frequency",
-        "factor",
+        "ac_frequency",
+        "ac_factor",
     ]
 
 

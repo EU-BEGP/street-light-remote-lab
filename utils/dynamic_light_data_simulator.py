@@ -125,8 +125,8 @@ if __name__ == "__main__":
                 light_object["ac_voltage"] * light_object["ac_current"], 2
             )
             light_object["ac_energy"] = round(random.uniform(0.1, 20.0), 2)
-            light_object["frequency"] = round(random.uniform(50.0, 60.0), 2)
-            light_object["factor"] = round(random.uniform(0.8, 1.0), 2)
+            light_object["ac_frequency"] = round(random.uniform(50.0, 60.0), 2)
+            light_object["ac_factor"] = round(random.uniform(0.8, 1.0), 2)
         elif light_type == "AC_INV":
             light_object["dc_voltage"] = round(random.uniform(12.0, 48.0), 2)
             light_object["dc_current"] = round(random.uniform(0.1, 5.0), 2)
@@ -142,8 +142,8 @@ if __name__ == "__main__":
                 light_object["ac_voltage"] * light_object["ac_current"], 2
             )
             light_object["ac_energy"] = round(random.uniform(0.1, 20.0), 2)
-            light_object["frequency"] = round(random.uniform(50.0, 60.0), 2)
-            light_object["factor"] = round(random.uniform(0.8, 1.0), 2)
+            light_object["ac_frequency"] = round(random.uniform(50.0, 60.0), 2)
+            light_object["ac_factor"] = round(random.uniform(0.8, 1.0), 2)
 
         publish.single(
             MQTT_PUB_TOPIC,

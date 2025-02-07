@@ -12,8 +12,8 @@ if [ "$ENVIRONMENT" = "production" ]; then
   python manage.py robot_mqtt_listener &
   python manage.py light_mqtt_listener &
 
-  # Start Gunicorn with UvicornWorker
-  gunicorn app.asgi:application -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --workers 4
+  # Start Uvicorn with base root path
+  uvicorn app.asgi:application --host 0.0.0.0 --port 8000 --workers 2 --root-path /sl/api
 
 elif [ "$ENVIRONMENT" = "development" ]; then
 

@@ -3,7 +3,6 @@ channels-redis==4.0.0
 channels==4.0.0
 django-cors-headers==3.11.0
 djangorestframework==3.13.1
-gunicorn==23.0.0
 paho-mqtt==2.1.0
 psycopg2==2.9.3
 uuid==1.30
