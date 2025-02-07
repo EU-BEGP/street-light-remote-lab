@@ -33,10 +33,7 @@ import { SpinnerComponent } from './core/components/spinner/spinner.component';
 import { AuthInterceptorService } from './core/services/auth-interceptor.service';
 
 // Plotly
-import * as PlotlyJS from 'plotly.js-dist-min';
-import { PlotlyModule } from 'angular-plotly.js';
-
-PlotlyModule.plotlyjs = PlotlyJS;
+import { PlotlyViaWindowModule } from 'angular-plotly.js';
 
 @NgModule({
   declarations: [
@@ -67,7 +64,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     HttpClientModule,
     MaterialModule,
     NgxHttpLoaderModule.forRoot(),
-    PlotlyModule,
+    PlotlyViaWindowModule,
     ReactiveFormsModule,
     ToastrModule.forRoot({
       timeOut: 3000,
