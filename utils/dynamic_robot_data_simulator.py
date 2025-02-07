@@ -91,6 +91,7 @@ class Robot:
     """
 
     def send_json_data(self):
+        print("[Robot Data Simulator]: Sending messages...")
         for i in range(self.height):
             for j in range(self.width):
                 data = {
@@ -109,6 +110,7 @@ class Robot:
 
                 sleep(0.05)
                 mqttc.publish(MQTT_PUB_TOPIC, json.dumps(data))
+                print(f"[Robot Data Simulator]: Message for position [{i},{j}] sent...")
 
         print("[Robot Data Simulator]: All messages sent successfully\n")
 
@@ -121,8 +123,8 @@ def on_connect(client, userdata, flags, reason_code, properties):
 
 def on_message(client, userdata, msg):
     global robot_code, width, height
-    print("[Robot Data Simulator]: Captured request")
     message = json.loads(msg.payload.decode())
+    print(f"[Robot Data Simulator]: Captured request {message}")
     if message["robot_code"] == robot_code and message["start"]:
         robot = Robot(
             robot_code=robot_code,
@@ -134,6 +136,8 @@ def on_message(client, userdata, msg):
         )
         robot.generate_data()
         robot.send_json_data()
+    else:
+        print("[Robot Data Simulator]: The code provided doesn't match")
 
 
 # User interactions
