@@ -50,9 +50,9 @@ def get_grid_information(grid):
 
 
 def process_message(mqtt_message):
-    robot_code = mqtt_message["robot_code"]  # Get robot_code from message.
+    robot_code = mqtt_message.get("robot_code")  # Get robot_code from message.
     grid_code = uuid.UUID(
-        mqtt_message["grid_code"]
+        mqtt_message.get("grid_code")
     )  # Get grid code and converting to a uuid object.
 
     # Approach: Get robot code and relate them to a light
@@ -72,16 +72,16 @@ def process_message(mqtt_message):
 
         # Save message
         message = Message(
-            x_pos=mqtt_message["x_pos"],
-            y_pos=mqtt_message["y_pos"],
-            intensity=mqtt_message["intensity"],
-            is_last=mqtt_message["is_last"],
+            x_pos=mqtt_message.get("x_pos", 0.0),
+            y_pos=mqtt_message.get("y_pos", 0.0),
+            intensity=mqtt_message.get("intensity", 0.0),
+            is_last=mqtt_message.get("is_last", False),
             grid=grid,
         )
         message.save()
 
         # If the message is the last one, update grid dimension info
-        if mqtt_message["is_last"]:
+        if mqtt_message.get("is_last"):
             print(f"[{MQTT_LISTENER_NAME} MQTT Listener]: Last Message received")
             width, height, is_complete = get_grid_information(grid)
             grid.width = width
