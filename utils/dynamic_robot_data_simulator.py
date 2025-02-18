@@ -9,8 +9,8 @@ import paho.mqtt.client as mqtt
 import random
 import uuid
 
-MQTT_HOST = ""
 MQTT_PORT = 1883
+MQTT_HOST = ""
 MQTT_USER = ""
 MQTT_PWD = ""
 MQTT_SUB_TOPIC = ""
@@ -122,7 +122,7 @@ def on_connect(client, userdata, flags, reason_code, properties):
 
 
 def on_message(client, userdata, msg):
-    global robot_code, width, height
+    global robot_code, width, height, lower_intensity_value, upper_intensity_value
     message = json.loads(msg.payload.decode())
     print(f"[Robot Data Simulator]: Captured request {message}")
     if message["robot_code"] == robot_code and message["start"]:
@@ -131,8 +131,8 @@ def on_message(client, userdata, msg):
             grid_code=str(uuid.uuid4()),
             width=int(width),
             height=int(height),
-            lower_intensity_val=1,
-            upper_intensity_val=20,
+            lower_intensity_val=int(lower_intensity_value),
+            upper_intensity_val=int(upper_intensity_value),
         )
         robot.generate_data()
         robot.send_json_data()
@@ -156,11 +156,23 @@ def get_height():
     return input("Enter the grid height: ")
 
 
+def get_lower_intensity_value():
+    """Prompt the user to enter the grid lower intensity value."""
+    return input("Enter the grid lower intensity value: ")
+
+
+def get_upper_intensity_value():
+    """Prompt the user to enter the grid upper intensity value."""
+    return input("Enter the grid upper intensity value: ")
+
+
 if __name__ == "__main__":
-    global robot_code, width, height
+    global robot_code, width, height, lower_intensity_value, upper_intensity_value
     robot_code = get_robot_code()
     width = get_width()
     height = get_height()
+    lower_intensity_value = get_lower_intensity_value()
+    upper_intensity_value = get_upper_intensity_value()
 
     print("[Robot Data Simulator]: Initialized")
     mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)

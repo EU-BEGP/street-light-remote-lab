@@ -225,7 +225,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
               dcPower: light_msg.dc_power,
               dcEnergyConsumption: light_msg.dc_energy_consumption,
               dcEnergyCharge: light_msg.dc_energy_charge,
-              dcLevel: light_msg.dc_level
+              dcLevel: Math.round(light_msg.dc_level),
             };
           }
           if (this.lightType == "AC") {
@@ -236,7 +236,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
               acPower: light_msg.ac_power,
               acEnergy: light_msg.ac_energy,
               acFrequency: light_msg.ac_frequency,
-              acFactor: light_msg.ac_factor
+              acFactor: light_msg.ac_factor,
             };
           }
           if (this.lightType == "AC_INV") {
@@ -247,13 +247,13 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
               dcPower: light_msg.dc_power,
               dcEnergyConsumption: light_msg.dc_energy_consumption,
               dcEnergyCharge: light_msg.dc_energy_charge,
-              dcLevel: light_msg.dc_level,
+              dcLevel: Math.round(light_msg.dc_level),
               acVoltage: light_msg.ac_voltage,
               acCurrent: light_msg.ac_current,
               acPower: light_msg.ac_power,
               acEnergy: light_msg.ac_energy,
               acFrequency: light_msg.ac_frequency,
-              acFactor: light_msg.ac_factor
+              acFactor: light_msg.ac_factor,
             };
           }
         }
@@ -370,7 +370,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
       return 'white';
     }
 
-    const max = 20;
+    const max = 400;
     const ratio = value / max;
 
     const red = Math.floor(255 * ratio * 0.8);
