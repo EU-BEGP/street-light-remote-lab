@@ -54,6 +54,11 @@ urlpatterns = [
     path("grids/", grid_views.GridsListView.as_view(), name="grid-list"),
     path("grids/<int:id>/", grid_views.GridUpdateView.as_view(), name="grid-update"),
     path(
+        "grids/<int:id>/expansion/",
+        grid_views.ExpansionGridView.as_view(),
+        name="grid-expansion",
+    ),
+    path(
         "messages/",
         message_views.MessageListCreateView.as_view(),
         name="message-list-create",
