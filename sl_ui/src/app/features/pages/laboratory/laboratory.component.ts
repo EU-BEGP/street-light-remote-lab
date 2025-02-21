@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ExperimentService } from '../../services/experiment.service';
 import { Grid } from '../../interfaces/grid';
 import { GridService } from '../../services/grid.service';
-import { LightWebsocketService } from '../../services/websockets/light-websocket.service';
+import { Light } from '../../interfaces/light';
 import { Message } from '../../interfaces/message';
 import { MqttService } from '../../services/mqtt.service';
 import { RobotWebsocketService } from '../../services/websockets/robot-websocket.service';
@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs';
-import { Light } from '../../interfaces/light';
 
 @Component({
   selector: 'app-laboratory',
@@ -19,12 +18,12 @@ import { Light } from '../../interfaces/light';
   styleUrls: ['./laboratory.component.css']
 })
 export class LaboratoryComponent implements OnInit, OnDestroy {
+  lightInformation: Light | null = null; // Received output from LightInformation component
+
   // General variables
   private gridIds: number[] = [];
   gridDimension: number = 8;
   experimentId?: number | null;
-  lightCode?: string | null;
-  lightType?: string | null;
 
   // Component status variables
   hasUnsavedChanges: boolean = false;
@@ -33,17 +32,11 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   // Websockets subscriptions
   private cameraSubscription: Subscription | null = null;
   private robotSubscription: Subscription | null = null;
-  private lightSubscription: Subscription | null = null;
 
   // Robot cell variables
   frame: string = '';
   pwmValue: number = 0;
   timeIntervalValue: number = 15;
-
-  light: Light = {
-    code: this.lightCode!,
-    type: this.lightType!
-  };
 
   // Grid cell variables
   grid: number[][] = this.generateInitialGrid();
@@ -147,7 +140,6 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     private cameraWebsocketService: CameraWebsocketService,
     private experimentService: ExperimentService,
     private gridService: GridService,
-    private lightWebsocketService: LightWebsocketService,
     private mqttService: MqttService, private robotWebsocketService: RobotWebsocketService,
     private router: Router,
     private toastr: ToastrService,
@@ -155,8 +147,6 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.experimentId = Number(localStorage.getItem('experiment_id'));
-    this.lightCode = localStorage.getItem("light_code");
-    this.lightType = localStorage.getItem("light_type");
 
     if (!isNaN(this.experimentId) && this.experimentId > 0) {
       this.experimentService.getExperimentGrids(this.experimentId).subscribe((grids: Grid[]): void => {
@@ -173,8 +163,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
           });
         }
       })
-      this.connectLightWebsocket();
-      this.connectCameraWebsocket();
+      // this.connectCameraWebsocket();
     }
     else {
       this.toastr.error('No experiment ID provided')
@@ -188,8 +177,6 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     if (this.robotSubscription) this.robotSubscription.unsubscribe();
     this.robotWebsocketService.disconnect();
 
-    if (this.lightSubscription) this.lightSubscription.unsubscribe();
-    this.lightWebsocketService.disconnect();
 
     if (this.cameraSubscription) this.cameraSubscription.unsubscribe();
     this.cameraWebsocketService.disconnect();
@@ -199,67 +186,6 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     this.sendLightCommand(true);
   }
 
-  // WebSocket functions
-  private connectLightWebsocket(): void {
-    this.lightWebsocketService.connect();
-
-    // Unsubscribe from the previous subscription, if it exists
-    if (this.lightSubscription) {
-      this.lightSubscription.unsubscribe();
-    }
-
-    // Subscribe to WebSocket messages
-    this.lightSubscription = this.lightWebsocketService.messages$.subscribe((light_msg) => {
-      if (light_msg.light_code == this.lightCode) {
-        this.pwmValue = light_msg.pwm;
-        this.timeIntervalValue = (Number(light_msg.time_interval) / 1000);
-        this.light.pwm = light_msg.pwm;
-        this.light.timeInterval = (Number(light_msg.time_interval) / 1000);
-
-        if (light_msg.type == this.lightType) {
-          if (this.lightType == "DC") {
-            this.light = {
-              ...this.light,
-              dcVoltage: light_msg.dc_voltage,
-              dcCurrent: light_msg.dc_current,
-              dcPower: light_msg.dc_power,
-              dcEnergyConsumption: light_msg.dc_energy_consumption,
-              dcEnergyCharge: light_msg.dc_energy_charge,
-              dcLevel: Math.round(light_msg.dc_level),
-            };
-          }
-          if (this.lightType == "AC") {
-            this.light = {
-              ...this.light,
-              acVoltage: light_msg.ac_voltage,
-              acCurrent: light_msg.ac_current,
-              acPower: light_msg.ac_power,
-              acEnergy: light_msg.ac_energy,
-              acFrequency: light_msg.ac_frequency,
-              acFactor: light_msg.ac_factor,
-            };
-          }
-          if (this.lightType == "AC_INV") {
-            this.light = {
-              ...this.light,
-              dcVoltage: light_msg.dc_voltage,
-              dcCurrent: light_msg.dc_current,
-              dcPower: light_msg.dc_power,
-              dcEnergyConsumption: light_msg.dc_energy_consumption,
-              dcEnergyCharge: light_msg.dc_energy_charge,
-              dcLevel: Math.round(light_msg.dc_level),
-              acVoltage: light_msg.ac_voltage,
-              acCurrent: light_msg.ac_current,
-              acPower: light_msg.ac_power,
-              acEnergy: light_msg.ac_energy,
-              acFrequency: light_msg.ac_frequency,
-              acFactor: light_msg.ac_factor,
-            };
-          }
-        }
-      }
-    });
-  }
 
   private connectCameraWebsocket(): void {
     this.cameraWebsocketService.connect();
@@ -309,7 +235,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     }
 
     var data = {
-      'light_code': this.lightCode
+      'light_code': this.lightInformation?.code
     }
 
     this.mqttService.publishRobotCommand(data).subscribe((response) => {
@@ -323,7 +249,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
 
   sendLightCommand(turnOff: boolean): void {
     var data = {
-      'light_code': this.lightCode,
+      'light_code': this.lightInformation?.code,
       'pwm': this.pwmValue,
       'time_interval': this.timeIntervalValue,
     }
@@ -473,5 +399,12 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
         this.toastr.error('There was an error saving one or more grids.');
       },
     });
+  }
+
+  // Events management
+
+  // LightInformation event
+  onLightInformation(lightInformation: Light): void {
+    this.lightInformation = lightInformation;
   }
 }

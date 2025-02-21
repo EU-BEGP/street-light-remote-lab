@@ -1,0 +1,112 @@
+<div>
+  <div class="light-information">
+    <span class="title">{{light.code.toUpperCase()}} ({{light.type}})</span>
+
+    <!-- Common fields for all light types -->
+    <div class="light-information-item">
+      <span>PWM:</span>
+      <span class="light-information-label">
+        {{light.pwm}}
+      </span>
+      <span>%</span>
+    </div>
+    <div class="light-information-item">
+      <span>Time Interval:</span>
+      <span class="light-information-label">
+        {{light.timeInterval}}
+      </span>
+      <span>[s]</span>
+    </div>
+  </div>
+
+  <div class="light-information" *ngIf="light.type=== 'AC' || light.type=== 'AC_INV'">
+    <!-- AC and AC_INV specific fields -->
+    <div class="light-information-item">
+      <span>AC Voltage:</span>
+      <span class="light-information-label">
+        {{light.acVoltage}}
+      </span>
+      <span>[V]</span>
+    </div>
+    <div class="light-information-item">
+      <span>AC Current:</span>
+      <span class="light-information-label">
+        {{light.acCurrent}}
+      </span>
+      <span>[A]</span>
+    </div>
+    <div class="light-information-item">
+      <span>AC Power:</span>
+      <span class="light-information-label">
+        {{light.acPower}}
+      </span>
+      <span>[W]</span>
+    </div>
+    <div class="light-information-item">
+      <span>AC Energy:</span>
+      <span class="light-information-label">
+        {{light.acEnergy}}
+      </span>
+      <span>[kWh]</span>
+    </div>
+    <div class="light-information-item">
+      <span>Frequency:</span>
+      <span class="light-information-label">
+        {{light.acFrequency}}
+      </span>
+      <span>[Hz]</span>
+    </div>
+    <div class="light-information-item">
+      <span>Factor:</span>
+      <span class="light-information-label">
+        {{light.acFactor}}
+      </span>
+    </div>
+  </div>
+
+  <div class="light-information" *ngIf="light.type=== 'DC' || light.type=== 'AC_INV'">
+    <!-- DC and AC_INV specific fields -->
+    <div class="light-information-item">
+      <span>DC Voltage:</span>
+      <span class="light-information-label">
+        {{light.dcVoltage}}
+      </span>
+      <span>[V]</span>
+    </div>
+    <div class="light-information-item">
+      <span>DC Current:</span>
+      <span class="light-information-label">
+        {{light.dcCurrent}}
+      </span>
+      <span>[A]</span>
+    </div>
+    <div class="light-information-item">
+      <span>DC Power:</span>
+      <span class="light-information-label">
+        {{light.dcPower}}
+      </span>
+      <span>[W]</span>
+    </div>
+    <div class="light-information-item">
+      <span>DC Energy Consumption:</span>
+      <span class="light-information-label">
+        {{light.dcEnergyConsumption}}
+      </span>
+      <span>[kWh]</span>
+    </div>
+    <div class="light-information-item">
+      <span>DC Energy Charge:</span>
+      <span class="light-information-label">
+        {{light.dcEnergyCharge}}
+      </span>
+      <span>[kWh]</span>
+    </div>
+    <div class="light-information-item">
+      <span>DC Level:</span>
+      <span class="light-information-label">
+        {{light.dcLevel}}
+      </span>
+      <span>%</span>
+    </div>
+  </div>
+</div>

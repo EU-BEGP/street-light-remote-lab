@@ -19,6 +19,7 @@ import { ExperimentDialogComponent } from './features/components/experiment-dial
 import { ExperimentsComponent } from './features/pages/experiments/experiments.component';
 import { FooterComponent } from './core/components/footer/footer.component';
 import { LaboratoryComponent } from './features/pages/laboratory/laboratory.component';
+import { LightInformationComponent } from './features/components/light-information/light-information.component';
 import { LobbyComponent } from './core/pages/lobby/lobby.component';
 import { LoginComponent } from './core/components/login/login.component';
 import { NavbarComponent } from './core/components/navbar/navbar.component';
@@ -45,6 +46,7 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     ExperimentsComponent,
     FooterComponent,
     LaboratoryComponent,
+    LightInformationComponent,
     LobbyComponent,
     LoginComponent,
     NavbarComponent,

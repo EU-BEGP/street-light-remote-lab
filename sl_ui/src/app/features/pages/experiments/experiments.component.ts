@@ -9,6 +9,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { StorageService } from '../../services/storage.service';
+import { Light } from '../../interfaces/light';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -36,6 +38,7 @@ export class ExperimentsComponent implements OnInit {
     private dialogConfigService: DialogConfigService,
     private experimentService: ExperimentService,
     private router: Router,
+    private storageService: StorageService,
     private toastr: ToastrService,
   ) { }
 
@@ -87,8 +90,8 @@ export class ExperimentsComponent implements OnInit {
   actionGoToLaboratory(experiment: Experiment): void {
     if (experiment) {
       if (experiment.id) localStorage.setItem('experiment_id', experiment.id.toString());
-      if (experiment.light) if (experiment.light.code) localStorage.setItem('light_code', experiment.light.code.toString());
-      if (experiment.light) if (experiment.light.type) localStorage.setItem('light_type', experiment.light.type.toString());
+      if (experiment.light) if (experiment.light.code) this.storageService.setLightCode(experiment.light.code.toString());
+      if (experiment.light) if (experiment.light.type) this.storageService.setLightType(experiment.light.type.toString());
       this.router.navigate(['/laboratory']);
     }
   }

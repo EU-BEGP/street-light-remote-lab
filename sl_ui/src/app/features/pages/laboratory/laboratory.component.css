@@ -10,36 +10,8 @@
   padding: 10px;
 }
 
-.light-info {
+.light-information {
   grid-column: 1 / -1;
-  display: flex;
-  justify-content: space-evenly;
-  justify-items: center;
-  align-items: center;
-  padding: 2px;
-  margin: 2px;
-  gap: 10px;
-  border: 1px solid #ddd;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.title {
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.light-info-item {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.light-info-label {
-  font-weight: 500;
-}
-
-.discharging {
-  color: #fa8072;
 }
 
 /* Robot component css configuration */
