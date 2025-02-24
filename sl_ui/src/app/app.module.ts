@@ -18,6 +18,8 @@ import { ConfirmationDialogComponent } from './core/components/confirmation-dial
 import { ExperimentDialogComponent } from './features/components/experiment-dialog/experiment-dialog.component';
 import { ExperimentsComponent } from './features/pages/experiments/experiments.component';
 import { FooterComponent } from './core/components/footer/footer.component';
+import { IntensityChartComponent } from './features/components/intensity-chart/intensity-chart.component';
+import { IntensityMatrixComponent } from './features/components/intensity-matrix/intensity-matrix.component';
 import { LaboratoryComponent } from './features/pages/laboratory/laboratory.component';
 import { LightInformationComponent } from './features/components/light-information/light-information.component';
 import { LobbyComponent } from './core/pages/lobby/lobby.component';
@@ -45,6 +47,8 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     ExperimentDialogComponent,
     ExperimentsComponent,
     FooterComponent,
+    IntensityChartComponent,
+    IntensityMatrixComponent,
     LaboratoryComponent,
     LightInformationComponent,
     LobbyComponent,
