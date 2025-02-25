@@ -10,9 +10,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./light-information.component.css']
 })
 export class LightInformationComponent implements OnInit, OnDestroy {
-  light: Light;
-  @Output() lightInformation: EventEmitter<Light> = new EventEmitter<Light>();
   private lightSubscription: Subscription | null = null;
+  light: Light;
 
   constructor(
     private lightWebsocketService: LightWebsocketService,
@@ -24,8 +23,8 @@ export class LightInformationComponent implements OnInit, OnDestroy {
     }
   }
 
+  //Lifecycle hooks
   ngOnInit(): void {
-    this.lightInformation.emit(this.light);
     this.connectLightWebsocket();
   }
 
@@ -34,7 +33,7 @@ export class LightInformationComponent implements OnInit, OnDestroy {
     this.lightWebsocketService.disconnect();
   }
 
-  // Private functions
+  // Light websocket connection
   private connectLightWebsocket(): void {
     this.lightWebsocketService.connect();
 
@@ -90,7 +89,6 @@ export class LightInformationComponent implements OnInit, OnDestroy {
             };
           }
         }
-        this.lightInformation.emit(this.light);
       }
     });
   }

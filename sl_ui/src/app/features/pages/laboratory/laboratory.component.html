@@ -1,11 +1,9 @@
 <mat-tab-group mat-align-tabs="center">
   <mat-tab label="Activity 1">
-    <app-spinner id="grid-spinner" [showSpinner]="isWsLoading"></app-spinner>
+    <app-spinner id="grid-spinner" [showSpinner]="loadingWs"></app-spinner>
     <div class="laboratory-container">
       <div class="contents">
-
-        <app-light-information (lightInformation)="onLightInformation($event)" class="light-information">
-        </app-light-information>
+        <app-light-information class="light-information"></app-light-information>
 
         <app-intensity-matrix [gridDimension]="gridDimension" [savedGrids]="savedGrids">
         </app-intensity-matrix>
@@ -14,50 +12,22 @@
 
         <app-intensity-chart [gridDimension]="gridDimension" [savedGrids]="savedGrids"></app-intensity-chart>
 
-        <!-- CONTROLS -->
-        <div class="light-control">
-          <span class="title">Light Properties</span>
-          <div class="light-interaction">
-            <div class="pwm">
-              <span id="pwm-label">PWM</span>
-              <div class="slider">
-                <span class="slider-label">0</span>
-                <mat-slider min="0" max="100" step="10" [(ngModel)]="pwmValue" thumbLabel color="primary"></mat-slider>
-                <span class="slider-label">100</span>
-              </div>
-            </div>
-
-            <div class="time-interval">
-              <mat-form-field appearance="fill">
-                <mat-label>Time Interval</mat-label>
-                <select matNativeControl required [(ngModel)]="timeIntervalValue">
-                  <option value="5">5 [s]</option>
-                  <option value="10">10 [s]</option>
-                  <option value="15">15 [s]</option>
-                  <option value="30">30 [s]</option>
-                  <option value="60">60 [s]</option>
-                </select>
-              </mat-form-field>
-            </div>
-          </div>
-          <button mat-raised-button color="primary" (click)="sendLightCommand(false)">Send</button>
-        </div>
+        <app-light-control></app-light-control>
 
         <div class="robot-control">
-          <span class="title">Control Robot</span>
+          <span>Robot Control</span>
           <button mat-raised-button color="primary" (click)="sendRobotCommand()">
             Capture Grid
           </button>
         </div>
 
-        <div class="chart-control">
-          <button mat-raised-button color="primary" (click)="saveCharts()">
-            Save Chart Data
+        <div class="save-grids">
+          <span>Save Captured Grids</span>
+          <button mat-raised-button color="primary" (click)="saveGrids()">
+            Save Grids
           </button>
         </div>
-
       </div>
     </div>
-
   </mat-tab>
 </mat-tab-group>

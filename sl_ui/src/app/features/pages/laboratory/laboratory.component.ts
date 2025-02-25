@@ -2,11 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ExperimentService } from '../../services/experiment.service';
 import { Grid } from '../../interfaces/grid';
 import { GridService } from '../../services/grid.service';
-import { Light } from '../../interfaces/light';
-import { Message } from '../../interfaces/message';
 import { MqttService } from '../../services/mqtt.service';
 import { RobotWebsocketService } from '../../services/websockets/robot-websocket.service';
 import { Router } from '@angular/router';
+import { StorageService } from '../../services/storage.service';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs';
@@ -17,46 +16,37 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./laboratory.component.css']
 })
 export class LaboratoryComponent implements OnInit, OnDestroy {
-  lightInformation: Light | null = null; // Received output from LightInformation component
-  gridDimension: number = 8;
-  savedGrids: Grid[] | null = null;
+  gridDimension: number = 8; // Input for chart and matrix components
+  savedGrids: Grid[] | null = null; // Input for chart and matrix components
+  private candidateGridIds: number[] = []; // List of grid Ids that are candidates to be saved
+  private experimentId?: number | null;
+  private lightCode?: string | null;;
   private robotSubscription: Subscription | null = null;
-
-
-  // General variables
-  private candidateGridIds: number[] = [];
-  experimentId?: number | null;
-
-  // Component status variables
+  private savedGridsFlag: boolean = false;
+  private maxNumberGrids: number = 3;
   hasUnsavedChanges: boolean = false;
-  isWsLoading: boolean = false;
-
-  // Robot cell variables
-  pwmValue: number = 0;
-  timeIntervalValue: number = 15;
-
-  // Chart cell variables
-  chartsSaved: boolean = false;
-  maxNumbercharts: number = 3;
+  loadingWs: boolean = false;
 
   constructor(
     private experimentService: ExperimentService,
-    private mqttService: MqttService,
     private gridService: GridService,
+    private mqttService: MqttService,
     private robotWebsocketService: RobotWebsocketService,
     private router: Router,
+    private storageService: StorageService,
     private toastr: ToastrService,
-  ) { }
+  ) {
+    this.experimentId = this.storageService.getExperimentId();
+    this.lightCode = this.storageService.getLightCode();
+  }
 
   //Lifecycle hooks
   ngOnInit(): void {
-    this.experimentId = Number(localStorage.getItem('experiment_id'));
-
     if (this.experimentId && this.experimentId > 0) {
       this.experimentService.getExperimentGrids(this.experimentId).subscribe((grids: Grid[]): void => {
         if (grids !== undefined && grids.length !== 0) {
           this.savedGrids = grids;
-          this.chartsSaved = true;
+          this.savedGridsFlag = true;
         }
       })
     }
@@ -71,9 +61,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.robotSubscription) this.robotSubscription.unsubscribe();
     this.robotWebsocketService.disconnect();
-
     localStorage.removeItem('experimentId');
-    // this.sendLightCommand(true);
   }
 
   // Robot websocket connection
@@ -88,7 +76,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     // Subscribe to WebSocket messages
     this.robotSubscription = this.robotWebsocketService.messages$.subscribe((robot_msg) => {
       if (robot_msg) {
-        this.isWsLoading = false;
+        this.loadingWs = false;
         this.hasUnsavedChanges = true;
         if (robot_msg.is_last) {
           this.candidateGridIds.push(robot_msg.grid_id);
@@ -100,40 +88,25 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
 
   //Robot functions
   sendRobotCommand(): void {
-    if (this.savedGrids != null && this.savedGrids.length + this.candidateGridIds.length >= this.maxNumbercharts) {
-      this.toastr.warning('Maximum number of grids (3) reached. Cannot request for more.')
+    if (this.savedGrids != null && this.savedGrids.length + this.candidateGridIds.length >= this.maxNumberGrids) {
+      this.toastr.warning('Maximum number of grids reached');
     }
     else {
       var data = {
-        'light_code': this.lightInformation?.code
+        'light_code': this.lightCode
       }
 
       this.mqttService.publishRobotCommand(data).subscribe((response) => {
         if (response.status && response.status === 200) {
           this.toastr.success(response.body.success);
-          this.isWsLoading = true;
+          this.loadingWs = true;
           this.connectRobotWebsocket();
         }
       });
     }
   }
 
-  sendLightCommand(turnOff: boolean): void {
-    var data = {
-      'light_code': this.lightInformation?.code,
-      'pwm': this.pwmValue,
-      'time_interval': this.timeIntervalValue,
-    }
-    if (turnOff) data['pwm'] = 0;
-
-    this.mqttService.publishLightCommand(data).subscribe((response) => {
-      if (response.status !== null && response.status === 200) {
-        if (!turnOff) this.toastr.success(response.body.success);
-      }
-    });
-  }
-
-  saveCharts(): void {
+  saveGrids(): void {
     forkJoin(
       this.candidateGridIds.map(gridId =>
         this.gridService.updateGrid(
@@ -144,18 +117,12 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     ).subscribe({
       next: () => {
         this.toastr.success('All grids saved to the experiment')
-        this.chartsSaved = true;
+        this.savedGridsFlag = true;
         this.hasUnsavedChanges = false;
       },
       error: (e) => {
-        this.toastr.error('There was an error saving one or more grids.');
+        this.toastr.error('There was an error saving one or more grids.', e);
       },
     });
-  }
-
-  /* Events management */
-  // LightInformation event
-  onLightInformation(lightInformation: Light): void {
-    this.lightInformation = lightInformation;
   }
 }

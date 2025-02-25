@@ -4,8 +4,24 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class StorageService {
-  private readonly LIGHT_CODE_KEY = 'light_code';
-  private readonly LIGHT_TYPE_KEY = 'light_type';
+  // Experiment Related
+  private readonly EXPERIMENT_ID: string = 'experimentId';
+
+  getExperimentId(): number | null {
+    return Number(localStorage.getItem(this.EXPERIMENT_ID));
+  }
+
+  setExperimentId(id: number): void {
+    localStorage.setItem(this.EXPERIMENT_ID, id.toString());
+  }
+
+  clearExperimentData(): void {
+    localStorage.removeItem(this.EXPERIMENT_ID);
+  }
+
+  // Light Related
+  private readonly LIGHT_CODE_KEY: string = 'lightCode';
+  private readonly LIGHT_TYPE_KEY: string = 'lightType';
 
   getLightCode(): string | null {
     return localStorage.getItem(this.LIGHT_CODE_KEY);

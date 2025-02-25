@@ -21,6 +21,7 @@ import { FooterComponent } from './core/components/footer/footer.component';
 import { IntensityChartComponent } from './features/components/intensity-chart/intensity-chart.component';
 import { IntensityMatrixComponent } from './features/components/intensity-matrix/intensity-matrix.component';
 import { LaboratoryComponent } from './features/pages/laboratory/laboratory.component';
+import { LightControlComponent } from './features/components/light-control/light-control.component';
 import { LightInformationComponent } from './features/components/light-information/light-information.component';
 import { LobbyComponent } from './core/pages/lobby/lobby.component';
 import { LoginComponent } from './core/components/login/login.component';
@@ -51,6 +52,7 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     IntensityChartComponent,
     IntensityMatrixComponent,
     LaboratoryComponent,
+    LightControlComponent,
     LightInformationComponent,
     LobbyComponent,
     LoginComponent,
