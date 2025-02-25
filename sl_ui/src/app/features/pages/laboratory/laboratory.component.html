@@ -10,13 +10,7 @@
         <app-intensity-matrix [gridDimension]="gridDimension" [savedGrids]="savedGrids">
         </app-intensity-matrix>
 
-        <!-- ROBOT cell-->
-        <div class="robot">
-          <h2>Robot Camera</h2>
-          <div class="video-container">
-            <img *ngIf="frame" [src]="frame" alt="Video Stream" />
-          </div>
-        </div>
+        <app-robot-camera></app-robot-camera>
 
         <app-intensity-chart [gridDimension]="gridDimension" [savedGrids]="savedGrids"></app-intensity-chart>
 

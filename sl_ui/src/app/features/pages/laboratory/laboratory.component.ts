@@ -1,4 +1,3 @@
-import { CameraWebsocketService } from '../../services/websockets/camera-websocket.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ExperimentService } from '../../services/experiment.service';
 import { Grid } from '../../interfaces/grid';
@@ -32,11 +31,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   hasUnsavedChanges: boolean = false;
   isWsLoading: boolean = false;
 
-  // Websockets subscriptions
-  private cameraSubscription: Subscription | null = null;
-
   // Robot cell variables
-  frame: string = '';
   pwmValue: number = 0;
   timeIntervalValue: number = 15;
 
@@ -45,7 +40,6 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   maxNumbercharts: number = 3;
 
   constructor(
-    private cameraWebsocketService: CameraWebsocketService,
     private experimentService: ExperimentService,
     private mqttService: MqttService,
     private gridService: GridService,
@@ -65,7 +59,6 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
           this.chartsSaved = true;
         }
       })
-      // this.connectCameraWebsocket();
     }
     else {
       this.toastr.error('No experiment ID provided')
@@ -79,11 +72,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     if (this.robotSubscription) this.robotSubscription.unsubscribe();
     this.robotWebsocketService.disconnect();
 
-    if (this.cameraSubscription) this.cameraSubscription.unsubscribe();
-    this.cameraWebsocketService.disconnect();
-
     localStorage.removeItem('experimentId');
-
     // this.sendLightCommand(true);
   }
 
@@ -105,22 +94,6 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
           this.candidateGridIds.push(robot_msg.grid_id);
           this.robotWebsocketService.disconnect();
         }
-      }
-    });
-  }
-
-  private connectCameraWebsocket(): void {
-    this.cameraWebsocketService.connect();
-
-    // Unsubscribe from the previous subscription, if it exists
-    if (this.cameraSubscription) {
-      this.cameraSubscription.unsubscribe();
-    }
-
-    // Subscribe to WebSocket messages
-    this.cameraSubscription = this.cameraWebsocketService.messages$.subscribe((camera_msg) => {
-      if (camera_msg) {
-        this.frame = `data:image/jpeg;base64,${camera_msg.frame}`;
       }
     });
   }

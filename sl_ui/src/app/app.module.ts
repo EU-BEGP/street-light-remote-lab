@@ -29,6 +29,7 @@ import { NotFoundComponent } from './core/pages/not-found/not-found.component';
 import { ProfileComponent } from './core/pages/profile/profile.component';
 import { ProfileFormComponent } from './core/components/profile-form/profile-form.component';
 import { RegistrationComponent } from './core/components/registration/registration.component';
+import { RobotCameraComponent } from './features/components/robot-camera/robot-camera.component';
 import { ScrollToTopComponent } from './core/components/scroll-to-top/scroll-to-top.component';
 import { SpinnerComponent } from './core/components/spinner/spinner.component';
 
@@ -58,6 +59,7 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     ProfileComponent,
     ProfileFormComponent,
     RegistrationComponent,
+    RobotCameraComponent,
     ScrollToTopComponent,
     SpinnerComponent,
   ],
