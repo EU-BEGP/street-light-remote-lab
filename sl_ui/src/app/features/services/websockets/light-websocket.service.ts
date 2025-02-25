@@ -1,7 +1,6 @@
 import config from '../../../config.json'
-import { Injectable } from '@angular/core';
 import { GeneralWebsocketService } from './general-websocket.service';
-import { TokenService } from 'src/app/core/services/token.service';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +8,8 @@ import { TokenService } from 'src/app/core/services/token.service';
 export class LightWebsocketService extends GeneralWebsocketService {
   private readonly LIGHT_WS_URL: string = config.api.websocketUrls.lightInformation;
 
-  constructor(tokenService: TokenService) {
-    super(tokenService);
+  constructor() {
+    super();
     this.setServiceName('LightWebSocketService');
   }
 

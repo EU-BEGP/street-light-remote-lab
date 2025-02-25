@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject, EMPTY, Subscription } from 'rxjs';
-import { TokenService } from 'src/app/core/services/token.service';
 import { catchError } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
@@ -17,7 +16,7 @@ export class GeneralWebsocketService {
   private disconnectedByUser: boolean = false;
   protected serviceName?: string; // Store the service name for logging
 
-  constructor(private tokenService: TokenService) { }
+  constructor() { }
 
   protected setServiceName(name: string): void {
     this.serviceName = name;
@@ -30,14 +29,8 @@ export class GeneralWebsocketService {
   public connect(wsUrl: string): void {
     this.disconnect();
 
-    const token = this.tokenService.token;
-
-    if (!token) return;
-
-    const tokenizedWsUrl = `${wsUrl}?token=${token}`;
-
     if (!this.socket$ || this.socket$.closed) {
-      this.socket$ = this.getNewWebSocket(tokenizedWsUrl);
+      this.socket$ = this.getNewWebSocket(wsUrl);
 
       this.messageSubscription = this.socket$.pipe(
         catchError(error => {

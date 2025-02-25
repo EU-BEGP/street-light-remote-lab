@@ -3,8 +3,8 @@ import { AuthService } from '../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { StorageService } from 'src/app/features/services/storage.service';
 import { ToastrService } from 'ngx-toastr';
-import { TokenService } from '../../services/token.service';
 import { User } from '../../interfaces/user';
 
 @Component({
@@ -27,8 +27,8 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private formBuilder: FormBuilder,
     private router: Router,
+    private storageService: StorageService,
     private toastr: ToastrService,
-    private tokenService: TokenService,
   ) { }
 
   ngOnInit(): void { }
@@ -60,7 +60,7 @@ export class LoginComponent implements OnInit {
       next: (response: any): void => {
         if (response != undefined) {
           // Add token to local storage
-          this.tokenService.setToken(response.body.token)
+          this.storageService.setToken(response.body.token)
 
           this.toastr.success(`Welcome ${user.email}`);
 

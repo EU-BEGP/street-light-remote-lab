@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CountdownConfig } from 'ngx-countdown';
 import { Input, Output, EventEmitter } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
+import { StorageService } from 'src/app/features/services/storage.service';
 import { Subscription } from 'rxjs';
-import { TokenService } from '../../services/token.service';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -26,7 +26,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   constructor(
     private router: Router,
-    private tokenService: TokenService,
+    private storageService: StorageService,
   ) { }
 
   ngOnInit(): void {
@@ -36,9 +36,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.currentRoute = this.router.url;
       });
 
-    this.tokenService.token$.subscribe(token => {
-      this.showMenu = !!token;
-    });
+    this.showMenu = !(this.storageService.getToken());
   }
   ngOnDestroy(): void {
     if (this.subscription) {
@@ -63,7 +61,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   }
 
   logout(): void {
-    this.tokenService.clearToken();
+    this.storageService.clearToken();
     this.showMenu = false;
     this.goToLogin();
   }

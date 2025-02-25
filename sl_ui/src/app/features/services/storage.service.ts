@@ -4,6 +4,21 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class StorageService {
+  // Auth Token Related
+  private readonly TOKEN: string = 'token';
+
+  getToken(): string | null {
+    return localStorage.getItem(this.TOKEN);
+  }
+
+  setToken(token: string): void {
+    localStorage.setItem(this.TOKEN, token);
+  }
+
+  clearToken(): void {
+    localStorage.removeItem(this.TOKEN);
+  }
+
   // Experiment Related
   private readonly EXPERIMENT_ID: string = 'experimentId';
 
