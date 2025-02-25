@@ -11,13 +11,14 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class CodeActivationComponent implements OnInit {
   activationStatus: boolean = false;
-  userId!: number;
+  private userId?: number | null;
+
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private toastr: ToastrService,
     private storageService: StorageService,
+    private toastr: ToastrService,
   ) { }
 
   ngOnInit(): void {
@@ -25,7 +26,7 @@ export class CodeActivationComponent implements OnInit {
       // User already logged in, no activation needed
       this.router.navigate(['']);
     } else {
-      this.userId = Number(localStorage.getItem('user_id'))
+      this.userId = this.storageService.getUserId();
     }
   }
 
@@ -91,18 +92,20 @@ export class CodeActivationComponent implements OnInit {
   }
 
   resendCode(): void {
-    this.authService.requestVerificationCode(this.userId).subscribe({
-      next: () => {
-        this.toastr.success(
-          'Please check your email for a new verification code.'
-        );
-      },
-      error: () => {
-        this.toastr.error(
-          'Unable to resend the verification code.'
-        );
-      },
-    });
+    if (this.userId) {
+      this.authService.requestVerificationCode(this.userId).subscribe({
+        next: () => {
+          this.toastr.success(
+            'Please check your email for a new verification code.'
+          );
+        },
+        error: () => {
+          this.toastr.error(
+            'Unable to resend the verification code.'
+          );
+        },
+      });
+    }
   }
 
   sendCode(): void {
@@ -125,7 +128,7 @@ export class CodeActivationComponent implements OnInit {
             'Your account has been successfully activated.'
           );
           this.activationStatus = true;
-          localStorage.removeItem('userId');
+          this.storageService.clearUserData();
 
           setTimeout((): void => {
             this.router.navigate([''])

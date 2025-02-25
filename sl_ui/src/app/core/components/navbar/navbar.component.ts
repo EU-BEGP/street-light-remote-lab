@@ -36,7 +36,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.currentRoute = this.router.url;
       });
 
-    this.showMenu = !(this.storageService.getToken());
+    this.showMenu = !!(this.storageService.getToken());
   }
   ngOnDestroy(): void {
     if (this.subscription) {

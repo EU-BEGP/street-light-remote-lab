@@ -1,5 +1,4 @@
 import config from './config.json'
-import { AccessService } from './core/services/access.service';
 import { Booking } from './core/interfaces/booking';
 import { BookingHandlerService } from './core/services/booking-handler.service';
 import { BookingService } from './core/services/booking.service';
@@ -7,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import { CountdownConfig } from 'ngx-countdown';
 import { Event, Router, RoutesRecognized } from '@angular/router';
 import { NgxLoader } from 'ngx-http-loader';
+import { StorageService } from './features/services/storage.service';
 import { TimerService } from './core/services/timer.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -29,10 +29,10 @@ export class AppComponent implements OnInit {
   };
 
   constructor(
-    private accessService: AccessService,
     private bookingHandler: BookingHandlerService,
     private bookingService: BookingService,
     private router: Router,
+    private storageService: StorageService,
     private timerService: TimerService,
     private toastr: ToastrService,
   ) {
@@ -63,7 +63,8 @@ export class AppComponent implements OnInit {
     const password = params[this.passwordParam] || null;
 
     if (accessKey) {
-      this.accessService.setAccess(accessKey, password);
+      this.storageService.setAccessKey(accessKey)
+      this.storageService.setPassword(password)
       this.validateBooking(accessKey, password);
     } else {
       this.toastr.error('Make a booking to access this laboratory');
@@ -75,15 +76,11 @@ export class AppComponent implements OnInit {
   }
 
   private handleStoredParams(): void {
-    const storedParams = this.accessService.getAccess();
+    const accessKey = this.storageService.getAccessKey();
+    const password = this.storageService.getPassword();
 
-    if (Object.keys(storedParams).length > 0) {
-      const accessKey = storedParams.accessKey;
-      const password = storedParams.password || null;
-
-      if (accessKey) {
-        this.validateBooking(accessKey, password);
-      }
+    if (accessKey) {
+      this.validateBooking(accessKey, password);
     } else {
       this.toastr.error('Make a booking to access this laboratory');
       if (!this.hasNavigated) {
@@ -124,7 +121,7 @@ export class AppComponent implements OnInit {
 
   onCountdownFinish(event: any): void {
     if (event.action == 'done') {
-      this.accessService.clearAccess();
+      this.storageService.clearAccessData();
       this.hasAccessToLab = false;
       this.router.navigate(['/lobby']);
     }

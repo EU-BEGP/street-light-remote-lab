@@ -61,7 +61,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.robotSubscription) this.robotSubscription.unsubscribe();
     this.robotWebsocketService.disconnect();
-    localStorage.removeItem('experimentId');
+    this.storageService.clearExperimentData();
   }
 
   // Robot websocket connection

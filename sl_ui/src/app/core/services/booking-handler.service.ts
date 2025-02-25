@@ -1,8 +1,9 @@
+import { Booking } from '../interfaces/booking';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
+import { StorageService } from 'src/app/features/services/storage.service';
 import { TimerService } from './timer.service';
-import { Booking } from '../interfaces/booking';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,9 @@ export class BookingHandlerService {
 
   constructor(
     private router: Router,
+    private storageService: StorageService,
+    private timerService: TimerService,
     private toastr: ToastrService,
-    private timerService: TimerService
   ) { }
 
   handleBookingResponse(response: Booking[]): void {
@@ -21,8 +23,7 @@ export class BookingHandlerService {
       this.timerService.setCountdownTime(remainingSeconds);
     } else {
       this.timerService.setCountdownTime(0);
-      localStorage.removeItem('access_key');
-      localStorage.removeItem('password');
+      this.storageService.clearAccessData();
 
       this.toastr.error('You can not access right now, your booking is invalid.');
       this.router.navigate(['/lobby']);

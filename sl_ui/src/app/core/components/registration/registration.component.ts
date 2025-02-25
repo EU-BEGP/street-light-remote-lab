@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
 import {
+  AbstractControl,
   FormBuilder,
-  Validators,
-  ValidatorFn,
   ValidationErrors,
-  AbstractControl
+  ValidatorFn,
+  Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { StorageService } from 'src/app/features/services/storage.service';
+import { ToastrService } from 'ngx-toastr';
 import { User } from '../../interfaces/user';
 
 @Component({
@@ -35,9 +36,10 @@ export class RegistrationComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private toastr: ToastrService,
-    private router: Router,
     private formBuilder: FormBuilder,
+    private router: Router,
+    private storageService: StorageService,
+    private toastr: ToastrService,
   ) { }
 
   ngOnInit(): void { }
@@ -68,7 +70,7 @@ export class RegistrationComponent implements OnInit {
 
     this.authService.signUp(user).subscribe((response) => {
       if (response.status !== null && response.status === 201) {
-        localStorage.setItem('user_id', response.body.id.toString());
+        this.storageService.setUserId(response.body.id)
 
         this.toastr.success(
           `Welcome ${user.name}`,
