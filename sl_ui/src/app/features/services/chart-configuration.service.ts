@@ -8,25 +8,50 @@ export class ChartConfigurationService {
   /* Layouts */
   // Default layout
   private defaultLayout = {
+    showlegend: false,
     autosize: true,
     height: 300,
-    width: 300,
-    showlegend: false,
+    width: 600,
     margin: {
       l: 0,
       r: 0,
       b: 0,
       t: 0,
-    }, // No margins
+    },
     scene: {
+      aspectratio: {
+        x: 200
+      },
       camera: {
         eye: {
-          x: 1.5,
-          y: 1.5,
-          z: 1.5,
-        },
-      }, // Camera position for better view
+          x: 0,   // Camera is centered horizontally (x-axis is left to right)
+          y: 2,   // Camera is positioned along the y-axis, looking into the screen
+          z: 0.5, // Camera is slightly above the origin to see the z-axis vertically
+        }
+      },
+      xaxis: {
+        autorange: 'reversed',
+        title: 'X Axis',
+        showgrid: true,
+        gridcolor: 'lightgray',
+      },
+      yaxis: {
+        autorange: 'reversed',
+        title: 'Y Axis',
+        showgrid: true,
+        gridcolor: 'lightgray',
+      },
+      zaxis: {
+        title: 'Z Axis',
+        gridcolor: 'lightgray',
+        showgrid: true,
+      },
     },
+  };
+
+  //Simulation Layout
+  private simulationLayout = {
+    ...this.defaultLayout
   };
 
   // Restrictive layout for simulations
@@ -92,6 +117,13 @@ export class ChartConfigurationService {
    */
   getChartDefaultLayout(): any {
     return this.defaultLayout;
+  }
+
+  /** Retrieves the simulation layout
+   * @returns The simulation layout
+   */
+  getChartSimulationLayout(): any {
+    return this.simulationLayout;
   }
 
   /** Retrieves the restrictive layout

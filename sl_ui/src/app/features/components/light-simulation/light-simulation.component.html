@@ -1,0 +1,27 @@
+<div>
+  <div class="simulation">
+    <h2>Light Simulation</h2>
+    <div class="simulation-components">
+      <div class="sim-selection-forms">
+        <mat-form-field appearance="fill">
+          <mat-label>Select Grid</mat-label>
+          <mat-select (selectionChange)="onGridSelect($event)">
+            <mat-option *ngFor="let grid of expandedGrids; let i = index" [value]="i">
+              Grid {{ i + 1 }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Select Separation</mat-label>
+          <mat-select [(value)]="separationNumber" (selectionChange)="onSeparationNumberSelect()">
+            <mat-option value=0>None</mat-option>
+            <mat-option value=1>1 square</mat-option>
+            <mat-option value=2>2 squares</mat-option>
+            <mat-option value=3>3 squares</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <plotly-plot [data]="[chartSurface]" [layout]="chartLayout" [config]="chartConfiguration"></plotly-plot>
+    </div>
+  </div>
+</div>

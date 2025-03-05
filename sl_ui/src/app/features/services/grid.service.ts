@@ -24,4 +24,8 @@ export class GridService {
   updateGrid(body: any, id: number): Observable<any> {
     return this.http.patch<any>(`${this.URL}${id}/`, body);
   }
+
+  getGridExpansion(id: number): Observable<any> {
+    return this.http.get(`${this.URL}${id}/expansion/`);
+  }
 }

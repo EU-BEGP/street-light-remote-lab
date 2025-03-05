@@ -34,7 +34,6 @@ export class IntensityChartComponent implements OnInit, OnDestroy, OnChanges {
     this.generateBaseSurface();
     this.connectRobotWebsocket();
   }
-
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['savedGrids'] && this.savedGrids) {
       this.savedGrids?.forEach(grid => {
@@ -81,8 +80,8 @@ export class IntensityChartComponent implements OnInit, OnDestroy, OnChanges {
   // Generate base surface and append it into the surfaces array of the chart
   private generateBaseSurface(): void {
     var baseSurface = {
-      x: Array.from({ length: this.gridDimension }, (_, i) => i + 1),
-      y: Array.from({ length: this.gridDimension }, (_, i) => i + 1),
+      x: Array.from({ length: this.gridDimension }, (_, i) => i),
+      y: Array.from({ length: this.gridDimension }, (_, i) => i),
       z: this.generateInitialZValues(this.gridDimension),
       type: 'surface',
       opacity: 0.8,

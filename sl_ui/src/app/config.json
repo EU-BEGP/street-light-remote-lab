@@ -1,29 +1,29 @@
 {
-  "version": "0.1.8",
+  "version": "0.1.9",
   "api": {
     "baseUrl": "",
-    "users": {
-      "me": "users/me/",
-      "login": "users/token/",
-      "signup": "users/signup/",
-      "passwordReset": "accounts/password_reset/",
-      "accountActivation": "users/activate-account/",
-      "codeRequest": "users/request-code/"
-    },
     "streetLights": {
-      "mqtt": {
-        "robotCommand": "mqtt/robot/",
-        "lightCommand": "mqtt/light/"
-      },
-      "robot": "robots/",
-      "light": "lights/",
       "experiment": "experiments/",
-      "grid": "grids/"
+      "grid": "grids/",
+      "light": "lights/",
+      "mqtt": {
+        "lightCommand": "mqtt/light/",
+        "robotCommand": "mqtt/robot/"
+      },
+      "robot": "robots/"
+    },
+    "users": {
+      "accountActivation": "users/activate-account/",
+      "codeRequest": "users/request-code/",
+      "login": "users/token/",
+      "me": "users/me/",
+      "passwordReset": "accounts/password_reset/",
+      "signup": "users/signup/"
     },
     "websocketUrls": {
-      "robotInformation": "",
+      "camera": "",
       "lightInformation": "",
-      "camera": ""
+      "robotInformation": ""
     }
   },
   "booking": {
@@ -34,8 +34,8 @@
     }
   },
   "organizationData": {
-    "name": "Universidad Privada Boliviana",
-    "acronym": "UPB"
+    "acronym": "UPB",
+    "name": "Universidad Privada Boliviana"
   },
   "appInformation": {
     "title": "Street Light Remote Lab"

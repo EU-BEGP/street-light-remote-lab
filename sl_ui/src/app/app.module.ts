@@ -23,6 +23,7 @@ import { IntensityMatrixComponent } from './features/components/intensity-matrix
 import { LaboratoryComponent } from './features/pages/laboratory/laboratory.component';
 import { LightControlComponent } from './features/components/light-control/light-control.component';
 import { LightInformationComponent } from './features/components/light-information/light-information.component';
+import { LightSimulationComponent } from './features/components/light-simulation/light-simulation.component';
 import { LobbyComponent } from './core/pages/lobby/lobby.component';
 import { LoginComponent } from './core/components/login/login.component';
 import { NavbarComponent } from './core/components/navbar/navbar.component';
@@ -54,6 +55,7 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     LaboratoryComponent,
     LightControlComponent,
     LightInformationComponent,
+    LightSimulationComponent,
     LobbyComponent,
     LoginComponent,
     NavbarComponent,

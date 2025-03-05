@@ -1,10 +1,10 @@
-from sl.views import robot_views
-from sl.views import light_views
+from django.urls import path
 from sl.views import experiment_views
 from sl.views import grid_views
+from sl.views import light_views
 from sl.views import message_views
 from sl.views import mqtt_views
-from django.urls import path
+from sl.views import robot_views
 
 app_name = "sl"
 
