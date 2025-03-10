@@ -19,9 +19,6 @@ export class ChartConfigurationService {
       t: 0,
     },
     scene: {
-      aspectratio: {
-        x: 200
-      },
       camera: {
         eye: {
           x: 0,   // Camera is centered horizontally (x-axis is left to right)
@@ -51,7 +48,44 @@ export class ChartConfigurationService {
 
   //Simulation Layout
   private simulationLayout = {
-    ...this.defaultLayout
+    showlegend: false,
+    autosize: true,
+    height: 400,
+    width: 800,
+    margin: {
+      l: 0,
+      r: 0,
+      b: 0,
+      t: 0,
+    },
+    scene: {
+      aspectratio: { x: 3, y: 1, z: 1 }, // Set x-axis to be 3 times larger than y-axis
+      aspectmode: 'manual', // Use manual aspect ratio
+      camera: {
+        eye: {
+          x: 1.5, // Increased from 0 to account for the wider x-axis
+          y: 3,   // Kept the same (or adjust as needed)
+          z: 0.5, // Kept the same (or adjust as needed)
+        }
+      },
+      xaxis: {
+        autorange: 'reversed',
+        title: 'X Axis',
+        showgrid: true,
+        gridcolor: 'lightgray',
+      },
+      yaxis: {
+        autorange: 'reversed',
+        title: 'Y Axis',
+        showgrid: true,
+        gridcolor: 'lightgray',
+      },
+      zaxis: {
+        title: 'Z Axis',
+        gridcolor: 'lightgray',
+        showgrid: true,
+      },
+    },
   };
 
   // Restrictive layout for simulations
