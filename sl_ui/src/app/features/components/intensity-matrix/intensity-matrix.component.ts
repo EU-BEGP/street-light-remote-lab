@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 export class IntensityMatrixComponent implements OnInit, OnDestroy, OnChanges {
   @Input() gridDimension: number = 0;
   @Input() savedGrids: Grid[] | null = null;
+  @Input() selectedGridIndex: number = 0;
   private robotSubscription: Subscription | null = null;
 
   matrixContainer = {

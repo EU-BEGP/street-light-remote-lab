@@ -2,7 +2,7 @@
   <div class="matrix">
     <h2>Intensity Matrix</h2>
     <mat-grid-list [cols]="gridDimension" [rowHeight]="30" gutterSize="10px">
-      <mat-grid-tile class="custom-tile" *ngFor="let cell of matrixContainer.matrices[currentMatrixIndex].flat()"
+      <mat-grid-tile class="custom-tile" *ngFor="let cell of matrixContainer.matrices[selectedGridIndex].flat()"
         [style.backgroundColor]="getCellColor(cell)" [ngClass]="cell > 0 ? 'text-white' : 'text-black'">
         {{ cell }}
       </mat-grid-tile>

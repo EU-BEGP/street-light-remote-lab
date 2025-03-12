@@ -26,6 +26,8 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   private maxNumberGrids: number = 3;
   hasUnsavedChanges: boolean = false;
   loadingWs: boolean = false;
+  numberOfGrids: number = 0;
+  selectedGridIndex: number = 0;
 
   constructor(
     private experimentService: ExperimentService,
@@ -45,6 +47,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     if (this.experimentId && this.experimentId > 0) {
       this.experimentService.getExperimentGrids(this.experimentId).subscribe((grids: Grid[]): void => {
         if (grids !== undefined && grids.length !== 0) {
+          this.numberOfGrids = grids.length;
           this.savedGrids = grids;
           this.savedGridsFlag = true;
         }
@@ -81,6 +84,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
         if (robot_msg.is_last) {
           this.candidateGridIds.push(robot_msg.grid_id);
           this.robotWebsocketService.disconnect();
+          this.numberOfGrids++;
         }
       }
     });

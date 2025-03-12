@@ -16,10 +16,10 @@
   grid-column: 1 / -1;
 }
 
-.robot-control {
+.control-panel {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
   justify-items: center;
   align-items: center;
   margin: 5px;
@@ -27,15 +27,20 @@
   border: 1px solid #d1d5db;
 }
 
-.save-grids {
+.grid-selector {
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   justify-items: center;
   align-items: center;
   margin: 5px;
   padding: 5px;
   border: 1px solid #d1d5db;
+}
+
+.grid-selector label {
+  display: block;
+  margin: 5px 0;
 }
 
 .light-simulation {

@@ -1,36 +1,51 @@
-<mat-tab-group mat-align-tabs="center">
-  <mat-tab label="Activity 1">
-    <app-spinner id="grid-spinner" [showSpinner]="loadingWs"></app-spinner>
-    <div class="laboratory-container">
-      <div class="contents">
-        <app-light-information class="light-information"></app-light-information>
+<div>
+  <app-spinner id="grid-spinner" [showSpinner]="loadingWs"></app-spinner>
+  <div class="laboratory-container">
+    <div class="contents">
+      <app-light-information class="light-information"></app-light-information>
 
-        <app-intensity-matrix [gridDimension]="gridDimension" [savedGrids]="savedGrids">
-        </app-intensity-matrix>
+      <app-intensity-matrix [gridDimension]="gridDimension" [savedGrids]="savedGrids"
+        [selectedGridIndex]="selectedGridIndex">
+      </app-intensity-matrix>
 
-        <app-robot-camera></app-robot-camera>
+      <app-robot-camera></app-robot-camera>
 
-        <app-intensity-chart [gridDimension]="gridDimension" [savedGrids]="savedGrids"></app-intensity-chart>
+      <app-intensity-chart [gridDimension]="gridDimension" [savedGrids]="savedGrids"
+        [selectedGridIndex]="selectedGridIndex"></app-intensity-chart>
 
-        <app-light-control></app-light-control>
+      <app-light-control></app-light-control>
 
-        <div class="robot-control">
-          <span>Robot Control</span>
-          <button mat-raised-button color="primary" (click)="sendRobotCommand()">
-            Capture Grid
-          </button>
-        </div>
-
-        <div class="save-grids">
-          <span>Save Captured Grids</span>
-          <button mat-raised-button color="primary" (click)="saveGrids()">
-            Save Grids
-          </button>
-        </div>
-
-        <app-light-simulation [gridDimension]="gridDimension" [savedGrids]="savedGrids"
-          class="light-simulation"></app-light-simulation>
+      <div class="control-panel">
+        <span>Robot Control</span>
+        <button mat-raised-button color="primary" (click)="sendRobotCommand()">
+          Capture Grid
+        </button>
+        <span>Save Captured Grids</span>
+        <button mat-raised-button color="primary" (click)="saveGrids()">
+          Save Grids
+        </button>
       </div>
+
+      <div class="grid-selector">
+        <h3>Select Grid to Visualize</h3>
+        <div *ngIf="numberOfGrids === 0">
+          <p>No grids available to visualize.</p>
+        </div>
+        <div *ngIf="numberOfGrids === 1">
+          <p>Only one grid is available to visualize.</p>
+        </div>
+        <div *ngIf="numberOfGrids > 1">
+          <div *ngFor="let item of [].constructor(numberOfGrids); let i = index">
+            <label>
+              <input type="radio" name="gridSelector" [value]="i" [(ngModel)]="selectedGridIndex">
+              Grid {{ i + 1 }}
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <app-light-simulation [gridDimension]="gridDimension" [savedGrids]="savedGrids"
+        class="light-simulation"></app-light-simulation>
     </div>
-  </mat-tab>
-</mat-tab-group>
+  </div>
+</div>
