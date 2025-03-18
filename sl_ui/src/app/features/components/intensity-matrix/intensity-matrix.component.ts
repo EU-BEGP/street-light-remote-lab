@@ -1,19 +1,17 @@
-import { Component, OnInit, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Grid } from '../../interfaces/grid';
 import { Message } from '../../interfaces/message';
-import { RobotWebsocketService } from '../../services/websockets/robot-websocket.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-intensity-matrix',
   templateUrl: './intensity-matrix.component.html',
   styleUrls: ['./intensity-matrix.component.css']
 })
-export class IntensityMatrixComponent implements OnInit, OnDestroy, OnChanges {
+export class IntensityMatrixComponent implements OnInit, OnChanges {
   @Input() gridDimension: number = 0;
   @Input() savedGrids: Grid[] | null = null;
   @Input() selectedGridIndex: number = 0;
-  private robotSubscription: Subscription | null = null;
+  @Input() currentMessage: Message | null = null;
 
   matrixContainer = {
     matrices: [] as number[][][], // Array to store all matrices
@@ -21,14 +19,11 @@ export class IntensityMatrixComponent implements OnInit, OnDestroy, OnChanges {
   firstMatrixUpdated: boolean = false;
   currentMatrixIndex = 0;
 
-  constructor(
-    private robotWebsocketService: RobotWebsocketService
-  ) { }
+  constructor() { }
 
   //Lifecycle hooks
   ngOnInit(): void {
     this.generateBaseMatrix();
-    this.connectRobotWebsocket();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -42,38 +37,31 @@ export class IntensityMatrixComponent implements OnInit, OnDestroy, OnChanges {
         }
       });
     }
-  }
 
-  ngOnDestroy(): void {
-    if (this.robotSubscription) this.robotSubscription.unsubscribe();
-    this.robotWebsocketService.disconnect();
-  }
-
-  // Robot websocket connection
-  private connectRobotWebsocket(): void {
-    this.robotWebsocketService.connect();
-
-    // Unsubscribe from the previous subscription, if it exists
-    if (this.robotSubscription) {
-      this.robotSubscription.unsubscribe();
+    if (changes['currentMessage'] && this.currentMessage) {
+      this.updateMatrixByMessage(this.currentMessage);
     }
-
-    // Subscribe to websocket messages
-    this.robotSubscription = this.robotWebsocketService.messages$.subscribe((robot_msg: Message): void => {
-      if (robot_msg) {
-        // Update matrix message by message
-        this.updateMatrixByMessage(robot_msg)
-      }
-    });
   }
 
   // Generate base empty matrix filled with zeros
   private generateBaseMatrix(): void {
-    this.matrixContainer.matrices.push(Array(this.gridDimension).fill(0).map(() => Array(this.gridDimension).fill(0)));
+    // Create a new matrix filled with zeros
+    const baseMatrix = Array(this.gridDimension)
+      .fill(0)
+      .map(() => Array(this.gridDimension).fill(0));
+
+    // Create a new matrices array with the new matrix added
+    this.matrixContainer.matrices = [
+      ...this.matrixContainer.matrices,
+      baseMatrix,
+    ];
+
+    // Update the selectedGridIndex to point to the new matrix
+    this.selectedGridIndex = this.matrixContainer.matrices.length - 1;
   }
 
   // Update matrix based on the received message
-  private updateMatrixByMessage(message: Message): void {
+  private updateMatrixByMessage(message: any): void {
     if (message && message.x_pos >= 0 && message.x_pos < this.gridDimension && message.y_pos >= 0 && message.y_pos < this.gridDimension) {
       // First message received
       if (message.x_pos === 0 && message.y_pos === 0) {
@@ -90,11 +78,20 @@ export class IntensityMatrixComponent implements OnInit, OnDestroy, OnChanges {
 
       // Update only the latest matrix
       const lastMatrixIndex = this.matrixContainer.matrices.length - 1;
-      this.matrixContainer.matrices[lastMatrixIndex] = this.matrixContainer.matrices[lastMatrixIndex].map((row: number[], rowIndex: number): number[] =>
+
+      // Create the updated matrix
+      const updatedMatrix = this.matrixContainer.matrices[lastMatrixIndex] = this.matrixContainer.matrices[lastMatrixIndex].map((row: number[], rowIndex: number): number[] =>
         rowIndex === message.y_pos
           ? [...row.slice(0, message.x_pos), message.intensity, ...row.slice(message.x_pos + 1)]
           : row
       );
+
+      // Update the matrices array immutably
+      this.matrixContainer.matrices = [
+        ...this.matrixContainer.matrices.slice(0, lastMatrixIndex),
+        updatedMatrix,
+        ...this.matrixContainer.matrices.slice(lastMatrixIndex + 1)
+      ];
     }
   }
 

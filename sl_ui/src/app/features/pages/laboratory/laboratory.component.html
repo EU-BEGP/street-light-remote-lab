@@ -5,13 +5,13 @@
       <app-light-information class="light-information"></app-light-information>
 
       <app-intensity-matrix [gridDimension]="gridDimension" [savedGrids]="savedGrids"
-        [selectedGridIndex]="selectedGridIndex">
+        [selectedGridIndex]="selectedGridIndex" [currentMessage]="currentMessage">
       </app-intensity-matrix>
 
       <app-robot-camera></app-robot-camera>
 
       <app-intensity-chart [gridDimension]="gridDimension" [savedGrids]="savedGrids"
-        [selectedGridIndex]="selectedGridIndex"></app-intensity-chart>
+        [selectedGridIndex]="selectedGridIndex" [currentMessage]="currentMessage"></app-intensity-chart>
 
       <app-light-control></app-light-control>
 

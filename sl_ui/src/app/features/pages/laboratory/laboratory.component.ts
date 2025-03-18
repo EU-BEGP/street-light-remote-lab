@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ExperimentService } from '../../services/experiment.service';
 import { Grid } from '../../interfaces/grid';
 import { GridService } from '../../services/grid.service';
+import { Message } from '../../interfaces/message';
 import { MqttService } from '../../services/mqtt.service';
 import { RobotWebsocketService } from '../../services/websockets/robot-websocket.service';
 import { Router } from '@angular/router';
@@ -28,6 +29,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
   loadingWs: boolean = false;
   numberOfGrids: number = 0;
   selectedGridIndex: number = 0;
+  currentMessage: Message | null = null;
 
   constructor(
     private experimentService: ExperimentService,
@@ -48,6 +50,7 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
       this.experimentService.getExperimentGrids(this.experimentId).subscribe((grids: Grid[]): void => {
         if (grids !== undefined && grids.length !== 0) {
           this.numberOfGrids = grids.length;
+          this.selectedGridIndex = this.numberOfGrids - 1;
           this.savedGrids = grids;
           this.savedGridsFlag = true;
         }
@@ -79,12 +82,14 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
     // Subscribe to WebSocket messages
     this.robotSubscription = this.robotWebsocketService.messages$.subscribe((robot_msg) => {
       if (robot_msg) {
+        this.currentMessage = robot_msg;
         this.loadingWs = false;
         this.hasUnsavedChanges = true;
         if (robot_msg.is_last) {
           this.candidateGridIds.push(robot_msg.grid_id);
           this.robotWebsocketService.disconnect();
-          this.numberOfGrids++;
+          this.numberOfGrids += 1;
+          this.selectedGridIndex = this.numberOfGrids - 1;
         }
       }
     });

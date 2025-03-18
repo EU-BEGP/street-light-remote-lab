@@ -1,21 +1,19 @@
 import { ChartConfigurationService } from '../../services/chart-configuration.service';
 import { ChartSurface } from '../../interfaces/chart-surface';
-import { Component, OnInit, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Grid } from '../../interfaces/grid';
 import { Message } from '../../interfaces/message'
-import { RobotWebsocketService } from '../../services/websockets/robot-websocket.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-intensity-chart',
   templateUrl: './intensity-chart.component.html',
   styleUrls: ['./intensity-chart.component.css']
 })
-export class IntensityChartComponent implements OnInit, OnDestroy, OnChanges {
+export class IntensityChartComponent implements OnInit, OnChanges {
   @Input() gridDimension: number = 0;
   @Input() savedGrids: Grid[] | null = null;
   @Input() selectedGridIndex: number = 0;
-  private robotSubscription: Subscription | null = null;
+  @Input() currentMessage: Message | null = null;
 
   chart = {
     surfaces: [] as ChartSurface[],
@@ -24,16 +22,13 @@ export class IntensityChartComponent implements OnInit, OnDestroy, OnChanges {
   firstSurfaceUpdated: boolean = false;
 
   constructor(
-    private robotWebsocketService: RobotWebsocketService,
     private chartConfigurationService: ChartConfigurationService,
   ) { }
 
   //Lifecycle hooks
   ngOnInit(): void {
     this.chartLayout = this.chartConfigurationService.getChartDefaultLayout();
-    // Generate the first surface of the chart
     this.generateBaseSurface();
-    this.connectRobotWebsocket();
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['savedGrids'] && this.savedGrids) {
@@ -46,29 +41,10 @@ export class IntensityChartComponent implements OnInit, OnDestroy, OnChanges {
         }
       });
     }
-  }
 
-  ngOnDestroy(): void {
-    if (this.robotSubscription) this.robotSubscription.unsubscribe();
-    this.robotWebsocketService.disconnect();
-  }
-
-  // Robot websocket connection
-  private connectRobotWebsocket(): void {
-    this.robotWebsocketService.connect();
-
-    // Unsubscribe from the previous subscription, if it exists
-    if (this.robotSubscription) {
-      this.robotSubscription.unsubscribe();
+    if (changes['currentMessage'] && this.currentMessage) {
+      this.updateSurfaceByMessage(this.currentMessage);
     }
-
-    // Subscribe to websocket messages
-    this.robotSubscription = this.robotWebsocketService.messages$.subscribe((robot_msg: Message): void => {
-      if (robot_msg) {
-        // Update chart message by message
-        this.updateSurfaceByMessage(robot_msg)
-      }
-    });
   }
 
   // Helper function to generate the initial chart Z array
@@ -88,7 +64,15 @@ export class IntensityChartComponent implements OnInit, OnDestroy, OnChanges {
       opacity: 0.8,
       showscale: false,
     }
-    this.chart.surfaces.push(baseSurface);
+
+    // Create a new matrices array with the new matrix added
+    this.chart.surfaces = [
+      ...this.chart.surfaces,
+      baseSurface,
+    ];
+
+    // Update the selectedGridIndex to point to the new surface
+    this.selectedGridIndex = this.chart.surfaces.length - 1;
   }
 
   // Update surface based on the received message
@@ -104,11 +88,25 @@ export class IntensityChartComponent implements OnInit, OnDestroy, OnChanges {
 
       // Update only the latest surface
       const lastSurfaceIndex = this.chart.surfaces.length - 1;
-      this.chart.surfaces[lastSurfaceIndex].z = this.chart.surfaces[lastSurfaceIndex].z.map((row: number[], rowIndex: number): number[] =>
+
+      // Create a new ChartSurface object with the updated z values
+      const updatedSurfaceZValues = this.chart.surfaces[lastSurfaceIndex].z.map((row: number[], rowIndex: number): number[] =>
         rowIndex === message.y_pos
           ? [...row.slice(0, message.x_pos), message.intensity, ...row.slice(message.x_pos + 1)]
           : row
       );
+      // Create a new ChartSurface object with the updated z values
+      const updatedSurface: ChartSurface = {
+        ...this.chart.surfaces[lastSurfaceIndex],
+        z: updatedSurfaceZValues,
+      };
+
+      // Update the surfaces array immutably
+      this.chart.surfaces = [
+        ...this.chart.surfaces.slice(0, lastSurfaceIndex),
+        updatedSurface, // Add the updated surface
+        ...this.chart.surfaces.slice(lastSurfaceIndex + 1),
+      ];
     }
   }
 }
