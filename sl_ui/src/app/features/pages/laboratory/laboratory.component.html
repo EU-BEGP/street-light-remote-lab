@@ -48,8 +48,9 @@
         </div>
       </div>
 
-      <app-light-simulation [gridDimension]="gridDimension" [savedGrids]="savedGrids"
-        class="light-simulation"></app-light-simulation>
+      <app-light-simulation *ngIf="savedGrids && savedGrids.length > 0" [gridDimension]="gridDimension"
+        [savedGrids]="savedGrids" class="light-simulation">
+      </app-light-simulation>
     </div>
   </div>
 </div>

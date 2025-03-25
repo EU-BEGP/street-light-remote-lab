@@ -22,7 +22,7 @@ import { forkJoin } from 'rxjs';
 })
 export class LaboratoryComponent implements OnInit, OnDestroy {
   gridDimension: number = 8; // Input for chart and matrix components
-  savedGrids: Grid[] | null = null; // Input for chart and matrix components
+  savedGrids: Grid[] = []; // Input for chart and matrix components
   private candidateGridIds: number[] = []; // List of grid Ids that are candidates to be saved
   private experimentId?: number | null;
   private lightCode?: string | null;;
@@ -128,8 +128,11 @@ export class LaboratoryComponent implements OnInit, OnDestroy {
         )
       )
     ).subscribe({
-      next: () => {
-        this.toastr.success('All grids saved to the experiment')
+      next: (savedGrids: Grid[]) => {
+        // Add all saved grids to your array
+        this.savedGrids = [...this.savedGrids, ...savedGrids];
+
+        this.toastr.success('All grids saved to the experiment');
         this.savedGridsFlag = true;
         this.hasUnsavedChanges = false;
       },
