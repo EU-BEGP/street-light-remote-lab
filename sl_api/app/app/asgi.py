@@ -1,4 +1,8 @@
-﻿"""
+# Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+# MIT License - See LICENSE file in the root directory
+# Boris Pedraza, Alex Villazon, Omar Ormachea
+
+"""
 ASGI config for app project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.

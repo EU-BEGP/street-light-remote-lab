@@ -1,3 +1,7 @@
+# Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+# MIT License - See LICENSE file in the root directory
+# Boris Pedraza, Alex Villazon, Omar Ormachea
+
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.models import Group
 from rest_framework import serializers

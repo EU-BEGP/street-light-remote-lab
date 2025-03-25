@@ -1,3 +1,7 @@
+// Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+// MIT License - See LICENSE file in the root directory
+// Boris Pedraza, Alex Villazon, Omar Ormachea
+
 import { Booking } from '../interfaces/booking';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';

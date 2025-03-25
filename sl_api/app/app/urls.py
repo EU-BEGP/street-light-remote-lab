@@ -1,4 +1,8 @@
-﻿from django.contrib import admin
+# Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+# MIT License - See LICENSE file in the root directory
+# Boris Pedraza, Alex Villazon, Omar Ormachea
+
+from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static

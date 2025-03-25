@@ -1,3 +1,7 @@
+// Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+// MIT License - See LICENSE file in the root directory
+// Boris Pedraza, Alex Villazon, Omar Ormachea
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CountdownConfig } from 'ngx-countdown';
 import { Input, Output, EventEmitter } from '@angular/core';

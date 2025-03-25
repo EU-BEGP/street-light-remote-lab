@@ -1,3 +1,7 @@
+# Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+# MIT License - See LICENSE file in the root directory
+# Boris Pedraza, Alex Villazon, Omar Ormachea
+
 FROM python:3.10
 ENV PYTHONUNBUFFERED=1
 

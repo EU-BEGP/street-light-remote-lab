@@ -1,3 +1,7 @@
+// Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+// MIT License - See LICENSE file in the root directory
+// Boris Pedraza, Alex Villazon, Omar Ormachea
+
 import { CameraWebsocketService } from '../../services/websockets/camera-websocket.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';

@@ -1,3 +1,7 @@
+// Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+// MIT License - See LICENSE file in the root directory
+// Boris Pedraza, Alex Villazon, Omar Ormachea
+
 import config from './config.json'
 import { Booking } from './core/interfaces/booking';
 import { BookingHandlerService } from './core/services/booking-handler.service';

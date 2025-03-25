@@ -1,4 +1,8 @@
-﻿"""Django's command-line utility for administrative tasks."""
+# Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+# MIT License - See LICENSE file in the root directory
+# Boris Pedraza, Alex Villazon, Omar Ormachea
+
+"""Django's command-line utility for administrative tasks."""
 
 import os
 import sys

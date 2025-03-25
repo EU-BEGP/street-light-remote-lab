@@ -1,4 +1,8 @@
-﻿import time
+# Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+# MIT License - See LICENSE file in the root directory
+# Boris Pedraza, Alex Villazon, Omar Ormachea
+
+import time
 
 from django.db import connections
 from django.db.utils import OperationalError

@@ -1,3 +1,7 @@
+// Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+// MIT License - See LICENSE file in the root directory
+// Boris Pedraza, Alex Villazon, Omar Ormachea
+
 import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Light } from '../../interfaces/light';
 import { LightWebsocketService } from '../../services/websockets/light-websocket.service';

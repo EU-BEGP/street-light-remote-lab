@@ -1,7 +1,6 @@
-# File: robot_simulator.py
-# Purpose: A robot data simulator for UPB remote lab.
-# Author: Maria Fernanda del Granado
-# Few adaptations made by Boris Pedraza
+# Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+# MIT License - See LICENSE file in the root directory
+# Maria Fernanda del Granado, Boris Pedraza, Alex Villazon, Omar Ormachea
 
 from time import sleep
 import json

@@ -1,3 +1,7 @@
+# Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+# MIT License - See LICENSE file in the root directory
+# Boris Pedraza, Alex Villazon, Omar Ormachea
+
 from django.utils import timezone
 from rest_framework import authentication, generics, permissions, status
 from rest_framework.authtoken.views import ObtainAuthToken

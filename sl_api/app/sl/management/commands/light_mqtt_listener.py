@@ -1,3 +1,7 @@
+# Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+# MIT License - See LICENSE file in the root directory
+# Boris Pedraza, Alex Villazon, Omar Ormachea
+
 from django.core.management.base import BaseCommand
 from sl.models import Light
 from utils.mqtt_listener import MQTTListener

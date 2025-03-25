@@ -1,6 +1,6 @@
-# Purpose: A dynamic robot data simulator based on requests.
-# Main Author: Maria Fernanda del Granado
-# Few adaptations made by Boris Pedraza
+# Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+# MIT License - See LICENSE file in the root directory
+# Maria Fernanda del Granado, Boris Pedraza, Alex Villazon, Omar Ormachea
 
 from time import sleep
 import json
