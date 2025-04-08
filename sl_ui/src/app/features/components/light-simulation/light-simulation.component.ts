@@ -78,8 +78,8 @@ export class LightSimulationComponent implements OnInit, OnChanges {
 
     // Update the surface object
     this.chartSurface = {
-      x: Array.from({ length: repeatedZ[0].length }, (_, i) => i), // Update x-axis
-      y: Array.from({ length: repeatedZ.length }, (_, i) => i), // Update y-axis
+      x: Array.from({ length: repeatedZ[0].length }, (_, i) => i),
+      y: Array.from({ length: repeatedZ.length }, (_, i) => i),
       z: repeatedZ,
       type: 'surface',
       showscale: false,
@@ -88,6 +88,7 @@ export class LightSimulationComponent implements OnInit, OnChanges {
   }
 
   // Helper function to repeat the grid's z values across the X-axis
+  // TODO: Improve function to handle merged values when the repeated matrixes collide
   private repeatGridZValues(zValues: number[][], repeatCount: number, separationDistance: number = 1): number[][] {
     const repeatedZ: number[][] = [];
 

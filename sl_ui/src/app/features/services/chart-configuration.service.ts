@@ -55,7 +55,7 @@ export class ChartConfigurationService {
     showlegend: false,
     autosize: true,
     height: 400,
-    width: 800,
+    width: 500,
     margin: {
       l: 0,
       r: 0,
@@ -63,13 +63,13 @@ export class ChartConfigurationService {
       t: 0,
     },
     scene: {
-      aspectratio: { x: 3, y: 1, z: 1 }, // Set x-axis to be 3 times larger than y-axis
-      aspectmode: 'manual', // Use manual aspect ratio
+      aspectratio: { x: 3, y: 1, z: 0.7 },
+      aspectmode: 'manual',
       camera: {
         eye: {
-          x: 1.5, // Increased from 0 to account for the wider x-axis
-          y: 3,   // Kept the same (or adjust as needed)
-          z: 0.5, // Kept the same (or adjust as needed)
+          x: 1.5,
+          y: 3,
+          z: 0.5,
         }
       },
       xaxis: {

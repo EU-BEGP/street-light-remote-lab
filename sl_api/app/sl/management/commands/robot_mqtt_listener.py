@@ -6,7 +6,11 @@ from django.core.management.base import BaseCommand
 from sl.models import Message, Grid, Robot, Light
 from time import sleep
 from utils.mqtt_listener import MQTTListener
-from utils.tools import stream_message_over_websocket
+from utils.tools import (
+    create_matrix_from_grid,
+    robust_smoothing,
+    stream_message_over_websocket,
+)
 import os
 import uuid
 
@@ -46,13 +50,13 @@ def get_grid_information(grid):
         for x in range(min_x, min_x + width)
         for y in range(min_y, min_y + height)
     )
-
     # Find missing coordinates
     missing_coords = expected_coords - present_coords
 
     return width, height, not missing_coords
 
 
+# MQTT Callback
 def process_message(mqtt_message):
     robot_code = mqtt_message.get("robot_code")  # Get robot_code from message.
     grid_code = uuid.UUID(
@@ -100,15 +104,26 @@ def process_message(mqtt_message):
                     f"[{MQTT_LISTENER_NAME} MQTT Listener]: Sending complete grid data"
                 )
                 grid_messages = Message.objects.filter(grid=grid).order_by("id")
-                for grid_message in grid_messages:
-                    websocket_message["grid_id"] = str(grid_message.grid.id)
-                    websocket_message["grid_code"] = str(grid_message.grid.code)
-                    websocket_message["x_pos"] = grid_message.x_pos
-                    websocket_message["y_pos"] = grid_message.y_pos
-                    websocket_message["intensity"] = grid_message.intensity
 
-                    if grid_message.is_last:
-                        websocket_message["is_last"] = True
+                # Create matrix and get position mappings
+                intensity_matrix = create_matrix_from_grid(grid_messages)
+                smooth_intensity_matrix = robust_smoothing(intensity_matrix)
+
+                for grid_message in grid_messages:
+                    websocket_message = {
+                        "grid_id": str(grid_message.grid.id),
+                        "grid_code": str(grid_message.grid.code),
+                        "x_pos": grid_message.x_pos,
+                        "y_pos": grid_message.y_pos,
+                        "intensity": grid_message.intensity,
+                        "is_last": grid_message.is_last,
+                        # Add smoothed intensity by looking up matrix position
+                        "smoothed_intensity": int(
+                            smooth_intensity_matrix[grid_message.x_pos][
+                                grid_message.y_pos
+                            ]
+                        ),
+                    }
 
                     stream_message_over_websocket(websocket_message, GROUP_NAME)
                     sleep(0.1)

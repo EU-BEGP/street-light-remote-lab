@@ -94,11 +94,17 @@ export class IntensityChartComponent implements OnInit, OnChanges {
       const lastSurfaceIndex = this.chart.surfaces.length - 1;
 
       // Create a new ChartSurface object with the updated z values
-      const updatedSurfaceZValues = this.chart.surfaces[lastSurfaceIndex].z.map((row: number[], rowIndex: number): number[] =>
-        rowIndex === message.y_pos
-          ? [...row.slice(0, message.x_pos), message.intensity, ...row.slice(message.x_pos + 1)]
-          : row
+      const updatedSurfaceZValues = this.chart.surfaces[lastSurfaceIndex].z.map(
+        (row: number[], rowIndex: number): number[] =>
+          rowIndex === message.y_pos
+            ? [
+              ...row.slice(0, message.x_pos),
+              message.smoothed_intensity ?? message.intensity,  // Fallback to intensity
+              ...row.slice(message.x_pos + 1)
+            ]
+            : row
       );
+
       // Create a new ChartSurface object with the updated z values
       const updatedSurface: ChartSurface = {
         ...this.chart.surfaces[lastSurfaceIndex],
