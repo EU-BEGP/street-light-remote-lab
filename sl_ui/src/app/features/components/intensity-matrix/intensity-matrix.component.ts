@@ -3,9 +3,7 @@
 // Boris Pedraza, Alex Villazon, Omar Ormachea
 
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Grid } from '../../interfaces/grid';
-import { Message } from '../../interfaces/message';
-
+import { Grid } from '../../interfaces/grid'; import { Message } from '../../interfaces/message';
 @Component({
   selector: 'app-intensity-matrix',
   templateUrl: './intensity-matrix.component.html',
@@ -13,7 +11,7 @@ import { Message } from '../../interfaces/message';
 })
 export class IntensityMatrixComponent implements OnInit, OnChanges {
   @Input() gridDimension: number = 0;
-  @Input() savedGrids: Grid[] | null = null;
+  @Input() grids: Grid[] | null = null;
   @Input() selectedGridIndex: number = 0;
   @Input() currentMessage: Message | null = null;
 
@@ -31,8 +29,8 @@ export class IntensityMatrixComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['savedGrids'] && this.savedGrids) {
-      this.savedGrids?.forEach(grid => {
+    if (changes['grids'] && this.grids) {
+      this.grids?.forEach(grid => {
         const messages = grid.grid_messages;
         if (messages) {
           messages.forEach(message => {

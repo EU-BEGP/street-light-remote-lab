@@ -24,7 +24,7 @@ class RobotListCreateView(generics.ListCreateAPIView):
         if serializer.is_valid():
             # Checks if data can be correctly serialized and contains necessary fields.
             serializer.save()
-            # Creates and saves new Experiment object in database.
+            # Creates and saves new Robot object in database.
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             # If the serializer is not valid, the serializer errors are returned.

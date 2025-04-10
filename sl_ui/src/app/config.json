@@ -3,7 +3,6 @@
   "api": {
     "baseUrl": "",
     "streetLights": {
-      "experiment": "experiments/",
       "grid": "grids/",
       "light": "lights/",
       "mqtt": {
@@ -39,5 +38,7 @@
   },
   "appInformation": {
     "title": "Street Light Remote Lab"
-  }
+  },
+  "controlledEnvLightCode": "light_10",
+  "gridDimension": 8
 }

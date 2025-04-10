@@ -3,7 +3,7 @@
 # Boris Pedraza, Alex Villazon, Omar Ormachea
 
 from rest_framework import serializers
-from .models import Robot, Light, Experiment, Message, Grid
+from .models import Robot, Light, Message, Grid
 
 
 class LightSerializer(serializers.ModelSerializer):
@@ -28,20 +28,6 @@ class RobotSerializer(serializers.ModelSerializer):
         fields = ["id", "code", "light"]
 
 
-class ExperimentReadSerializer(serializers.ModelSerializer):
-    light = ReducedLightSerializer()
-
-    class Meta:
-        model = Experiment
-        fields = ["id", "name", "created_at", "owner", "light"]
-
-
-class ExperimentWriteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Experiment
-        fields = ["id", "name", "created_at", "owner", "light"]
-
-
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
@@ -61,7 +47,6 @@ class GridSerializer(serializers.ModelSerializer):
             "height",
             "complete",
             "created_at",
-            "experiment",
             "light",
             "grid_messages",
         ]

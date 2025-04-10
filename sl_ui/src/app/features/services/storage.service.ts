@@ -63,21 +63,6 @@ export class StorageService {
     localStorage.removeItem(this.PASSWORD);
   }
 
-  // Experiment Related
-  private readonly EXPERIMENT_ID: string = 'experimentId';
-
-  getExperimentId(): number | null {
-    return Number(localStorage.getItem(this.EXPERIMENT_ID));
-  }
-
-  setExperimentId(id: number): void {
-    localStorage.setItem(this.EXPERIMENT_ID, id.toString());
-  }
-
-  clearExperimentData(): void {
-    localStorage.removeItem(this.EXPERIMENT_ID);
-  }
-
   // Light Related
   private readonly LIGHT_CODE_KEY: string = 'lightCode';
   private readonly LIGHT_TYPE_KEY: string = 'lightType';

@@ -18,7 +18,7 @@ export class AccessGuard implements CanActivate {
   canActivate(): boolean {
     if (this.storageService.getToken()) {
       // If the user is logged in, redirect to the Laboratory
-      this.router.navigate(['/experiments']);
+      this.router.navigate(['/laboratory']);
       return false; // Prevent access to the AccessComponent
     } else {
       // If the user is not logged in, allow access to the AccessComponent

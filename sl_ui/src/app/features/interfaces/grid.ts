@@ -2,7 +2,6 @@
 // MIT License - See LICENSE file in the root directory
 // Boris Pedraza, Alex Villazon, Omar Ormachea
 
-import { Experiment } from './experiment';
 import { Light } from './light';
 import { Message } from './message';
 
@@ -12,7 +11,6 @@ export interface Grid {
   width?: number;
   height?: number;
   complete?: boolean;
-  experiment?: Experiment;
   light?: Light;
   grid_messages?: Message[];
 }

@@ -47,32 +47,12 @@ class Robot(models.Model):
     )
 
 
-class Experiment(models.Model):
-    name = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name="owner_experiments",
-        on_delete=models.CASCADE,
-    )
-    light = models.ForeignKey(
-        Light, related_name="light_experiments", on_delete=models.CASCADE
-    )
-
-
 class Grid(models.Model):
     code = models.UUIDField(unique=True)
     width = models.IntegerField(null=True, blank=True)
     height = models.IntegerField(null=True, blank=True)
     complete = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    experiment = models.ForeignKey(
-        Experiment,
-        related_name="experiment_grids",
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-    )
     light = models.ForeignKey(
         Light, related_name="light_grids", on_delete=models.CASCADE
     )

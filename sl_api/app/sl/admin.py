@@ -3,7 +3,7 @@
 # Boris Pedraza, Alex Villazon, Omar Ormachea
 
 from django.contrib import admin
-from .models import Robot, Light, Experiment, Message, Grid
+from .models import Robot, Light, Message, Grid
 
 
 class LightAdmin(admin.ModelAdmin):
@@ -34,11 +34,6 @@ class RobotAdmin(admin.ModelAdmin):
     list_display = ["id", "code", "light"]
 
 
-class ExperimentAdmin(admin.ModelAdmin):
-    ordering = ["id"]
-    list_display = ["id", "name", "owner", "light", "created_at"]
-
-
 class GridAdmin(admin.ModelAdmin):
     ordering = ["id"]
     list_display = [
@@ -47,7 +42,6 @@ class GridAdmin(admin.ModelAdmin):
         "width",
         "height",
         "complete",
-        "experiment",
         "light",
         "created_at",
     ]
@@ -68,6 +62,5 @@ class MessageAdmin(admin.ModelAdmin):
 
 admin.site.register(Robot, RobotAdmin)
 admin.site.register(Light, LightAdmin)
-admin.site.register(Experiment, ExperimentAdmin)
 admin.site.register(Grid, GridAdmin)
 admin.site.register(Message, MessageAdmin)

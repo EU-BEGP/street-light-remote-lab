@@ -8,13 +8,13 @@
     <div class="contents">
       <app-light-information class="light-information"></app-light-information>
 
-      <app-intensity-matrix [gridDimension]="gridDimension" [savedGrids]="savedGrids"
+      <app-intensity-matrix [gridDimension]="gridDimension" [grids]="capturedGrids"
         [selectedGridIndex]="selectedGridIndex" [currentMessage]="currentMessage">
       </app-intensity-matrix>
 
       <app-robot-camera></app-robot-camera>
 
-      <app-intensity-chart [gridDimension]="gridDimension" [savedGrids]="savedGrids"
+      <app-intensity-chart [gridDimension]="gridDimension" [grids]="capturedGrids"
         [selectedGridIndex]="selectedGridIndex" [currentMessage]="currentMessage"></app-intensity-chart>
 
       <app-light-control></app-light-control>
@@ -25,21 +25,18 @@
           Capture Grid
         </button>
         <span>Save Captured Grids</span>
-        <button mat-raised-button color="primary" (click)="saveGrids()">
-          Save Grids
-        </button>
       </div>
 
       <div class="grid-selector">
         <h3>Select Grid to Visualize</h3>
-        <div *ngIf="numberOfGrids === 0">
+        <div *ngIf="capturedGrids.length === 0">
           <p>No grids available to visualize.</p>
         </div>
-        <div *ngIf="numberOfGrids === 1">
+        <div *ngIf="capturedGrids.length === 1">
           <p>Only one grid is available to visualize.</p>
         </div>
-        <div *ngIf="numberOfGrids > 1">
-          <div *ngFor="let item of [].constructor(numberOfGrids); let i = index">
+        <div *ngIf="capturedGrids.length > 1">
+          <div *ngFor="let item of [].constructor(capturedGrids.length); let i = index">
             <label>
               <input type="radio" name="gridSelector" [value]="i" [(ngModel)]="selectedGridIndex">
               Grid {{ i + 1 }}
@@ -48,8 +45,8 @@
         </div>
       </div>
 
-      <app-light-simulation *ngIf="savedGrids && savedGrids.length > 0" [gridDimension]="gridDimension"
-        [savedGrids]="savedGrids" class="light-simulation">
+      <app-light-simulation *ngIf="capturedGrids && capturedGrids.length > 0" [gridDimension]="gridDimension"
+        [grids]="capturedGrids" class="light-simulation">
       </app-light-simulation>
     </div>
   </div>

@@ -2,11 +2,10 @@
 # MIT License - See LICENSE file in the root directory
 # Boris Pedraza, Alex Villazon, Omar Ormachea
 
-from sl.models import Light, Grid, Experiment
+from sl.models import Light, Grid
 from sl.serializers import (
     LightSerializer,
     GridSerializer,
-    ExperimentReadSerializer,
 )
 from sl.views.utilities import handle_grid_param, handle_date_params
 from rest_framework import generics, status
@@ -29,7 +28,6 @@ class LightListCreateView(generics.ListCreateAPIView):
         if serializer.is_valid():
             # Checks if data can be correctly serialized and contains necessary fields.
             serializer.save()
-            # Creates and saves new Experiment object in database.
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             # If the serializer is not valid, the serializer errors are returned.
@@ -58,18 +56,6 @@ class LightUpdateView(generics.UpdateAPIView):
         else:
             # If the serializer is not valid, the serializer errors are returned.
             return Response(serializer.errors)
-
-
-## Get experiments related to a Light
-class LightExperimentsListView(generics.ListAPIView):
-    serializer_class = ExperimentReadSerializer
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-
-    def get_queryset(self):
-        light_id = self.kwargs["id"]
-        experiments = Experiment.objects.filter(light=light_id)
-        return experiments
 
 
 ## Get grids related to a Light

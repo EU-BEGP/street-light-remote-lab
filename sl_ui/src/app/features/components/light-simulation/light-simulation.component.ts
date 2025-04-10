@@ -16,7 +16,7 @@ import { Message } from '../../interfaces/message';
 })
 export class LightSimulationComponent implements OnInit, OnChanges {
   @Input() gridDimension: number = 0; // Original grid dimension (e.g., 8x8)
-  @Input() savedGrids: Grid[] | null = null;
+  @Input() grids: Grid[] | null = null;
 
   separationNumber: any;
   chartSurface: any;
@@ -41,8 +41,8 @@ export class LightSimulationComponent implements OnInit, OnChanges {
       this.chartSurface = this.generateBaseSurface();
     }
 
-    if (changes['savedGrids'] && this.savedGrids) {
-      this.savedGrids.forEach(grid => {
+    if (changes['grids'] && this.grids) {
+      this.grids.forEach(grid => {
         this.getGridExpansions(grid);
       });
     }

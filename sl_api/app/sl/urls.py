@@ -3,7 +3,6 @@
 # Boris Pedraza, Alex Villazon, Omar Ormachea
 
 from django.urls import path
-from sl.views import experiment_views
 from sl.views import grid_views
 from sl.views import light_views
 from sl.views import message_views
@@ -26,37 +25,16 @@ urlpatterns = [
         "lights/<int:id>/", light_views.LightUpdateView.as_view(), name="light-update"
     ),
     path(
-        "lights/<int:id>/experiments/",
-        light_views.LightExperimentsListView.as_view(),
-        name="light-experiments-list",
-    ),
-    path(
         "lights/<int:id>/grids/",
         light_views.LightGridsListView.as_view(),
         name="light-grids-list",
     ),
-    path(
-        "experiments/",
-        experiment_views.ExperimentListCreateView.as_view(),
-        name="experiment-list-create",
-    ),
-    path(
-        "experiments/<int:id>/",
-        experiment_views.ExperimentRetrieveUpdateView.as_view(),
-        name="experiment-update",
-    ),
-    path(
-        "experiments/<int:pk>/delete/",
-        experiment_views.ExperimentDeleteView.as_view(),
-        name="experiment-delete",
-    ),
-    path(
-        "experiments/<int:id>/grids/",
-        experiment_views.ExperimentGridListView.as_view(),
-        name="experiment-grids-list",
-    ),
     path("grids/", grid_views.GridsListView.as_view(), name="grid-list"),
-    path("grids/<int:id>/", grid_views.GridUpdateView.as_view(), name="grid-update"),
+    path(
+        "grids/<int:id>/",
+        grid_views.GridRetrieveUpdateView.as_view(),
+        name="grid-update",
+    ),
     path(
         "grids/<int:id>/expansion/",
         grid_views.ExpansionGridView.as_view(),

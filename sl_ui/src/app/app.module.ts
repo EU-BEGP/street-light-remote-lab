@@ -19,8 +19,6 @@ import { AccessComponent } from './core/pages/access/access.component';
 import { AppComponent } from './app.component';
 import { CodeActivationComponent } from './core/pages/code-activation/code-activation.component';
 import { ConfirmationDialogComponent } from './core/components/confirmation-dialog/confirmation-dialog.component';
-import { ExperimentDialogComponent } from './features/components/experiment-dialog/experiment-dialog.component';
-import { ExperimentsComponent } from './features/pages/experiments/experiments.component';
 import { FooterComponent } from './core/components/footer/footer.component';
 import { IntensityChartComponent } from './features/components/intensity-chart/intensity-chart.component';
 import { IntensityMatrixComponent } from './features/components/intensity-matrix/intensity-matrix.component';
@@ -51,8 +49,6 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     AppComponent,
     CodeActivationComponent,
     ConfirmationDialogComponent,
-    ExperimentDialogComponent,
-    ExperimentsComponent,
     FooterComponent,
     IntensityChartComponent,
     IntensityMatrixComponent,

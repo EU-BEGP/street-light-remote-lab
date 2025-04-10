@@ -19,8 +19,8 @@ class GridsListView(generics.ListAPIView):
     queryset = Grid.objects.all().order_by("id")
 
 
-## UPDATE grid
-class GridUpdateView(generics.UpdateAPIView):
+## RETRIEVE UPDATE grid
+class GridRetrieveUpdateView(generics.RetrieveUpdateAPIView):
     serializer_class = GridSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)

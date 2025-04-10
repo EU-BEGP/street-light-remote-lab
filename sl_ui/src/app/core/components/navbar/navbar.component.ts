@@ -50,10 +50,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   onCountdownFinish(event: any): void {
     this.countdownFinish.emit(event);
-  }
 
-  goToExperiments(): void {
-    this.router.navigate(['/experiments']);
   }
 
   goToMyProfile(): void {

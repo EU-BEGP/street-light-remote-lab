@@ -25,6 +25,10 @@ export class GridService {
     };
   }
 
+  getGrid(id: number): Observable<any> {
+    return this.http.get<any>(`${this.URL}${id}/`);
+  }
+
   updateGrid(body: any, id: number): Observable<any> {
     return this.http.patch<any>(`${this.URL}${id}/`, body);
   }
