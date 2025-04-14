@@ -33,7 +33,6 @@ import { LoginComponent } from './core/components/login/login.component';
 import { NavbarComponent } from './core/components/navbar/navbar.component';
 import { NotFoundComponent } from './core/pages/not-found/not-found.component';
 import { ProfileComponent } from './core/pages/profile/profile.component';
-import { ProfileFormComponent } from './core/components/profile-form/profile-form.component';
 import { RealTimeInteractionActivityComponent } from './features/pages/real-time-interaction-activity/real-time-interaction-activity.component';
 import { RegistrationComponent } from './core/components/registration/registration.component';
 import { RobotCameraComponent } from './features/components/robot-camera/robot-camera.component';
@@ -64,7 +63,6 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     NavbarComponent,
     NotFoundComponent,
     ProfileComponent,
-    ProfileFormComponent,
     RegistrationComponent,
     RobotCameraComponent,
     ScrollToTopComponent,

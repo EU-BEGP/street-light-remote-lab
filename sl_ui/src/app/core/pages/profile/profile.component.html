@@ -2,6 +2,39 @@
 <!-- MIT License - See LICENSE file in the root directory -->
 <!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
 
-<h2>My Profile</h2>
-<app-profile-form></app-profile-form>
-<app-scroll-to-top></app-scroll-to-top>
+<div class="profile-container">
+  <h2 class="profile-title">My Profile</h2>
+  <div class="profile-card">
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
+      <mat-form-field appearance="outline" class="profile-field">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+        <mat-error *ngIf="nameControl?.invalid && (nameControl?.touched || nameControl?.dirty)">
+          <div *ngIf="nameControl?.hasError('required')">Name is required</div>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="profile-field">
+        <mat-label>Last name</mat-label>
+        <input matInput formControlName="lastName">
+        <mat-error *ngIf="lastNameControl?.invalid && (lastNameControl?.touched || lastNameControl?.dirty)">
+          <div *If="lastNameControl?.hasError('required')">Last name is required</div>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="profile-field">
+        <mat-label>Email</mat-label>
+        <input matInput placeholder="user@mail.com" formControlName="email">
+        <mat-error *ngIf="emailControl?.invalid && (emailControl?.touched || emailControl?.dirty)">
+          <div *ngIf="emailControl?.hasError('required')">Email is required</div>
+          <div *ngIf="emailControl?.hasError('email')">Invalid email format</div>
+        </mat-error>
+      </mat-form-field>
+
+      <button type="submit" mat-raised-button color="primary" class="submit-button">
+        Update Profile
+      </button>
+    </form>
+  </div>
+  <app-scroll-to-top></app-scroll-to-top>
+</div>

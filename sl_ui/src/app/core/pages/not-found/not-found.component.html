@@ -2,25 +2,18 @@
 <!-- MIT License - See LICENSE file in the root directory -->
 <!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
 
-<section class="page-404">
-  <div class="container">
-    <div class="text-center">
-      <h1 id="title-404">Oops!</h1>
+<section class="not-found">
+  <div class="not-found-content">
+    <h1 class="not-found-title">Not Found</h1>
 
-      <img src="./assets/error.png" id="img-404" alt="404 image" />
+    <img src="./assets/error.png" class="not-found-image" alt="Page not found illustration">
 
-      <div class="msg-box-404">
-        <h3 class="h2">404 - Page not found</h3>
-
-        <p>
-          The page you are looking for might have been removed or it is
-          temporarily unavailable.
-        </p>
-
-        <button mat-raised-button color="primary" (click)="goToHome()">
-          Go to homepage
-        </button>
-      </div>
+    <div class="not-found-message">
+      <h2>We couldn't find that page</h2>
+      <p>The page you're looking for might have been moved or doesn't exist.</p>
+      <button mat-raised-button color="primary" (click)="goToHome()">
+        Return to Homepage
+      </button>
     </div>
   </div>
 </section>

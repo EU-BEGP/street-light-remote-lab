@@ -2,41 +2,31 @@
 <!-- MIT License - See LICENSE file in the root directory -->
 <!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
 
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <mat-form-field class="input-field">
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+  <mat-form-field appearance="outline" class="form-field">
     <mat-label>Email</mat-label>
-    <input matInput placeholder="user@mail.com" formControlName="email" />
+    <input matInput placeholder="user@mail.com" formControlName="email">
     <mat-error *ngIf="emailControl?.invalid && (emailControl?.touched || emailControl?.dirty)">
-      <div *ngIf="emailControl?.hasError('required')">
-        Email field is required
-      </div>
-      <div *ngIf="emailControl?.hasError('email')">
-        Invalid email address
-      </div>
+      <div *ngIf="emailControl?.hasError('required')">Email field is required</div>
+      <div *ngIf="emailControl?.hasError('email')">Invalid email address</div>
     </mat-error>
   </mat-form-field>
 
-  <mat-form-field class="input-field">
+  <mat-form-field appearance="outline" class="form-field">
     <mat-label>Password</mat-label>
-    <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" autocomplete="on" />
+    <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" autocomplete="on">
     <button type="button" mat-icon-button matSuffix (click)="hidePassword = !hidePassword"
-      [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword" tabindex="-1">
+      [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
       <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
     </button>
     <mat-error *ngIf="passwordControl?.invalid && (passwordControl?.touched || passwordControl?.dirty)">
-      <div *ngIf="passwordControl?.hasError('required')">
-        Password field is required
-      </div>
+      <div *ngIf="passwordControl?.hasError('required')">Password field is required</div>
     </mat-error>
   </mat-form-field>
 
-  <p id="password-link">
-    <a class="mat-caption" [href]="passwordResetUrl" target="_blank">
-      Forgot Password?
-    </a>
+  <p class="password-link">
+    <a [href]="passwordResetUrl" target="_blank">Forgot Password?</a>
   </p>
 
-  <button class="access-button" type="submit" mat-raised-button color="primary">
-    Sign In
-  </button>
+  <button type="submit" mat-raised-button color="primary" class="submit-button">Sign In</button>
 </form>

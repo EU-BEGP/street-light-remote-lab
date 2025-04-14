@@ -14,7 +14,7 @@
 
   <span class="spacer"></span>
 
-  <div *ngIf="hasAccessToLab && showMenu">
+  <div class="nav-buttons" *ngIf="hasAccessToLab && showMenu">
     <button mat-button aria-label="Profile list button" (click)="goToMyProfile()" *ngIf="showNavbarItem('/profile')">
       <mat-icon class="icon">person</mat-icon>
       <span>Profile</span>

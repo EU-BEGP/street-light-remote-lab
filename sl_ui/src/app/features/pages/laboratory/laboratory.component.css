@@ -2,13 +2,11 @@
 /* MIT License - See LICENSE file in the root directory */
 /* Boris Pedraza, Alex Villazon, Omar Ormachea */
 
-/* Center the tab group container (optional) */
 .centered-tabs {
   display: flex;
   justify-content: center;
 }
 
-/* Force the tab headers to be centered */
 ::ng-deep .centered-tab-headers .mat-tab-header {
   display: flex;
   justify-content: center;
