@@ -2,52 +2,14 @@
 <!-- MIT License - See LICENSE file in the root directory -->
 <!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
 
-<div>
-  <app-spinner id="grid-spinner" [showSpinner]="loadingWs"></app-spinner>
-  <div class="laboratory-container">
-    <div class="contents">
-      <app-light-information class="light-information"></app-light-information>
-
-      <app-intensity-matrix [gridDimension]="gridDimension" [grids]="capturedGrids"
-        [selectedGridIndex]="selectedGridIndex" [currentMessage]="currentMessage">
-      </app-intensity-matrix>
-
-      <app-robot-camera></app-robot-camera>
-
-      <app-intensity-chart [gridDimension]="gridDimension" [grids]="capturedGrids"
-        [selectedGridIndex]="selectedGridIndex" [currentMessage]="currentMessage"></app-intensity-chart>
-
-      <app-light-control></app-light-control>
-
-      <div class="control-panel">
-        <span>Robot Control</span>
-        <button mat-raised-button color="primary" (click)="sendRobotCommand()">
-          Capture Grid
-        </button>
-        <span>Save Captured Grids</span>
-      </div>
-
-      <div class="grid-selector">
-        <h3>Select Grid to Visualize</h3>
-        <div *ngIf="capturedGrids.length === 0">
-          <p>No grids available to visualize.</p>
-        </div>
-        <div *ngIf="capturedGrids.length === 1">
-          <p>Only one grid is available to visualize.</p>
-        </div>
-        <div *ngIf="capturedGrids.length > 1">
-          <div *ngFor="let item of [].constructor(capturedGrids.length); let i = index">
-            <label>
-              <input type="radio" name="gridSelector" [value]="i" [(ngModel)]="selectedGridIndex">
-              Grid {{ i + 1 }}
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <app-light-simulation *ngIf="capturedGrids && capturedGrids.length > 0" [gridDimension]="gridDimension"
-        [grids]="capturedGrids" class="light-simulation">
-      </app-light-simulation>
-    </div>
-  </div>
+<div class="centered-tabs">
+  <mat-tab-group class="centered-tab-headers">
+    <mat-tab label="Real Time Interaction">
+      <app-real-time-interaction-activity></app-real-time-interaction-activity>
+    </mat-tab>
+    <mat-tab label="Data Analysis">
+    </mat-tab>
+    <mat-tab label="Light Monitoring">
+    </mat-tab>
+  </mat-tab-group>
 </div>

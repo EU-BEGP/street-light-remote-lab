@@ -6,7 +6,7 @@ import { CanDeactivate } from '@angular/router';
 import { ConfirmationDialogComponent } from 'src/app/core/components/confirmation-dialog/confirmation-dialog.component';
 import { DialogConfigService } from '../services/dialog-config.service';
 import { Injectable } from '@angular/core';
-import { LaboratoryComponent } from '../pages/laboratory/laboratory.component';
+import { RealTimeInteractionActivityComponent } from '../pages/real-time-interaction-activity/real-time-interaction-activity.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, of } from 'rxjs';
 import { TimerService } from 'src/app/core/services/timer.service';
@@ -15,7 +15,7 @@ import { map, switchMap, take } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class CanDeactivateLabGuard implements CanDeactivate<LaboratoryComponent>{
+export class CanDeactivateLabGuard implements CanDeactivate<RealTimeInteractionActivityComponent>{
 
   constructor(
     private dialog: MatDialog,
@@ -23,7 +23,7 @@ export class CanDeactivateLabGuard implements CanDeactivate<LaboratoryComponent>
     private timerService: TimerService,
   ) { }
 
-  canDeactivate(component: LaboratoryComponent): Observable<boolean> | Promise<boolean> | boolean {
+  canDeactivate(component: RealTimeInteractionActivityComponent): Observable<boolean> | Promise<boolean> | boolean {
     return this.timerService.countdown$.pipe(
       take(1), // Take only the latest value
       switchMap((time: number) => {

@@ -2,7 +2,6 @@
 // MIT License - See LICENSE file in the root directory
 // Boris Pedraza, Alex Villazon, Omar Ormachea
 
-import { NgModule } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -20,6 +19,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -30,6 +30,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { NgModule } from '@angular/core';
 
 const MaterialComponents = [
   MatAutocompleteModule,
@@ -49,6 +50,7 @@ const MaterialComponents = [
   MatNativeDateModule,
   MatPaginatorModule,
   MatProgressSpinnerModule,
+  MatRadioModule,
   MatSelectModule,
   MatSidenavModule,
   MatSlideToggleModule,

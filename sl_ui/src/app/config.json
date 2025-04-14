@@ -40,5 +40,6 @@
     "title": "Street Light Remote Lab"
   },
   "controlledEnvLightCode": "light_10",
+  "controlledEnvLightType": "DC",
   "gridDimension": 8
 }

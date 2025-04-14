@@ -2,10 +2,10 @@
 // MIT License - See LICENSE file in the root directory
 // Boris Pedraza, Alex Villazon, Omar Ormachea
 
+import config from 'src/app/config.json';
 import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Light } from '../../interfaces/light';
 import { LightWebsocketService } from '../../services/websockets/light-websocket.service';
-import { StorageService } from '../../services/storage.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -15,17 +15,14 @@ import { Subscription } from 'rxjs';
 })
 export class LightInformationComponent implements OnInit, OnDestroy {
   private lightSubscription: Subscription | null = null;
-  light: Light;
+  light: Light = {
+    code: config.controlledEnvLightCode,
+    type: config.controlledEnvLightType,
+  };
 
   constructor(
     private lightWebsocketService: LightWebsocketService,
-    private storageService: StorageService,
-  ) {
-    this.light = {
-      code: this.storageService.getLightCode() || '',
-      type: this.storageService.getLightType() || '',
-    }
-  }
+  ) { }
 
   //Lifecycle hooks
   ngOnInit(): void {
