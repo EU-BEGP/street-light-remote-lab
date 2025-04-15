@@ -21,6 +21,7 @@ import { CodeActivationComponent } from './core/pages/code-activation/code-activ
 import { ConfirmationDialogComponent } from './core/components/confirmation-dialog/confirmation-dialog.component';
 import { DataAnalysisActivityComponent } from './features/pages/data-analysis-activity/data-analysis-activity.component';
 import { FooterComponent } from './core/components/footer/footer.component';
+import { GridSelectorComponent } from './features/components/grid-selector/grid-selector.component';
 import { IntensityChartComponent } from './features/components/intensity-chart/intensity-chart.component';
 import { IntensityMatrixComponent } from './features/components/intensity-matrix/intensity-matrix.component';
 import { LaboratoryComponent } from './features/pages/laboratory/laboratory.component';
@@ -30,6 +31,7 @@ import { LightMonitoringActivityComponent } from './features/pages/light-monitor
 import { LightSimulationComponent } from './features/components/light-simulation/light-simulation.component';
 import { LobbyComponent } from './core/pages/lobby/lobby.component';
 import { LoginComponent } from './core/components/login/login.component';
+import { ObjectControlComponent } from './features/components/object-control/object-control.component';
 import { NavbarComponent } from './core/components/navbar/navbar.component';
 import { NotFoundComponent } from './core/pages/not-found/not-found.component';
 import { ProfileComponent } from './core/pages/profile/profile.component';
@@ -52,6 +54,7 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     CodeActivationComponent,
     ConfirmationDialogComponent,
     FooterComponent,
+    GridSelectorComponent,
     IntensityChartComponent,
     IntensityMatrixComponent,
     LaboratoryComponent,
@@ -60,6 +63,7 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     LightSimulationComponent,
     LobbyComponent,
     LoginComponent,
+    ObjectControlComponent,
     NavbarComponent,
     NotFoundComponent,
     ProfileComponent,

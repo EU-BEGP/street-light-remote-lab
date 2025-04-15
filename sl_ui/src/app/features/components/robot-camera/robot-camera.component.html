@@ -2,11 +2,19 @@
 <!-- MIT License - See LICENSE file in the root directory -->
 <!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
 
-<div>
-  <div class="robot-camera">
-    <h2>Robot Camera</h2>
-    <div class="video-container">
-      <img [src]="frame" alt="Video Stream" />
+<div class="camera-card">
+  <div class="camera-header">
+    <h3 class="camera-title">
+      <mat-icon>videocam</mat-icon>
+      Live Camera Feed
+    </h3>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="camera-container">
+    <div class="video-frame">
+      <img [src]="frame" alt="Live camera feed" />
     </div>
   </div>
 </div>

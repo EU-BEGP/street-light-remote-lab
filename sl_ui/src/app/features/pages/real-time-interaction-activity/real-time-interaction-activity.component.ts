@@ -19,6 +19,7 @@ import config from 'src/app/config.json';
 })
 export class RealTimeInteractionActivityComponent implements OnInit, OnDestroy {
   capturedGrids: Grid[] = [];
+  selectedGridIndex: number = 0;
   currentMessage: Message | null = null;
   gridDimension: number = config.gridDimension;
   hasUnsavedChanges: boolean = false;
@@ -26,7 +27,6 @@ export class RealTimeInteractionActivityComponent implements OnInit, OnDestroy {
   loadingWs: boolean = false;
   maxNumberGrids: number = 3;
   robotSubscription: Subscription | null = null;
-  selectedGridIndex: number = 0;
 
   constructor(
     private gridService: GridService,
@@ -74,9 +74,9 @@ export class RealTimeInteractionActivityComponent implements OnInit, OnDestroy {
       this.toastr.warning('Maximum number of grids reached');
     }
     else {
-      var data = {
+      const data = {
         'light_code': this.lightCode
-      }
+      };
 
       this.mqttService.publishRobotCommand(data).subscribe((response) => {
         if (response.status && response.status === 200) {

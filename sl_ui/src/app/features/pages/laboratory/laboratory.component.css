@@ -2,17 +2,29 @@
 /* MIT License - See LICENSE file in the root directory */
 /* Boris Pedraza, Alex Villazon, Omar Ormachea */
 
-.centered-tabs {
-  display: flex;
-  justify-content: center;
+.tab-container {
+  width: 100%;
+  max-width: 100%;
 }
 
-::ng-deep .centered-tab-headers .mat-tab-header {
-  display: flex;
-  justify-content: center;
+/* Center only the tab headers */
+::ng-deep .centered-tabs .mat-tab-header {
+  width: fit-content;
+  margin: 0 auto;
 }
 
-::ng-deep .centered-tab-headers .mat-tab-labels {
-  display: flex;
-  justify-content: center;
+/* Ensure tab content takes full width */
+.tab-content {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Remove any padding that might be causing space */
+::ng-deep .mat-tab-body-wrapper {
+  padding: 0 !important;
+}
+
+/* If needed, add this to ensure no horizontal scroll */
+::ng-deep .mat-tab-body-content {
+  overflow-x: hidden !important;
 }

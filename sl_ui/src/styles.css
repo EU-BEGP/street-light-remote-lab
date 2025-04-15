@@ -28,7 +28,6 @@ html {
   overflow-y: auto;
   width: 100%;
   box-sizing: border-box;
-  padding: 1rem;
 }
 
 .grid-2-col {

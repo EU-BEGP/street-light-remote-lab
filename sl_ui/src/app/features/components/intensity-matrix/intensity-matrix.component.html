@@ -2,13 +2,23 @@
 <!-- MIT License - See LICENSE file in the root directory -->
 <!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
 
-<div>
-  <div class="matrix">
-    <h2>Intensity Matrix</h2>
-    <mat-grid-list [cols]="gridDimension" [rowHeight]="30" gutterSize="10px">
-      <mat-grid-tile class="custom-tile" *ngFor="let cell of matrixContainer.matrices[selectedGridIndex].flat()"
-        [style.backgroundColor]="getCellColor(cell)" [ngClass]="cell > 0 ? 'text-white' : 'text-black'">
-        {{ cell }}
+<div class="matrix-card">
+  <div class="matrix-header">
+    <h3 class="matrix-title">
+      <mat-icon>grid_on</mat-icon>
+      Intensity Matrix
+    </h3>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="matrix-wrapper">
+    <mat-grid-list [cols]="gridDimension" [rowHeight]="30" gutterSize="2px">
+      <mat-grid-tile *ngFor="let cell of matrixContainer.matrices[selectedGridIndex].flat()"
+                    [style.background]="getCellColor(cell)"
+                    [class.cell-active]="cell > 0"
+                    class="matrix-cell">
+        <span class="cell-value">{{ cell }}</span>
       </mat-grid-tile>
     </mat-grid-list>
   </div>
