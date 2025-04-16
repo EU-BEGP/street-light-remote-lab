@@ -59,8 +59,8 @@ export class RealTimeInteractionActivityComponent implements OnInit, OnDestroy {
         this.hasUnsavedChanges = true;
         if (robot_msg.is_last) {
           this.gridService.getGrid(robot_msg.grid_id).subscribe((grid: Grid): void => {
-            this.capturedGrids.push(grid);
-            this.selectedGridIndex = this.capturedGrids.length - 1
+            this.capturedGrids = [...this.capturedGrids, grid];
+            this.selectedGridIndex = this.capturedGrids.length - 1;
           });
           this.robotWebsocketService.disconnect();
         }

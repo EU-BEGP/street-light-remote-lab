@@ -15,8 +15,8 @@
 
 /* Ensure tab content takes full width */
 .tab-content {
-  width: 100%;
-  max-width: 100%;
+  width: calc(100% - 1rem);
+  max-width: calc(100% - 1rem);
 }
 
 /* Remove any padding that might be causing space */

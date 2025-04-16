@@ -4,26 +4,29 @@
 
 <app-spinner id="grid-spinner" [showSpinner]="loadingWs"></app-spinner>
 <div class="activity-dashboard">
-  <div class="dashboard-row first-row">
-    <app-light-information></app-light-information>
-    <app-object-control (robotCommand)="sendRobotCommand()"></app-object-control>
-    <app-robot-camera></app-robot-camera>
+  <div class="first-row">
+    <app-light-information class="activity-component"></app-light-information>
+    <app-object-control class="activity-component" (robotCommand)="sendRobotCommand()"></app-object-control>
+    <app-robot-camera class="activity-component"></app-robot-camera>
   </div>
 
   <div class="dashboard-row second-row">
-    <app-intensity-matrix 
-      [gridDimension]="gridDimension" 
+    <app-intensity-matrix
+      class="activity-component"
+      [gridDimension]="gridDimension"
       [grids]="capturedGrids"
-      [selectedGridIndex]="selectedGridIndex" 
+      [selectedGridIndex]="selectedGridIndex"
       [currentMessage]="currentMessage">
     </app-intensity-matrix>
-    <app-grid-selector 
-      [(selectedGridIndex)]="selectedGridIndex" 
+    <app-grid-selector
+      class="activity-component"
+      [(selectedGridIndex)]="selectedGridIndex"
       [capturedGrids]="capturedGrids">
     </app-grid-selector>
-    <app-intensity-chart 
-      [gridDimension]="gridDimension" 
-      [grids]="capturedGrids" 
+    <app-intensity-chart
+      class="activity-component"
+      [gridDimension]="gridDimension"
+      [grids]="capturedGrids"
       [selectedGridIndex]="selectedGridIndex"
       [currentMessage]="currentMessage">
     </app-intensity-chart>
@@ -31,8 +34,9 @@
 
   <div class="dashboard-row third-row">
     <div class="simulation-container" *ngIf="capturedGrids.length > 0">
-      <app-light-simulation 
-        [gridDimension]="gridDimension" 
+      <app-light-simulation
+        class="activity-component"
+        [gridDimension]="gridDimension"
         [grids]="capturedGrids">
       </app-light-simulation>
     </div>

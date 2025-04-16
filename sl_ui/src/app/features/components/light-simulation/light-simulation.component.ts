@@ -2,12 +2,13 @@
 // MIT License - See LICENSE file in the root directory
 // Boris Pedraza, Alex Villazon, Omar Ormachea
 
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { ChartSurface } from '../../interfaces/chart-surface';
-import { Grid } from '../../interfaces/grid';
 import { ChartConfigurationService } from '../../services/chart-configuration.service';
+import { ChartSurface } from '../../interfaces/chart-surface';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Grid } from '../../interfaces/grid';
 import { GridService } from '../../services/grid.service';
 import { Message } from '../../interfaces/message';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-light-simulation',
@@ -24,6 +25,7 @@ export class LightSimulationComponent implements OnInit, OnChanges {
   chartConfiguration: any;
   expandedGrids: any[] = []; // Initialize expandedGrids as an empty array
   selectedGridIndex: number | null = null; // Track the selected grid index
+  loadingExpansions: boolean = false;
 
   constructor(
     private chartConfigurationService: ChartConfigurationService,
@@ -42,8 +44,18 @@ export class LightSimulationComponent implements OnInit, OnChanges {
     }
 
     if (changes['grids'] && this.grids) {
-      this.grids.forEach(grid => {
-        this.getGridExpansions(grid);
+      this.loadingExpansions = true;
+      this.expandedGrids = []; // Clear previous expansions
+
+      // Create an array of all expansion observables
+      const expansionObservables = this.grids
+        .filter(grid => grid.id)
+        .map(grid => this.gridService.getGridExpansion(grid.id!));
+
+      // Wait for all expansions to complete
+      forkJoin(expansionObservables).subscribe(expansions => {
+        this.expandedGrids = expansions;
+        this.loadingExpansions = false;
       });
     }
   }

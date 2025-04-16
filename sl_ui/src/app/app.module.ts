@@ -25,7 +25,6 @@ import { GridSelectorComponent } from './features/components/grid-selector/grid-
 import { IntensityChartComponent } from './features/components/intensity-chart/intensity-chart.component';
 import { IntensityMatrixComponent } from './features/components/intensity-matrix/intensity-matrix.component';
 import { LaboratoryComponent } from './features/pages/laboratory/laboratory.component';
-import { LightControlComponent } from './features/components/light-control/light-control.component';
 import { LightInformationComponent } from './features/components/light-information/light-information.component';
 import { LightMonitoringActivityComponent } from './features/pages/light-monitoring-activity/light-monitoring-activity.component';
 import { LightSimulationComponent } from './features/components/light-simulation/light-simulation.component';
@@ -58,7 +57,6 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     IntensityChartComponent,
     IntensityMatrixComponent,
     LaboratoryComponent,
-    LightControlComponent,
     LightInformationComponent,
     LightSimulationComponent,
     LobbyComponent,
