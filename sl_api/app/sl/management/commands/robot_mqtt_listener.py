@@ -59,9 +59,7 @@ def get_grid_information(grid):
 # MQTT Callback
 def process_message(mqtt_message):
     robot_code = mqtt_message.get("robot_code")  # Get robot_code from message.
-    grid_code = uuid.UUID(
-        mqtt_message.get("grid_code")
-    )  # Get grid code and converting to a uuid object.
+    grid_code = uuid.UUID(mqtt_message.get("grid_code"))
 
     # Approach: Get robot code and relate them to a light
     try:
@@ -75,7 +73,7 @@ def process_message(mqtt_message):
 
         except Grid.DoesNotExist:
             # Crete new Grid
-            grid = Grid(code=grid_code, light=light)
+            grid = Grid(code=grid_code, light=light, grid_type="REAL_TIME")
             grid.save()
 
         # Save message

@@ -48,14 +48,44 @@ class Robot(models.Model):
 
 
 class Grid(models.Model):
+    GRID_TYPE_CHOICES = [
+        ("REAL_TIME", "Real-time"),
+        ("ULTRA_CONCURRENT", "UltraConcurrent"),
+    ]
+
+    # Core Fields
     code = models.UUIDField(unique=True)
+    grid_type = models.CharField(
+        max_length=20, choices=GRID_TYPE_CHOICES, default="REAL_TIME"
+    )
     width = models.IntegerField(null=True, blank=True)
     height = models.IntegerField(null=True, blank=True)
     complete = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    light = models.ForeignKey(
-        Light, related_name="light_grids", on_delete=models.CASCADE
-    )
+
+    # Real-time Fields
+    light = models.ForeignKey("Light", on_delete=models.CASCADE, null=True, blank=True)
+
+    # UltraConcurrent Fields
+    uc_pwm = models.FloatField(null=True, blank=True)
+    uc_height = models.IntegerField(null=True, blank=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["grid_type"]),
+            models.Index(fields=["uc_pwm", "uc_height"]),
+        ]
+
+    @classmethod
+    def get_uc_parameter_options(cls):
+        """Returns all available parameter combinations for UltraConcurrent grids"""
+        return (
+            cls.objects.filter(grid_type="ULTRA_CONCURRENT")
+            .exclude(uc_pwm__isnull=True, uc_height__isnull=True)
+            .values_list("uc_pwm", "uc_height", named=True)
+            .distinct()
+            .order_by("uc_pwm", "uc_height")
+        )
 
 
 class Message(models.Model):

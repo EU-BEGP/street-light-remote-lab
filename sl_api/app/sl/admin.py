@@ -35,16 +35,27 @@ class RobotAdmin(admin.ModelAdmin):
 
 
 class GridAdmin(admin.ModelAdmin):
-    ordering = ["id"]
     list_display = [
         "id",
         "code",
+        "grid_type",
         "width",
         "height",
         "complete",
+        "uc_pwm",
+        "uc_height",
         "light",
         "created_at",
     ]
+    list_filter = ["grid_type", "complete"]
+    fieldsets = (
+        ("Core", {"fields": ("code", "grid_type", "width", "height", "complete")}),
+        ("Real-time", {"fields": ("light",)}),
+        (
+            "UltraConcurrent",
+            {"fields": ("uc_pwm", "uc_height")},
+        ),
+    )
 
 
 class MessageAdmin(admin.ModelAdmin):

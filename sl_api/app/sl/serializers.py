@@ -43,10 +43,13 @@ class GridSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "code",
+            "grid_type",
             "width",
             "height",
             "complete",
             "created_at",
             "light",
+            "uc_pwm",
+            "uc_height",
             "grid_messages",
         ]

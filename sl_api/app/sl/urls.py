@@ -41,6 +41,16 @@ urlpatterns = [
         name="grid-expansion",
     ),
     path(
+        "grids/uc-parameters/",
+        grid_views.UltraConcurrentParametersView.as_view(),
+        name="grid-uc-parameters",
+    ),
+    path(
+        "grids/uc-search/",
+        grid_views.UltraConcurrentSearchView.as_view(),
+        name="grid-uc-search",
+    ),
+    path(
         "messages/",
         message_views.MessageListCreateView.as_view(),
         name="message-list-create",

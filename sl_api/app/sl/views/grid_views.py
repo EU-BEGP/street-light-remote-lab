@@ -59,3 +59,51 @@ class ExpansionGridView(generics.RetrieveAPIView):
         intensity_matrix = create_matrix_from_grid(grid_messages)
         expanded_intensity_matrix = smart_gaussian_extrapolate(intensity_matrix)
         return Response(expanded_intensity_matrix, status=status.HTTP_200_OK)
+
+
+class UltraConcurrentParametersView(generics.GenericAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        try:
+            combinations = Grid.get_uc_parameter_options()
+
+            if not combinations.exists():
+                return Response(
+                    {"detail": "No parameter combinations found"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+            # Extract unique values
+            pwm_options = sorted({c.uc_pwm for c in combinations})
+            height_options = sorted({c.uc_height for c in combinations})
+
+            return Response(
+                {
+                    "pwm_options": pwm_options,
+                    "height_options": height_options,
+                    "combinations": [[c.uc_pwm, c.uc_height] for c in combinations],
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        except Exception as e:
+            return Response(
+                {"detail": "Server error occurred", "error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+
+class UltraConcurrentSearchView(generics.ListAPIView):
+    serializer_class = GridSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        pwm = self.request.query_params.get("pwm")
+        height = self.request.query_params.get("height")
+
+        return Grid.objects.filter(
+            grid_type="ULTRA_CONCURRENT", uc_pwm=pwm, uc_height=height
+        )
