@@ -14,10 +14,9 @@ import { Message } from '../../interfaces/message'
   styleUrls: ['./intensity-chart.component.css']
 })
 export class IntensityChartComponent implements OnInit, OnChanges {
-  @Input() gridDimension: number = 0;
-  @Input() grids: Grid[] | null = null;
-  @Input() selectedGridIndex: number = 0;
   @Input() currentMessage: Message | null = null;
+  @Input() gridDimension: number = 0;
+  @Input() selectedGridIndex: number = 0;
 
   chart = {
     surfaces: [] as ChartSurface[],
@@ -35,17 +34,6 @@ export class IntensityChartComponent implements OnInit, OnChanges {
     this.generateBaseSurface();
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['grids'] && this.grids) {
-      this.grids?.forEach(grid => {
-        const messages = grid.grid_messages;
-        if (messages) {
-          messages.forEach(message => {
-            this.updateSurfaceByMessage(message);
-          });
-        }
-      });
-    }
-
     if (changes['currentMessage'] && this.currentMessage) {
       this.updateSurfaceByMessage(this.currentMessage);
     }
@@ -99,8 +87,7 @@ export class IntensityChartComponent implements OnInit, OnChanges {
           rowIndex === message.y_pos
             ? [
               ...row.slice(0, message.x_pos),
-              // message.smoothed_intensity ?? message.intensity,  // Fallback to intensity
-              message.intensity,
+              message.splined_intensity,
               ...row.slice(message.x_pos + 1)
             ]
             : row

@@ -9,7 +9,7 @@ export interface Message {
   x_pos: number;
   y_pos: number;
   intensity: number;
-  smoothed_intensity: number;
+  splined_intensity: number;
   is_last: boolean;
   grid: Grid;
 }

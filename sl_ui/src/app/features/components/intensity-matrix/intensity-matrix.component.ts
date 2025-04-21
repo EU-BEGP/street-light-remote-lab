@@ -11,7 +11,6 @@ import { Grid } from '../../interfaces/grid'; import { Message } from '../../int
 })
 export class IntensityMatrixComponent implements OnInit, OnChanges {
   @Input() gridDimension: number = 0;
-  @Input() grids: Grid[] | null = null;
   @Input() selectedGridIndex: number = 0;
   @Input() currentMessage: Message | null = null;
 
@@ -29,17 +28,6 @@ export class IntensityMatrixComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['grids'] && this.grids) {
-      this.grids?.forEach(grid => {
-        const messages = grid.grid_messages;
-        if (messages) {
-          messages.forEach(message => {
-            this.updateMatrixByMessage(message);
-          });
-        }
-      });
-    }
-
     if (changes['currentMessage'] && this.currentMessage) {
       this.updateMatrixByMessage(this.currentMessage);
     }

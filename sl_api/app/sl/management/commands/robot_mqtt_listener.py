@@ -8,7 +8,7 @@ from time import sleep
 from utils.mqtt_listener import MQTTListener
 from utils.tools import (
     create_matrix_from_grid,
-    robust_smoothing,
+    perform_2d_spline,
     stream_message_over_websocket,
 )
 import os
@@ -105,7 +105,7 @@ def process_message(mqtt_message):
 
                 # Create matrix and get position mappings
                 intensity_matrix = create_matrix_from_grid(grid_messages)
-                smooth_intensity_matrix = robust_smoothing(intensity_matrix)
+                splined_matrix = perform_2d_spline(intensity_matrix)
 
                 for grid_message in grid_messages:
                     websocket_message = {
@@ -114,13 +114,10 @@ def process_message(mqtt_message):
                         "x_pos": grid_message.x_pos,
                         "y_pos": grid_message.y_pos,
                         "intensity": grid_message.intensity,
-                        "is_last": grid_message.is_last,
-                        # Add smoothed intensity by looking up matrix position
-                        "smoothed_intensity": int(
-                            smooth_intensity_matrix[grid_message.x_pos][
-                                grid_message.y_pos
-                            ]
+                        "splined_intensity": float(
+                            splined_matrix[grid_message.x_pos][grid_message.y_pos]
                         ),
+                        "is_last": grid_message.is_last,
                     }
 
                     stream_message_over_websocket(websocket_message, GROUP_NAME)
