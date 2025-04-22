@@ -3,16 +3,17 @@
 // Boris Pedraza, Alex Villazon, Omar Ormachea
 
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Grid } from '../../interfaces/grid'; import { Message } from '../../interfaces/message';
+import { Message } from '../../interfaces/message';
+
 @Component({
-  selector: 'app-intensity-matrix',
-  templateUrl: './intensity-matrix.component.html',
-  styleUrls: ['./intensity-matrix.component.css']
+  selector: 'app-live-intensity-matrix',
+  templateUrl: './live-intensity-matrix.component.html',
+  styleUrls: ['./live-intensity-matrix.component.css']
 })
-export class IntensityMatrixComponent implements OnInit, OnChanges {
+export class LiveIntensityMatrixComponent implements OnInit, OnChanges {
   @Input() gridDimension: number = 0;
-  @Input() selectedGridIndex: number = 0;
   @Input() currentMessage: Message | null = null;
+  @Input() selectedGridIndex: number = 0;
 
   matrixContainer = {
     matrices: [] as number[][][], // Array to store all matrices

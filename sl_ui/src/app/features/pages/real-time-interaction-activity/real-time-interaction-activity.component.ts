@@ -18,12 +18,12 @@ import config from 'src/app/config.json';
   styleUrls: ['./real-time-interaction-activity.component.css']
 })
 export class RealTimeInteractionActivityComponent implements OnInit, OnDestroy {
+  gridDimension: number = config.gridDimension;
+  lightCode: string = config.controlledEnvLightCode;
   capturedGrids: Grid[] = [];
   selectedGridIndex: number = 0;
   currentMessage: Message | null = null;
-  gridDimension: number = config.gridDimension;
   hasUnsavedChanges: boolean = false;
-  lightCode: string = config.controlledEnvLightCode;
   loadingWs: boolean = false;
   maxNumberGrids: number = 3;
   robotSubscription: Subscription | null = null;

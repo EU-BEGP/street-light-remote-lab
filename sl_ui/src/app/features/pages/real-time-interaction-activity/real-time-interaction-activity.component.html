@@ -11,32 +11,14 @@
   </div>
 
   <div class="dashboard-row second-row">
-    <app-intensity-matrix
-      class="activity-component"
-      [gridDimension]="gridDimension"
-      [selectedGridIndex]="selectedGridIndex"
-      [currentMessage]="currentMessage">
-    </app-intensity-matrix>
-    <app-grid-selector
-      class="activity-component"
-      [(selectedGridIndex)]="selectedGridIndex"
+    <app-live-intensity-matrix class="activity-component" [gridDimension]="gridDimension"
+      [selectedGridIndex]="selectedGridIndex" [currentMessage]="currentMessage">
+    </app-live-intensity-matrix>
+    <app-grid-selector class="activity-component" [(selectedGridIndex)]="selectedGridIndex"
       [capturedGrids]="capturedGrids">
     </app-grid-selector>
-    <app-intensity-chart
-      class="activity-component"
-      [gridDimension]="gridDimension"
-      [selectedGridIndex]="selectedGridIndex"
-      [currentMessage]="currentMessage">
-    </app-intensity-chart>
-  </div>
-
-  <div class="dashboard-row third-row">
-    <div class="simulation-container" *ngIf="capturedGrids.length > 0">
-      <app-light-simulation
-        class="activity-component"
-        [gridDimension]="gridDimension"
-        [grids]="capturedGrids">
-      </app-light-simulation>
-    </div>
+    <app-live-intensity-chart class="activity-component" [gridDimension]="gridDimension"
+      [selectedGridIndex]="selectedGridIndex" [currentMessage]="currentMessage">
+    </app-live-intensity-chart>
   </div>
 </div>

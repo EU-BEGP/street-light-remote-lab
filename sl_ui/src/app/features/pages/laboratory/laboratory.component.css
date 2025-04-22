@@ -15,16 +15,14 @@
 
 /* Ensure tab content takes full width */
 .tab-content {
-  width: calc(100% - 1rem);
-  max-width: calc(100% - 1rem);
+  width: 100%;
+  max-width: 100%;
 }
 
-/* Remove any padding that might be causing space */
 ::ng-deep .mat-tab-body-wrapper {
   padding: 0 !important;
 }
 
-/* If needed, add this to ensure no horizontal scroll */
 ::ng-deep .mat-tab-body-content {
   overflow-x: hidden !important;
 }

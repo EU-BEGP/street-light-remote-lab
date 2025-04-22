@@ -52,7 +52,7 @@
   min-height: 0;
 }
 
-.second-row app-intensity-matrix {
+.second-row app-live-intensity-matrix {
   flex: 40;
   min-width: 0;
 }
@@ -62,19 +62,9 @@
   min-width: 0;
 }
 
-.second-row app-intensity-chart {
+.second-row app-live-intensity-chart {
   flex: 40;
   min-width: 0;
-}
-
-.third-row {
-  display: flex;
-  justify-content: center;
-}
-
-.simulation-container {
-  width: 75%;
-  max-width: 900px;
 }
 
 @media (max-width: 1200px) {
@@ -87,11 +77,6 @@
   .first-row>*,
   .second-row>* {
     width: 100%;
-  }
-
-  .simulation-container {
-    width: 100%;
-    max-width: 100%;
   }
 }
 

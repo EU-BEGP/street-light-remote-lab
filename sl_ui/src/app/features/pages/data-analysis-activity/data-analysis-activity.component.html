@@ -1,1 +1,22 @@
-<p>data-analysis-activity works!</p>
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+<div class="activity-dashboard">
+  <div class="dashboard-row first-row">
+    <app-parameter-selector class="activity-component" (gridLoaded)="handleGridLoaded($event)"></app-parameter-selector>
+
+    <app-static-intensity-matrix class="activity-component" [grid]="currentGrid" [gridDimension]="gridDimension">
+    </app-static-intensity-matrix>
+
+    <app-static-intensity-chart class="activity-component" [grid]="currentGrid" [gridDimension]="gridDimension">
+    </app-static-intensity-chart>
+  </div>
+
+  <div class="dashboard-row second-row">
+    <div class="simulation-container">
+      <app-light-simulation class="activity-component" [grid]="currentGrid" [gridDimension]="gridDimension">
+      </app-light-simulation>
+    </div>
+  </div>
+</div>

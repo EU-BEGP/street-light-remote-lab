@@ -1,4 +1,10 @@
+// Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+// MIT License - See LICENSE file in the root directory
+// Boris Pedraza, Alex Villazon, Omar Ormachea
+
+import config from 'src/app/config.json';
 import { Component, OnInit } from '@angular/core';
+import { Grid } from '../../interfaces/grid';
 
 @Component({
   selector: 'app-data-analysis-activity',
@@ -6,10 +12,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./data-analysis-activity.component.css']
 })
 export class DataAnalysisActivityComponent implements OnInit {
+  gridDimension: number = config.gridDimension;
+  currentGrid: Grid | null = null;
 
-  constructor() { }
+  constructor(
+  ) { }
 
   ngOnInit(): void {
   }
 
+  handleGridLoaded(grid: any) {
+    this.currentGrid = grid;
+  }
 }

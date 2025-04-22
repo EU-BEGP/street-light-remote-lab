@@ -36,4 +36,12 @@ export class GridService {
   getGridExpansion(id: number): Observable<any> {
     return this.http.get(`${this.URL}${id}/expansion/`);
   }
+
+  getUCGridsParameters(): Observable<any> {
+    return this.http.get(`${this.URL}uc-parameters/`)
+  }
+
+  searchUCGridByParameters(height: number, pwm: number): Observable<any> {
+    return this.http.get(`${this.URL}uc-search/?height=${height}&pwm=${pwm}`)
+  }
 }

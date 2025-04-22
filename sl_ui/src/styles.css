@@ -14,7 +14,7 @@ html {
   min-height: 100vh;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   line-height: 1.6;
-  width: calc(100% - 1rem);
+  width: 100%;
   overflow-x: hidden;
 }
 

@@ -174,7 +174,7 @@ export class ChartConfigurationService {
   /** Retrieves the restrictive toolbar configuration
    * @returns The restrictive toolbar configuration.
    */
-  getChartRestrictiveToolabarConfiguration(): any {
+  getChartRestrictiveToolbarConfiguration(): any {
     return this.restrictiveToolbarConfiguration;
   }
 }

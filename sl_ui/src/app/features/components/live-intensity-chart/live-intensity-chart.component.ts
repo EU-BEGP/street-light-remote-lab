@@ -5,17 +5,16 @@
 import { ChartConfigurationService } from '../../services/chart-configuration.service';
 import { ChartSurface } from '../../interfaces/chart-surface';
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Grid } from '../../interfaces/grid';
 import { Message } from '../../interfaces/message'
 
 @Component({
-  selector: 'app-intensity-chart',
-  templateUrl: './intensity-chart.component.html',
-  styleUrls: ['./intensity-chart.component.css']
+  selector: 'app-live-intensity-chart',
+  templateUrl: './live-intensity-chart.component.html',
+  styleUrls: ['./live-intensity-chart.component.css']
 })
-export class IntensityChartComponent implements OnInit, OnChanges {
-  @Input() currentMessage: Message | null = null;
+export class LiveIntensityChartComponent implements OnInit, OnChanges {
   @Input() gridDimension: number = 0;
+  @Input() currentMessage: Message | null = null;
   @Input() selectedGridIndex: number = 0;
 
   chart = {

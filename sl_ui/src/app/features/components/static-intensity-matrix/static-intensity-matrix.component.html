@@ -1,0 +1,21 @@
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+<div class="matrix-card">
+  <div class="matrix-header">
+    <h3 class="matrix-title">
+      <mat-icon>grid_on</mat-icon>
+      Static Intensity Matrix
+    </h3>
+  </div>
+
+  <div class="matrix-wrapper">
+    <mat-grid-list [cols]="gridDimension" [rowHeight]="30" gutterSize="2px">
+      <mat-grid-tile *ngFor="let cell of currentMatrix.flat()" [style.background]="getCellColor(cell)"
+        [class.cell-active]="cell > 0" class="matrix-cell">
+        <span class="cell-value">{{ cell }}</span>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</div>

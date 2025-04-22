@@ -3,12 +3,9 @@
 // Boris Pedraza, Alex Villazon, Omar Ormachea
 
 import { ChartConfigurationService } from '../../services/chart-configuration.service';
-import { ChartSurface } from '../../interfaces/chart-surface';
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Grid } from '../../interfaces/grid';
 import { GridService } from '../../services/grid.service';
-import { Message } from '../../interfaces/message';
-import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-light-simulation',
@@ -16,16 +13,17 @@ import { forkJoin } from 'rxjs';
   styleUrls: ['./light-simulation.component.css']
 })
 export class LightSimulationComponent implements OnInit, OnChanges {
-  @Input() gridDimension: number = 0; // Original grid dimension (e.g., 8x8)
+  @Input() gridDimension: number = 0;
+  @Input() grid: Grid | null = null;
   @Input() grids: Grid[] | null = null;
 
-  separationNumber: any;
-  chartSurface: any;
+  separationNumber: number = 0;
+  chartData: any[] = [];
   chartLayout: any;
   chartConfiguration: any;
-  expandedGrids: any[] = []; // Initialize expandedGrids as an empty array
-  selectedGridIndex: number | null = null; // Track the selected grid index
-  loadingExpansions: boolean = false;
+  expandedGrids: any[] = [];
+  showGridSelector: boolean = false;
+  selectedGridIndex: number = 0;
 
   constructor(
     private chartConfigurationService: ChartConfigurationService,
@@ -33,102 +31,26 @@ export class LightSimulationComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit(): void {
-    this.chartSurface = this.generateBaseSurface();
-    this.chartLayout = this.chartConfigurationService.getChartSimulationLayout();
-    this.chartConfiguration = this.chartConfigurationService.getChartRestrictiveToolabarConfiguration();
+    this.initializeChart();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['gridDimension']) {
-      this.chartSurface = this.generateBaseSurface();
+    if (changes['grid'] && this.grid) {
+      this.handleSingleGridInput();
     }
 
     if (changes['grids'] && this.grids) {
-      this.loadingExpansions = true;
-      this.expandedGrids = []; // Clear previous expansions
-
-      // Create an array of all expansion observables
-      const expansionObservables = this.grids
-        .filter(grid => grid.id)
-        .map(grid => this.gridService.getGridExpansion(grid.id!));
-
-      // Wait for all expansions to complete
-      forkJoin(expansionObservables).subscribe(expansions => {
-        this.expandedGrids = expansions;
-        this.loadingExpansions = false;
-      });
+      this.handleMultipleGridsInput();
     }
   }
 
-  getGridExpansions(grid: Grid): void {
-    if (grid.id) {
-      this.gridService.getGridExpansion(grid.id).subscribe((expandedGrid: any): void => {
-        this.expandedGrids.push(expandedGrid);
-      });
-    }
+  private initializeChart(): void {
+    this.chartLayout = this.chartConfigurationService.getChartSimulationLayout();
+    this.chartConfiguration = this.chartConfigurationService.getChartRestrictiveToolbarConfiguration();
+    this.chartData = [this.createBaseSurface()];
   }
 
-  onGridSelect(event: any): void {
-    // Handle grid selection from the dropdown
-    this.selectedGridIndex = event.value;
-    this.updateSurfaceWithSelectedGrid();
-  }
-
-  onSeparationNumberSelect(): void {
-    this.updateSurfaceWithSelectedGrid();
-  }
-
-  // Update the surface plot with the selected grid
-  private updateSurfaceWithSelectedGrid(): void {
-    if (this.selectedGridIndex === null || !this.expandedGrids[this.selectedGridIndex]) {
-      return;
-    }
-
-    const selectedExpandedGridValues = this.expandedGrids[this.selectedGridIndex];
-    // Repeat the selected grid's z values three times across the X-axis
-    const repeatedZ = this.repeatGridZValues(selectedExpandedGridValues, 3, this.separationNumber);
-
-    // Update the surface object
-    this.chartSurface = {
-      x: Array.from({ length: repeatedZ[0].length }, (_, i) => i),
-      y: Array.from({ length: repeatedZ.length }, (_, i) => i),
-      z: repeatedZ,
-      type: 'surface',
-      showscale: false,
-      opacity: 0.9,
-    };
-  }
-
-  // Helper function to repeat the grid's z values across the X-axis
-  // TODO: Improve function to handle merged values when the repeated matrixes collide
-  private repeatGridZValues(zValues: number[][], repeatCount: number, separationDistance: number = 1): number[][] {
-    const repeatedZ: number[][] = [];
-
-    for (let y = 0; y < zValues.length; y++) {
-      const row: number[] = [];
-      for (let i = 0; i < repeatCount; i++) {
-        row.push(...zValues[y]); // Add the current row of zValues
-        if (i < repeatCount - 1) {
-          for (let ii = 0; ii < separationDistance; ii++) {
-            row.push(NaN); // Use `null` to create a gap
-          }
-        }
-      }
-      repeatedZ.push(row);
-    }
-
-    return repeatedZ;
-  }
-
-  // Helper function to generate the initial chart Z array
-  private generateInitialZValues(gridDimension: number): number[][] {
-    return Array.from({ length: gridDimension }, () =>
-      Array.from({ length: gridDimension }, () => 0)
-    );
-  }
-
-  // Generate base surface and append it into the surfaces array of the chart
-  private generateBaseSurface(): any {
+  private createBaseSurface(): any {
     return {
       x: Array.from({ length: this.gridDimension }, (_, i) => i),
       y: Array.from({ length: this.gridDimension }, (_, i) => i),
@@ -139,11 +61,69 @@ export class LightSimulationComponent implements OnInit, OnChanges {
     };
   }
 
-  private generateZValuesBasedOnGridMessages(gridMessages: Message[]): number[][] {
-    var zValues = this.generateInitialZValues(this.gridDimension);
-    gridMessages.forEach(message => {
-      zValues[message.x_pos][message.y_pos] = message.intensity;
-    });
-    return zValues;
+  private generateInitialZValues(size: number): number[][] {
+    return Array.from({ length: size }, () => Array(size).fill(0));
+  }
+
+  private handleSingleGridInput(): void {
+    this.showGridSelector = false;
+    if (this.grid?.id) {
+      this.gridService.getGridExpansion(this.grid.id).subscribe(expandedGrid => {
+        this.expandedGrids = [expandedGrid];
+        this.updateChart(expandedGrid);
+      });
+    }
+  }
+
+  private handleMultipleGridsInput(): void {
+    this.showGridSelector = true;
+    if (this.grids?.length && this.grids[0].id) {
+      this.gridService.getGridExpansion(this.grids[0].id).subscribe(expandedGrid => {
+        this.expandedGrids = [expandedGrid];
+        this.updateChart(expandedGrid);
+      });
+    }
+  }
+
+  onGridSelect(event: any): void {
+    this.selectedGridIndex = event.value;
+    if (this.expandedGrids[this.selectedGridIndex]) {
+      this.updateChart(this.expandedGrids[this.selectedGridIndex]);
+    }
+  }
+
+  onSeparationNumberSelect(): void {
+    if (this.expandedGrids[this.selectedGridIndex]) {
+      this.updateChart(this.expandedGrids[this.selectedGridIndex]);
+    }
+  }
+
+  private updateChart(zValues: number[][]): void {
+    const repeatedZ = this.repeatGridZValues(zValues, 3, this.separationNumber);
+
+    this.chartData = [{
+      ...this.createBaseSurface(),
+      z: repeatedZ,
+      x: Array.from({ length: repeatedZ[0].length }, (_, i) => i),
+      y: Array.from({ length: repeatedZ.length }, (_, i) => i)
+    }];
+  }
+
+  private repeatGridZValues(zValues: number[][], repeatCount: number, separationDistance: number): number[][] {
+    const repeatedZ: number[][] = [];
+    const gap = Array(separationDistance).fill(NaN);
+
+    for (const row of zValues) {
+      const newRow: number[] = [];
+      for (let i = 0; i < repeatCount; i++) {
+        newRow.push(...row);
+        if (i < repeatCount - 1) {
+          newRow.push(...gap);
+        }
+      }
+      repeatedZ.push(newRow);
+    }
+
+    return repeatedZ;
   }
 }
