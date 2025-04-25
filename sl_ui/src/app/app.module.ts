@@ -28,6 +28,7 @@ import { LaboratoryComponent } from './features/pages/laboratory/laboratory.comp
 import { LightInformationComponent } from './features/components/light-information/light-information.component';
 import { LightMonitoringActivityComponent } from './features/pages/light-monitoring-activity/light-monitoring-activity.component';
 import { LightSimulationComponent } from './features/components/light-simulation/light-simulation.component';
+import { LightTableComponent } from './features/components/light-table/light-table.component';
 import { LobbyComponent } from './core/pages/lobby/lobby.component';
 import { LoginComponent } from './core/components/login/login.component';
 import { NavbarComponent } from './core/components/navbar/navbar.component';
@@ -62,6 +63,7 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     LightInformationComponent,
     LightMonitoringActivityComponent,
     LightSimulationComponent,
+    LightTableComponent,
     LiveIntensityChartComponent,
     LiveIntensityMatrixComponent,
     LobbyComponent,
