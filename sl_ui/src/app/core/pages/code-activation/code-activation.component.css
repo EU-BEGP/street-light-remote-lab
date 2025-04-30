@@ -91,6 +91,7 @@
   color: #4CAF50;
 }
 
+/* Responsive Adjustments */
 @media (max-width: 600px) {
   .activation-card {
     padding: 1.5rem;

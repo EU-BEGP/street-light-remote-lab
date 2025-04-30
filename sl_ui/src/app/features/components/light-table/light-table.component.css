@@ -113,7 +113,7 @@
   height: 16px;
 }
 
-/* Compact mode for smaller screens */
+/* Responsive Adjustments */
 @media (max-width: 1200px) {
   .control-container {
     flex-direction: column;

@@ -33,16 +33,8 @@
     </mat-form-field>
   </div>
 
-  <div class="plot-container">
     <div class="plot-wrapper">
-      <plotly-plot
-        [data]="chartData"
-        [layout]="chartLayout"
-        [config]="chartConfiguration"
-        [useResizeHandler]="false"
-        [style.width]="'100%'"
-        [style.height]="'100%'">
+      <plotly-plot [data]="chartData" [layout]="chartLayout" [config]="chartConfiguration">
       </plotly-plot>
     </div>
-  </div>
 </div>

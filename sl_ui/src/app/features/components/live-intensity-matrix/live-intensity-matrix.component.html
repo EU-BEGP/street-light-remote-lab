@@ -11,13 +11,13 @@
   </div>
 
   <div class="matrix-wrapper">
-    <mat-grid-list [cols]="gridDimension" [rowHeight]="30" gutterSize="2px">
-      <mat-grid-tile *ngFor="let cell of matrixContainer.matrices[selectedGridIndex].flat()"
-                    [style.background]="getCellColor(cell)"
-                    [class.cell-active]="cell > 0"
-                    class="matrix-cell">
+    <div class="matrix-grid" [style.gridTemplateColumns]="'repeat(' + gridDimension + ', 1fr)'">
+      <div *ngFor="let cell of matrixContainer.matrices[selectedGridIndex].flat()"
+           [style.background]="getCellColor(cell)"
+           [class.cell-active]="cell > 0"
+           class="matrix-cell">
         <span class="cell-value">{{ cell }}</span>
-      </mat-grid-tile>
-    </mat-grid-list>
+      </div>
+    </div>
   </div>
 </div>

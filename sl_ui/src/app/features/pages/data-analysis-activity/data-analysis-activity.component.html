@@ -3,20 +3,19 @@
 <!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
 
 <div class="activity-dashboard">
-  <div class="dashboard-row first-row">
-    <app-parameter-selector class="activity-component" (gridLoaded)="handleGridLoaded($event)"></app-parameter-selector>
+  <div class="dashboard-row parameter-row">
+    <app-parameter-selector class="activity-component" (gridLoaded)="handleGridLoaded($event)">
+    </app-parameter-selector>
+  </div>
 
+  <div class="dashboard-row content-row">
     <app-static-intensity-matrix class="activity-component" [grid]="currentGrid" [gridDimension]="gridDimension">
     </app-static-intensity-matrix>
 
     <app-static-intensity-chart class="activity-component" [grid]="currentGrid" [gridDimension]="gridDimension">
     </app-static-intensity-chart>
-  </div>
 
-  <div class="dashboard-row second-row">
-    <div class="simulation-container">
-      <app-light-simulation class="activity-component" [grid]="currentGrid" [gridDimension]="gridDimension">
-      </app-light-simulation>
-    </div>
+    <app-light-simulation class="activity-component" [grid]="currentGrid" [gridDimension]="gridDimension">
+    </app-light-simulation>
   </div>
 </div>

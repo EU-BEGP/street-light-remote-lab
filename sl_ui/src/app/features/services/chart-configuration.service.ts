@@ -14,8 +14,9 @@ export class ChartConfigurationService {
   private defaultLayout = {
     showlegend: false,
     autosize: true,
-    height: 300,
-    width: 600,
+    height: 450,
+    width: 450,
+    responsive: true,
     margin: {
       l: 0,
       r: 0,
@@ -25,9 +26,9 @@ export class ChartConfigurationService {
     scene: {
       camera: {
         eye: {
-          x: 0,   // Camera is centered horizontally (x-axis is left to right)
-          y: 2,   // Camera is positioned along the y-axis, looking into the screen
-          z: 0.5, // Camera is slightly above the origin to see the z-axis vertically
+          x: 0,
+          y: 2,
+          z: 0.5,
         }
       },
       xaxis: {
@@ -54,8 +55,8 @@ export class ChartConfigurationService {
   private simulationLayout = {
     showlegend: false,
     autosize: true,
-    height: 400,
-    width: 500,
+    height: 450,
+    width: 600,
     margin: {
       l: 0,
       r: 0,

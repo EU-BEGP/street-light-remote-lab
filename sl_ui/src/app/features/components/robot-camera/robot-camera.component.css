@@ -56,6 +56,21 @@
   object-fit: cover;
 }
 
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .video-frame {
+    width: 90%;
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .video-frame {
+    width: 95%;
+    max-width: 350px;
+  }
+}
+
 /* Animation and compact mode */
 @keyframes pulse {
   0% {
@@ -68,20 +83,5 @@
 
   100% {
     opacity: 1;
-  }
-}
-
-/* Compact mode for smaller screens */
-@media (max-width: 1200px) {
-  .video-frame {
-    width: 90%;
-    max-width: 400px;
-  }
-}
-
-@media (max-width: 768px) {
-  .video-frame {
-    width: 95%;
-    max-width: 350px;
   }
 }

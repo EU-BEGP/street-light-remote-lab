@@ -6,63 +6,54 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding: 0.5rem;
+  padding: 1rem;
   background-color: #eeeeee;
   width: 100%;
-  gap: 1rem;
+  max-width: 100%;
+  gap: 0.5rem;
   box-sizing: border-box;
-  margin: 0 auto;
-
+  margin: 0;
 }
 
 .activity-component {
   display: flex;
+  min-width: 0;
 }
 
-.dashboard-row {
-  display: flex;
-  gap: 1rem;
+.parameter-row {
+  display: grid;
+  place-items: center;
   width: 100%;
 }
 
-.first-row {
-  display: flex;
+.parameter-row app-parameter-selector {
+  width: 33.33%;
+  max-width: 500px;
+  min-width: 300px;
+}
+
+.content-row {
+  display: grid;
+  width: 100%;
   gap: 1rem;
+  margin: 0;
+  padding: 0;
 }
 
-.first-row app-parameter-selector {
-  flex: 20;
+.content-row>* {
   min-width: 0;
 }
 
-.first-row app-static-intensity-matrix {
-  flex: 40;
-  min-width: 0;
-}
-
-.first-row app-static-intensity-chart {
-  flex: 40;
-  min-width: 0;
-}
-
-.second-row {
-  display: flex;
-  justify-content: center;
-}
-
-.simulation-container {
-  width: 75%;
-  max-width: 900px;
-}
-
-@media (max-width: 1200px) {
-
-  .first-row {
-    flex-direction: column;
+/* Responsive Adjustments */
+@media (min-width: 769px) {
+  .content-row {
+    grid-template-columns: repeat(2, 1fr);
   }
+}
 
-  .first-row>* {
-    width: 100%;
+@media (min-width: 1201px) {
+  .content-row {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -70,5 +61,16 @@
   .activity-dashboard {
     padding: 0.5rem;
     gap: 0.5rem;
+  }
+
+  .content-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .parameter-row app-parameter-selector {
+    width: 100%;
+    max-width: 100%;
+    min-width: unset;
   }
 }

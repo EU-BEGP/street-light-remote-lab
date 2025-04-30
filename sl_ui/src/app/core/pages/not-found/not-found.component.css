@@ -50,6 +50,7 @@ button {
   font-size: 1rem;
 }
 
+/* Responsive Adjustments */
 @media (max-width: 600px) {
   .not-found-title {
     font-size: 3rem;

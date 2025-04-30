@@ -13,7 +13,10 @@ import { GridService } from '../../services/grid.service';
 export class ParameterSelectorComponent implements OnInit {
   @Output() gridLoaded = new EventEmitter<any>();
 
-  parameters: any;
+  parameters: any = {
+    pwm_options: [],
+    height_options: []
+  };
   selectedPWM: number | null = null;
   selectedHeight: number | null = null;
   isInitialLoad = true;

@@ -31,51 +31,67 @@
 }
 
 .matrix-wrapper {
-  width: 100%;
+  flex: 1;
   overflow: auto;
   min-height: 200px;
-  border: 1px solid;
+  border: 1px solid #e0e0e0;
   border-radius: 4px;
   background: #f9f9f9;
-  padding: 0.25rem;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
 }
 
-mat-grid-list {
-  width: max-content;
-  min-width: 100%;
+.matrix-grid {
+  display: grid;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  grid-template-columns: repeat(auto-fill, minmax(max(24px, calc(100% / 10 - 2px)), 1fr));
+  gap: 2px;
 }
 
 .matrix-cell {
-  border: 1px solid #ddd !important;
+  aspect-ratio: 1 / 1;
+  min-width: 24px;
+  min-height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ddd;
   border-radius: 3px;
   transition: all 0.2s ease;
   font-weight: 500;
   background: white;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  position: relative;
+  cursor: default;
 }
 
 .matrix-cell:hover {
   transform: scale(1.05);
   z-index: 1;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  border-color: var(--main-blue) !important;
+  border-color: var(--main-blue);
 }
 
 .cell-active {
-  color: white !important;
+  color: white;
 }
 
 .cell-value {
   font-size: 0.8rem;
+  pointer-events: none;
 }
 
-/* Responsive adjustments */
+/* Responsive Adjustments */
 @media (max-width: 768px) {
-  .matrix-container {
-    min-width: unset;
+  .matrix-cell {
+    min-width: 18px;
+    min-height: 18px;
   }
 
-  .matrix-cell {
-    min-width: 24px;
+  .cell-value {
+    font-size: 0.65rem;
   }
 }

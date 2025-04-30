@@ -44,6 +44,7 @@
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
+/* Responsive Adjustments */
 @media (max-width: 768px) {
   .lobby-container {
     padding: 1rem;
