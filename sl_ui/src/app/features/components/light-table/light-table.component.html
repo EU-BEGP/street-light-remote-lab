@@ -56,23 +56,32 @@
           <div class="control-container">
             <div class="slider-container">
               <span class="slider-min">0%</span>
-              <mat-slider
-                color="primary"
-                min="0"
-                max="100"
-                step="1"
-                thumbLabel
-                [value]="light.newPwm"
-                (input)="onPwmChange(light, $event)"
-                class="pwm-slider">
+              <mat-slider color="primary" min="0" max="100" step="1" thumbLabel [value]="light.newPwm"
+                (input)="onPwmChange(light, $event)" class="pwm-slider">
               </mat-slider>
               <span class="slider-max">100%</span>
             </div>
-            <button mat-raised-button
-                    color="primary"
-                    class="control-button"
-                    (click)="sendPwmCommand(light)"
-                    [disabled]="light.newPwm === light.pwm">
+            <button mat-raised-button color="primary" class="control-button" (click)="sendPwmCommand(light)">
+              <mat-icon>send</mat-icon>
+              SET
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="bulkControl">
+        <th mat-header-cell *matHeaderCellDef> Bulk Control </th>
+        <td mat-cell *matCellDef="let light; let i = index">
+          <!-- Only show controls in first row -->
+          <div class="bulk-control-container" *ngIf="i === 0">
+            <div class="slider-container">
+              <span class="slider-min">0%</span>
+              <mat-slider color="primary" min="0" max="100" step="1" thumbLabel [(ngModel)]="bulkPwmValue"
+                class="bulk-pwm-slider">
+              </mat-slider>
+              <span class="slider-max">100%</span>
+            </div>
+            <button mat-raised-button color="primary" class="control-button" (click)="sendBulkPwmCommand()">
               <mat-icon>send</mat-icon>
               SET
             </button>

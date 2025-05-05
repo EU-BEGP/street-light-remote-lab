@@ -14,26 +14,13 @@
   margin: 0 auto;
 }
 
-.activity-component {
-  display: flex;
-}
-
 .first-row {
   display: flex;
-  gap: 1rem;
   width: 100%;
 }
 
-.first-row light-info-container {
-  flex: 65;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  min-width: 0;
-}
-
-.first-row camera-view {
-  flex: 35;
+.first-row app-light-table {
+  width: 100%;
   min-width: 0;
 }
 
@@ -44,33 +31,29 @@
   min-height: 0;
 }
 
-.second-row light-control-container {
-  flex: 65;
+.second-row>* {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  min-width: 0;
 }
 
-.second-row chart-view {
-  flex: 35;
-  min-width: 0;
+app-robot-camera,
+app-efficient-area-chart {
+  display: flex;
+  flex: 1;
+  min-height: 0;
 }
 
-/* Responsive Adjustments */
+/* Responsive adjustments */
 @media (max-width: 1200px) {
-
-  .first-row,
   .second-row {
     flex-direction: column;
-    height: auto;
   }
 
-  .light-info-container,
-  .light-control-container,
-  .camera-view,
-  .chart-view {
-    flex: 100%;
+  .second-row>* {
+    flex: none;
+    width: 100%;
   }
 }
 

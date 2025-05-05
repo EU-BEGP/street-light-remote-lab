@@ -22,8 +22,9 @@ export class LightTableComponent implements OnInit, OnDestroy {
     dcLevel: 0,
   });
   newPwm: number = 0;
+  bulkPwmValue: number = 0;
 
-  displayedColumns: string[] = ['code', 'pwm', 'timeInterval', 'dcVoltage', 'dcCurrent', 'dcPower', 'dcLevel', 'control'];
+  displayedColumns: string[] = ['code', 'pwm', 'timeInterval', 'dcVoltage', 'dcCurrent', 'dcPower', 'dcLevel', 'control', 'bulkControl'];
 
   constructor(
     private lightWebsocketService: LightWebsocketService,
@@ -60,6 +61,22 @@ export class LightTableComponent implements OnInit, OnDestroy {
         value: this.newPwm
       };
       console.log(command);
+    }
+  }
+
+  // Send Bulk PWM value to all lights
+  sendBulkPwmCommand(): void {
+    if (this.bulkPwmValue !== null && this.bulkPwmValue >= 0 && this.bulkPwmValue <= 100) {
+      console.log(`Setting all lights to ${this.bulkPwmValue}% PWM`);
+
+      this.lights.forEach(light => {
+        const command = {
+          light_code: light.code,
+          command: 'SET_PWM',
+          value: this.bulkPwmValue
+        };
+        console.log('Sending bulk command:', command);
+      });
     }
   }
 
