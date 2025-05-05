@@ -2,11 +2,10 @@
 /* MIT License - See LICENSE file in the root directory */
 /* Boris Pedraza, Alex Villazon, Omar Ormachea */
 
-.grid-selector-card {
+.chart-card {
   flex: 1;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
   gap: 0.75rem;
   padding: 1rem;
   background: white;
@@ -14,11 +13,11 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
-.selector-header {
+.chart-header {
   padding-bottom: 0.25rem;
 }
 
-.selector-title {
+.chart-title {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -27,39 +26,28 @@
   font-size: 1.1rem;
 }
 
-.selector-title mat-icon {
+.chart-title mat-icon {
   color: var(--secondary-blue);
 }
 
-.grid-icon {
-  color: var(--main-blue);
-}
-
-.grid-title {
-  margin: 0;
-  color: var(--main-blue);
-  font-size: 1.1rem;
-}
-
-.grid-options {
-  display: flex;
-  gap: 0.5rem;
+.chart-wrapper {
   flex: 1;
-  overflow-y: hidden;
+  /* flex: 1; */
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 4px;
+  background: white;
+  min-height: 250px;
+  position: relative;
+  display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
-.grid-option {
-  margin: 0.25rem 0;
-}
-
-.grid-label {
-  padding: 0.25rem 0;
-  display: flex;
-  align-items: center;
-}
-
-.grid-number {
-  margin-left: 0.5rem;
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .chart-wrapper {
+    min-height: 200px;
+  }
 }

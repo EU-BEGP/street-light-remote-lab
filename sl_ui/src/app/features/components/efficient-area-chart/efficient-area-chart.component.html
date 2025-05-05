@@ -5,12 +5,12 @@
 <div class="chart-card">
   <div class="chart-header">
     <h3 class="chart-title">
-      <mat-icon>show_chart</mat-icon>
-      Intensity Visualization
+      <mat-icon>area_chart</mat-icon>
+      Efficient Area Visualization
     </h3>
   </div>
 
   <div class="chart-wrapper">
-    <plotly-plot [data]="[chart.surfaces[selectedGridIndex]]" [layout]="chartLayout"></plotly-plot>
+    <plotly-plot [data]="chartData" [layout]="chartLayout"></plotly-plot>
   </div>
 </div>

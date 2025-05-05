@@ -13,10 +13,8 @@ export class ChartConfigurationService {
   // Default layout
   private defaultLayout = {
     showlegend: false,
-    autosize: true,
     height: 450,
     width: 450,
-    responsive: true,
     margin: {
       l: 0,
       r: 0,
@@ -151,30 +149,18 @@ export class ChartConfigurationService {
 
   constructor() { }
 
-  /** Retrieves the default layout
-   * @returns The default layout
-   */
   getChartDefaultLayout(): any {
     return this.defaultLayout;
   }
 
-  /** Retrieves the simulation layout
-   * @returns The simulation layout
-   */
   getChartSimulationLayout(): any {
     return this.simulationLayout;
   }
 
-  /** Retrieves the restrictive layout
-   * @returns The restrictive layout.
-   */
   getChartRestrictiveLayout(): any {
     return this.restrictiveLayout;
   }
 
-  /** Retrieves the restrictive toolbar configuration
-   * @returns The restrictive toolbar configuration.
-   */
   getChartRestrictiveToolbarConfiguration(): any {
     return this.restrictiveToolbarConfiguration;
   }

@@ -10,15 +10,19 @@
     <app-robot-camera class="activity-component"></app-robot-camera>
   </div>
 
-  <div class="dashboard-row second-row">
-    <app-live-intensity-matrix class="activity-component" [gridDimension]="gridDimension"
-      [selectedGridIndex]="selectedGridIndex" [currentMessage]="currentMessage">
-    </app-live-intensity-matrix>
+  <div *ngIf="capturedGrids.length > 0" class="dashboard-row second-row">
     <app-grid-selector class="activity-component" [(selectedGridIndex)]="selectedGridIndex"
       [capturedGrids]="capturedGrids">
     </app-grid-selector>
+  </div>
+
+  <div class="dashboard-row third-row">
+    <app-live-intensity-matrix class="activity-component" [gridDimension]="gridDimension"
+      [selectedGridIndex]="selectedGridIndex" [currentMessage]="currentMessage">
+    </app-live-intensity-matrix>
     <app-live-intensity-chart class="activity-component" [gridDimension]="gridDimension"
       [selectedGridIndex]="selectedGridIndex" [currentMessage]="currentMessage">
     </app-live-intensity-chart>
+    <app-efficient-area-chart></app-efficient-area-chart>
   </div>
 </div>

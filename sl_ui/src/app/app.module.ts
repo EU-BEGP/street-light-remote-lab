@@ -20,6 +20,7 @@ import { AppComponent } from './app.component';
 import { CodeActivationComponent } from './core/pages/code-activation/code-activation.component';
 import { ConfirmationDialogComponent } from './core/components/confirmation-dialog/confirmation-dialog.component';
 import { DataAnalysisActivityComponent } from './features/pages/data-analysis-activity/data-analysis-activity.component';
+import { EfficientAreaChartComponent } from './features/components/efficient-area-chart/efficient-area-chart.component';
 import { FooterComponent } from './core/components/footer/footer.component';
 import { GridSelectorComponent } from './features/components/grid-selector/grid-selector.component';
 import { LiveIntensityChartComponent } from './features/components/live-intensity-chart/live-intensity-chart.component';
@@ -57,6 +58,7 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     CodeActivationComponent,
     ConfirmationDialogComponent,
     DataAnalysisActivityComponent,
+    EfficientAreaChartComponent,
     FooterComponent,
     GridSelectorComponent,
     LaboratoryComponent,
