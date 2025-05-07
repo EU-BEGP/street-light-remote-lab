@@ -23,6 +23,11 @@
     <app-live-intensity-chart class="activity-component" [gridDimension]="gridDimension"
       [selectedGridIndex]="selectedGridIndex" [currentMessage]="currentMessage">
     </app-live-intensity-chart>
-    <app-efficient-area-chart></app-efficient-area-chart>
+    <app-light-intensity-distribution
+      class="activity-component"
+      [selectedGridIndex]="selectedGridIndex"
+      [capturedGrids]="capturedGrids"
+      [gridDimension]="gridDimension">
+    </app-light-intensity-distribution>
   </div>
 </div>

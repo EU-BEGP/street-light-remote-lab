@@ -13,12 +13,19 @@
 
   <div class="matrix-wrapper">
     <div class="matrix-grid" [style.gridTemplateColumns]="'repeat(' + gridDimension + ', 1fr)'">
-      <div *ngFor="let cell of currentMatrix.flat()"
-           [style.background]="getCellColor(cell)"
-           [class.cell-active]="cell > 0"
-           class="matrix-cell">
-        <span class="cell-value">{{ cell }}</span>
-      </div>
+      <ng-container *ngFor="let row of currentMatrix.slice().reverse(); let yReversed = index">
+        <div *ngFor="let cell of row; let x = index"
+            [style.background]="getCellColor(cell)"
+            [class.cell-active]="cell > 0"
+            class="matrix-cell">
+          <div class="cell-value">
+            <!-- Display (x, y) where y = (gridDimension - 1 - yReversed) -->
+            <span>[{{x}},{{gridDimension - 1 - yReversed}}]</span>
+            <!-- Display intensity value in cell -->
+            <span>{{cell}}</span>
+          </div>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>

@@ -15,6 +15,9 @@
 
 .chart-header {
   padding-bottom: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .chart-title {
@@ -26,13 +29,35 @@
   font-size: 1.1rem;
 }
 
-.chart-title mat-icon {
-  color: var(--secondary-blue);
+.chart-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.chart-tabs button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: #f0f0f0;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chart-tabs button:last-of-type {
+  margin-left: auto;
+}
+
+.chart-tabs button.active {
+  background: var(--main-blue);
+  color: white;
+}
+
+.chart-tabs button:hover:not(.active) {
+  background: #e0e0e0;
 }
 
 .chart-wrapper {
   flex: 1;
-  /* flex: 1; */
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   padding: 4px;
@@ -45,7 +70,6 @@
   overflow: hidden;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
   .chart-wrapper {
     min-height: 200px;

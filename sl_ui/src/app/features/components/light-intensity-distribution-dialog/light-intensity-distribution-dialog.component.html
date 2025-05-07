@@ -1,0 +1,47 @@
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+<mat-dialog-content>
+  <div class="dialog-container">
+    <mat-button-toggle-group [(ngModel)]="selectedChart" class="chart-selector">
+      <mat-button-toggle value="histogram">Histogram</mat-button-toggle>
+      <mat-button-toggle value="polar">Polar</mat-button-toggle>
+      <mat-button-toggle value="threshold">Threshold</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <h2 class="chart-title">{{ currentChart.title }}</h2>
+
+    <div class="section">
+      <h3>About This Chart</h3>
+      <p>{{ currentChart.description }}</p>
+
+      <h4>Purpose:</h4>
+      <ul>
+        <li *ngFor="let item of currentChart.purpose">{{ item }}</li>
+      </ul>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="section">
+      <h3>How to Read</h3>
+      <ul>
+        <li *ngFor="let tip of currentChart.readingTips">{{ tip }}</li>
+      </ul>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="section">
+      <h3>Discussion Questions</h3>
+      <ul>
+        <li *ngFor="let question of currentChart.questions">{{ question }}</li>
+      </ul>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" mat-dialog-close>Close</button>
+</mat-dialog-actions>

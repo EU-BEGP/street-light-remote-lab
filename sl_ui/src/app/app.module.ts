@@ -20,16 +20,17 @@ import { AppComponent } from './app.component';
 import { CodeActivationComponent } from './core/pages/code-activation/code-activation.component';
 import { ConfirmationDialogComponent } from './core/components/confirmation-dialog/confirmation-dialog.component';
 import { DataAnalysisActivityComponent } from './features/pages/data-analysis-activity/data-analysis-activity.component';
-import { EfficientAreaChartComponent } from './features/components/efficient-area-chart/efficient-area-chart.component';
 import { FooterComponent } from './core/components/footer/footer.component';
 import { GridSelectorComponent } from './features/components/grid-selector/grid-selector.component';
-import { LiveIntensityChartComponent } from './features/components/live-intensity-chart/live-intensity-chart.component';
-import { LiveIntensityMatrixComponent } from './features/components/live-intensity-matrix/live-intensity-matrix.component';
 import { LaboratoryComponent } from './features/pages/laboratory/laboratory.component';
 import { LightInformationComponent } from './features/components/light-information/light-information.component';
+import { LightIntensityDistributionComponent } from './features/components/light-intensity-distribution/light-intensity-distribution.component';
+import { LightIntensityDistributionDialogComponent } from './features/components/light-intensity-distribution-dialog/light-intensity-distribution-dialog.component';
 import { LightMonitoringActivityComponent } from './features/pages/light-monitoring-activity/light-monitoring-activity.component';
 import { LightSimulationComponent } from './features/components/light-simulation/light-simulation.component';
 import { LightTableComponent } from './features/components/light-table/light-table.component';
+import { LiveIntensityChartComponent } from './features/components/live-intensity-chart/live-intensity-chart.component';
+import { LiveIntensityMatrixComponent } from './features/components/live-intensity-matrix/live-intensity-matrix.component';
 import { LobbyComponent } from './core/pages/lobby/lobby.component';
 import { LoginComponent } from './core/components/login/login.component';
 import { NavbarComponent } from './core/components/navbar/navbar.component';
@@ -58,11 +59,12 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     CodeActivationComponent,
     ConfirmationDialogComponent,
     DataAnalysisActivityComponent,
-    EfficientAreaChartComponent,
     FooterComponent,
     GridSelectorComponent,
     LaboratoryComponent,
     LightInformationComponent,
+    LightIntensityDistributionComponent,
+    LightIntensityDistributionDialogComponent,
     LightMonitoringActivityComponent,
     LightSimulationComponent,
     LightTableComponent,
