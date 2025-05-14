@@ -4,7 +4,7 @@
 
 import config from '../../../config.json'
 import { GeneralWebsocketService } from './general-websocket.service';
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,8 @@ import { Injectable } from '@angular/core';
 export class CameraWebsocketService extends GeneralWebsocketService {
   private readonly CAMERA_WS_URL: string = config.api.websocketUrls.camera;
 
-  constructor() {
-    super();
+  constructor(ngZone: NgZone) {
+    super(ngZone);
     this.setServiceName('CameraWebSocketService');
   }
 

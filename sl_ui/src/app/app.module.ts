@@ -33,6 +33,7 @@ import { LiveIntensityChartComponent } from './features/components/live-intensit
 import { LiveIntensityMatrixComponent } from './features/components/live-intensity-matrix/live-intensity-matrix.component';
 import { LobbyComponent } from './core/pages/lobby/lobby.component';
 import { LoginComponent } from './core/components/login/login.component';
+import { MultiLightMonitorComponent } from './features/components/multi-light-monitor/multi-light-monitor.component';
 import { NavbarComponent } from './core/components/navbar/navbar.component';
 import { NotFoundComponent } from './core/pages/not-found/not-found.component';
 import { ObjectControlComponent } from './features/components/object-control/object-control.component';
@@ -72,6 +73,7 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     LiveIntensityMatrixComponent,
     LobbyComponent,
     LoginComponent,
+    MultiLightMonitorComponent,
     NavbarComponent,
     NotFoundComponent,
     ObjectControlComponent,

@@ -2,7 +2,7 @@
 // MIT License - See LICENSE file in the root directory
 // Boris Pedraza, Alex Villazon, Omar Ormachea
 
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Observable, Subject, EMPTY, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
@@ -17,10 +17,10 @@ export class GeneralWebsocketService {
   private messagesSubject$: Subject<any> = new Subject<any>();
   public messages$: Observable<any> = this.messagesSubject$.asObservable();
   private socket$: WebSocketSubject<any> | null = null;
-  private disconnectedByUser: boolean = false;
   protected serviceName?: string; // Store the service name for logging
+  private disconnectedByUser: boolean = false;
 
-  constructor() { }
+  constructor(protected ngZone: NgZone) { }
 
   protected setServiceName(name: string): void {
     this.serviceName = name;
@@ -47,9 +47,9 @@ export class GeneralWebsocketService {
           return EMPTY;
         })
       ).subscribe(
-        message => this.messagesSubject$.next(message),
-        error => this.log(`Received error: ${error}`),
-        (): void => { }
+        message => this.ngZone.run(() => this.messagesSubject$.next(message)),
+        error => this.ngZone.run(() => this.log(`Received error: ${error}`)),
+        () => this.ngZone.run(() => { })
       );
     }
   }

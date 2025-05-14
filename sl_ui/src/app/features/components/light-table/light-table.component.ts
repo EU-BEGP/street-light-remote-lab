@@ -33,7 +33,7 @@ export class LightTableComponent implements OnInit, OnDestroy {
     for (let i = 0; i < 5; i++) {
       this.lights[i] = {
         ...this.lights[i],
-        code: `${config.controlledEnvLightCode}-${i + 1}`,
+        code: `${config.controlledEnvLightCode}`,
       };
     }
   }
@@ -86,21 +86,21 @@ export class LightTableComponent implements OnInit, OnDestroy {
     if (this.lightSubscription) {
       this.lightSubscription.unsubscribe();
     }
-
-    this.lightSubscription = this.lightWebsocketService.messages$.subscribe((light_msg) => {
-      const lightIndex = parseInt(light_msg.light_code.split('-').pop()) - 1;
-
-      if (lightIndex >= 0 && lightIndex < 5) {
-        this.lights[lightIndex] = {
-          ...this.lights[lightIndex],
-          pwm: light_msg.pwm,
-          timeInterval: (Number(light_msg.time_interval) / 1000),
-          dcVoltage: light_msg.dc_voltage,
-          dcCurrent: light_msg.dc_current,
-          dcPower: light_msg.dc_power,
-          dcLevel: Math.round(light_msg.dc_level),
-        };
-      }
+    this.lightSubscription = this.lightWebsocketService.messages$.subscribe((lightMsg) => {
+      this.lights = this.lights.map(light => {
+        if (light.code === lightMsg.light_code) {
+          return {
+            ...light,
+            pwm: lightMsg.pwm,
+            timeInterval: (Number(lightMsg.time_interval) / 1000),
+            dcVoltage: lightMsg.dc_voltage,
+            dcCurrent: lightMsg.dc_current,
+            dcPower: lightMsg.dc_power,
+            dcLevel: Math.round(lightMsg.dc_level)
+          };
+        }
+        return light;
+      });
     });
   }
 }

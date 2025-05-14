@@ -4,7 +4,7 @@
 
 import config from '../../../config.json'
 import { GeneralWebsocketService } from './general-websocket.service';
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,8 @@ import { Injectable } from '@angular/core';
 export class RobotWebsocketService extends GeneralWebsocketService {
   private readonly ROBOT_WS_URL: string = config.api.websocketUrls.robotInformation;
 
-  constructor() {
-    super();
+  constructor(ngZone: NgZone) {
+    super(ngZone);
     this.setServiceName('RobotWebSocketService');
   }
 

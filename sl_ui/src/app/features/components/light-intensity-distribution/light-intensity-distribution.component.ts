@@ -44,7 +44,6 @@ export class LightIntensityDistributionComponent implements OnInit, OnChanges {
     this.dialog.open(LightIntensityDistributionDialogComponent, {
       width: '90%',
       maxWidth: '600px',
-      data: { chartType: this.activeTab }
     });
   }
 

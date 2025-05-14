@@ -44,49 +44,49 @@ export class LightInformationComponent implements OnInit, OnDestroy {
     }
 
     // Subscribe to WebSocket messages
-    this.lightSubscription = this.lightWebsocketService.messages$.subscribe((light_msg) => {
-      if (light_msg.light_code == this.light.code) {
-        this.light.pwm = light_msg.pwm;
-        this.light.timeInterval = (Number(light_msg.time_interval) / 1000);
+    this.lightSubscription = this.lightWebsocketService.messages$.subscribe((lightMsg) => {
+      if (lightMsg.light_code == this.light.code) {
+        this.light.pwm = lightMsg.pwm;
+        this.light.timeInterval = (Number(lightMsg.time_interval) / 1000);
 
-        if (light_msg.type == this.light.type) {
+        if (lightMsg.type == this.light.type) {
           if (this.light.type == 'DC') {
             this.light = {
               ...this.light,
-              dcVoltage: light_msg.dc_voltage,
-              dcCurrent: light_msg.dc_current,
-              dcPower: light_msg.dc_power,
-              dcEnergyConsumption: light_msg.dc_energy_consumption,
-              dcEnergyCharge: light_msg.dc_energy_charge,
-              dcLevel: Math.round(light_msg.dc_level),
+              dcVoltage: lightMsg.dc_voltage,
+              dcCurrent: lightMsg.dc_current,
+              dcPower: lightMsg.dc_power,
+              dcEnergyConsumption: lightMsg.dc_energy_consumption,
+              dcEnergyCharge: lightMsg.dc_energy_charge,
+              dcLevel: Math.round(lightMsg.dc_level),
             };
           }
           if (this.light.type == 'AC') {
             this.light = {
               ...this.light,
-              acVoltage: light_msg.ac_voltage,
-              acCurrent: light_msg.ac_current,
-              acPower: light_msg.ac_power,
-              acEnergy: light_msg.ac_energy,
-              acFrequency: light_msg.ac_frequency,
-              acFactor: light_msg.ac_factor,
+              acVoltage: lightMsg.ac_voltage,
+              acCurrent: lightMsg.ac_current,
+              acPower: lightMsg.ac_power,
+              acEnergy: lightMsg.ac_energy,
+              acFrequency: lightMsg.ac_frequency,
+              acFactor: lightMsg.ac_factor,
             };
           }
           if (this.light.type == 'AC_INV') {
             this.light = {
               ...this.light,
-              dcVoltage: light_msg.dc_voltage,
-              dcCurrent: light_msg.dc_current,
-              dcPower: light_msg.dc_power,
-              dcEnergyConsumption: light_msg.dc_energy_consumption,
-              dcEnergyCharge: light_msg.dc_energy_charge,
-              dcLevel: Math.round(light_msg.dc_level),
-              acVoltage: light_msg.ac_voltage,
-              acCurrent: light_msg.ac_current,
-              acPower: light_msg.ac_power,
-              acEnergy: light_msg.ac_energy,
-              acFrequency: light_msg.ac_frequency,
-              acFactor: light_msg.ac_factor,
+              dcVoltage: lightMsg.dc_voltage,
+              dcCurrent: lightMsg.dc_current,
+              dcPower: lightMsg.dc_power,
+              dcEnergyConsumption: lightMsg.dc_energy_consumption,
+              dcEnergyCharge: lightMsg.dc_energy_charge,
+              dcLevel: Math.round(lightMsg.dc_level),
+              acVoltage: lightMsg.ac_voltage,
+              acCurrent: lightMsg.ac_current,
+              acPower: lightMsg.ac_power,
+              acEnergy: lightMsg.ac_energy,
+              acFrequency: lightMsg.ac_frequency,
+              acFactor: lightMsg.ac_factor,
             };
           }
         }
