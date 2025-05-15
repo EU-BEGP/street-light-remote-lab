@@ -72,7 +72,7 @@ class PublishLightCommand(generics.GenericAPIView):
         pwm = request.data.get("pwm", None)
         time_interval = request.data.get("time_interval", None)
 
-        if light_code and pwm and time_interval:
+        if light_code is not None and pwm is not None and time_interval is not None:
             message = {
                 "light_code": light_code,
                 "pwm": int(pwm),
