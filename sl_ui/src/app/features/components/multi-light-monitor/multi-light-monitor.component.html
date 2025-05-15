@@ -1,1 +1,17 @@
-<p>multi-light-monitor works!</p>
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+<div class="chart-card">
+  <div class="chart-header">
+    <h3 class="chart-title">
+      <mat-icon>show_chart</mat-icon>
+      Multi-Light Monitor
+    </h3>
+  </div>
+
+  <div class="chart-wrapper">
+    <plotly-plot [data]="chartData" [layout]="chartLayout">
+    </plotly-plot>
+  </div>
+</div>
