@@ -41,5 +41,11 @@
   },
   "controlledEnvLightCode": "light_10",
   "controlledEnvLightType": "DC",
-  "gridDimension": 8
+  "gridDimension": 8,
+  "outsideLightsCodes": [
+    "light_03",
+    "light_04",
+    "light_05",
+    "light_06",
+    "light_07"
 }
