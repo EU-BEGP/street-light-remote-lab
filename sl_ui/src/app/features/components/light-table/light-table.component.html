@@ -4,10 +4,28 @@
 
 <div class="light-table-card">
   <div class="light-table-header">
-    <h3 class="light-table-title">
-      <mat-icon>lightbulb</mat-icon>
-      DC Lights Information
-    </h3>
+    <div class="header-row">
+      <h3 class="light-table-title">
+        <mat-icon>lightbulb</mat-icon>
+        DC Lights Information
+      </h3>
+      <div class="bulk-control-header">
+        <h3 class="bulk-control-title">
+          PWM Bulk Control
+        </h3>
+        <div class="slider-container">
+          <span class="slider-min">0%</span>
+          <mat-slider color="primary" min="0" max="100" step="1" thumbLabel [(ngModel)]="bulkPwmValue"
+            class="bulk-pwm-slider">
+          </mat-slider>
+          <span class="slider-max">100%</span>
+        </div>
+        <button mat-raised-button color="primary" class="control-button" (click)="sendBulkPwmCommand()">
+          <mat-icon>send</mat-icon>
+          SET ALL
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="table-wrapper">
@@ -27,27 +45,27 @@
 
       <ng-container matColumnDef="timeInterval">
         <th mat-header-cell *matHeaderCellDef> Interval </th>
-        <td mat-cell *matCellDef="let light"> {{light.timeInterval || '--'}}s </td>
+        <td mat-cell *matCellDef="let light"> {{light.timeInterval || '--'}} s </td>
       </ng-container>
 
       <ng-container matColumnDef="dcVoltage">
         <th mat-header-cell *matHeaderCellDef> DC Voltage </th>
-        <td mat-cell *matCellDef="let light"> {{light.dcVoltage || '--'}}V </td>
+        <td mat-cell *matCellDef="let light"> {{light.dcVoltage || '--'}} V </td>
       </ng-container>
 
       <ng-container matColumnDef="dcCurrent">
         <th mat-header-cell *matHeaderCellDef> DC Current </th>
-        <td mat-cell *matCellDef="let light"> {{light.dcCurrent || '--'}}A </td>
+        <td mat-cell *matCellDef="let light"> {{light.dcCurrent || '--'}} A </td>
       </ng-container>
 
       <ng-container matColumnDef="dcPower">
         <th mat-header-cell *matHeaderCellDef> DC Power </th>
-        <td mat-cell *matCellDef="let light"> {{light.dcPower || '--'}}W </td>
+        <td mat-cell *matCellDef="let light"> {{light.dcPower || '--'}} W </td>
       </ng-container>
 
       <ng-container matColumnDef="dcLevel">
         <th mat-header-cell *matHeaderCellDef> DC Level </th>
-        <td mat-cell *matCellDef="let light"> {{light.dcLevel || '--'}}% </td>
+        <td mat-cell *matCellDef="let light"> {{light.dcLevel || '--'}} % </td>
       </ng-container>
 
       <ng-container matColumnDef="control">
@@ -62,26 +80,6 @@
               <span class="slider-max">100%</span>
             </div>
             <button mat-raised-button color="primary" class="control-button" (click)="sendPwmCommand(light)">
-              <mat-icon>send</mat-icon>
-              SET
-            </button>
-          </div>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="bulkControl">
-        <th mat-header-cell *matHeaderCellDef> Bulk Control </th>
-        <td mat-cell *matCellDef="let light; let i = index">
-          <!-- Only show controls in first row -->
-          <div class="bulk-control-container" *ngIf="i === 0">
-            <div class="slider-container">
-              <span class="slider-min">0%</span>
-              <mat-slider color="primary" min="0" max="100" step="1" thumbLabel [(ngModel)]="bulkPwmValue"
-                class="bulk-pwm-slider">
-              </mat-slider>
-              <span class="slider-max">100%</span>
-            </div>
-            <button mat-raised-button color="primary" class="control-button" (click)="sendBulkPwmCommand()">
               <mat-icon>send</mat-icon>
               SET
             </button>

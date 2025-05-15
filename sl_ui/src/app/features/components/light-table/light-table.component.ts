@@ -32,7 +32,7 @@ export class LightTableComponent implements OnInit, OnDestroy {
   newPwm: number = 0;
   bulkPwmValue: number = 0;
 
-  displayedColumns: string[] = ['code', 'pwm', 'timeInterval', 'dcVoltage', 'dcCurrent', 'dcPower', 'dcLevel', 'control', 'bulkControl'];
+  displayedColumns: string[] = ['code', 'pwm', 'timeInterval', 'dcVoltage', 'dcCurrent', 'dcPower', 'dcLevel', 'control'];
 
   constructor(
     private lightWebsocketService: LightWebsocketService,
