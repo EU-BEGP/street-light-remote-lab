@@ -8,6 +8,7 @@ from django.core.mail import EmailMultiAlternatives, BadHeaderError
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from scipy.interpolate import Rbf
 from scipy.interpolate import RectBivariateSpline
 from skimage.measure import block_reduce
 import asyncio
@@ -99,36 +100,150 @@ def perform_2d_spline(
     return input_matrix.copy()
 
 
-def smart_gaussian_extrapolate(matrix, sigma_ratio=0.25, min_padding=5):
+def rbf_interpolation_expansion(
+    matrix, target_size=16, function="multiquadric", epsilon=None
+):
     """
-    Automatically expands matrix with Gaussian falloff until reaching zero.
+    Expands a matrix using RBF interpolation, ensuring edges decay toward zero.
+
+    Args:
+        matrix: Input numpy array of light intensities.
+        target_size: Output size
+        function: RBF kernel type ('multiquadric', 'gaussian', etc.).
+        epsilon: Shape parameter for RBF (auto-calculated if None).
+
+    Returns:
+        Expanded Matrix
     """
-    # Calculate auto-padding based on intensity drop-off
-    edge_mean = np.mean(
-        np.concatenate([matrix[0, :], matrix[-1, :], matrix[:, 0], matrix[:, -1]])
-    )
-    center_value = np.max(matrix)
-    padding = max(min_padding, int(0.5 * center_value / edge_mean))
-    # Create expanded grid
+    # Original grid coordinates (8x8)
     h, w = matrix.shape
-    x = np.linspace(-padding, h + padding, h + 2 * padding)
-    y = np.linspace(-padding, w + padding, w + 2 * padding)
-    xx, yy = np.meshgrid(x, y, indexing="ij")
+    x_orig = np.linspace(0, 1, h)
+    y_orig = np.linspace(0, 1, w)
+    xx_orig, yy_orig = np.meshgrid(x_orig, y_orig, indexing="ij")
 
-    # Distance from original matrix edges (in pixels)
-    dist = np.maximum(
-        np.maximum(-xx, xx - (h - 1)),  # Horizontal distance
-        np.maximum(-yy, yy - (w - 1)),  # Vertical distance
+    # Fit RBF to original data
+    rbf = Rbf(
+        xx_orig.flatten(),
+        yy_orig.flatten(),
+        matrix.flatten(),
+        function=function,
+        epsilon=epsilon,
     )
 
-    # Auto-sigma based on padding
-    sigma = sigma_ratio * padding
+    # Expanded grid coordinates
+    x_new = np.linspace(-0.5, 1.5, target_size)
+    y_new = np.linspace(-0.5, 1.5, target_size)
+    xx_new, yy_new = np.meshgrid(x_new, y_new, indexing="ij")
 
-    # Gaussian falloff mask (1 at matrix, 0 at edges)
-    mask = np.exp(-(np.maximum(dist, 0) ** 2) / (2 * sigma**2))
+    # Interpolate/extrapolate
+    expanded = rbf(xx_new, yy_new)
 
-    # Apply mask to padded matrix
-    padded = np.pad(matrix, padding, mode="edge")
-    result = padded * mask
-    result = np.round(result)
+    # Clip negative values to zero (physical constraint)
+    expanded = np.clip(expanded, 0, None)
+
+    # Normalize to preserve original max intensity
+    expanded = expanded * (np.max(matrix) / np.max(expanded))
+
+    return expanded
+
+
+def zero_edge_rbf_expand(matrix, target_size=16, decay_strength=2.0):
+    """
+    Expands matrix to target_size x target_size using RBF, enforcing zero at edges.
+
+    Args:
+        matrix: Input 8x8 numpy array.
+        target_size: Output size
+        decay_strength: Controls how aggressively edges are pushed to zero (higher = sharper decay).
+
+    Returns:
+        Zero-edged expanded matrix.
+    """
+    h, w = matrix.shape
+    assert target_size > max(h, w), "Target size must be larger than input."
+
+    # Original grid coordinates (normalized to [0, 1])
+    x_orig = np.linspace(0, 1, h)
+    y_orig = np.linspace(0, 1, w)
+    xx_orig, yy_orig = np.meshgrid(x_orig, y_orig, indexing="ij")
+
+    # Fit RBF to original data
+    rbf = Rbf(
+        xx_orig.flatten(), yy_orig.flatten(), matrix.flatten(), function="multiquadric"
+    )
+
+    # Expanded grid coordinates (normalized to [-pad, 1+pad] to force zero edges)
+    pad_ratio = 0.5  # How far beyond original bounds to interpolate
+    x_new = np.linspace(0 - pad_ratio, 1 + pad_ratio, target_size)
+    y_new = np.linspace(0 - pad_ratio, 1 + pad_ratio, target_size)
+    xx_new, yy_new = np.meshgrid(x_new, y_new, indexing="ij")
+
+    # Interpolate/extrapolate
+    expanded = rbf(xx_new, yy_new)
+
+    # --- Enforce zero edges ---
+    # Create a smooth mask that is 1.0 in the original grid and decays to 0 at edges
+    mask_x = np.clip(1.0 - (np.abs(x_new - 0.5) - 0.5) / pad_ratio, 0, 1)
+    mask_y = np.clip(1.0 - (np.abs(y_new - 0.5) - 0.5) / pad_ratio, 0, 1)
+    mask = np.outer(mask_x, mask_y) ** decay_strength
+
+    # Apply mask and clip negatives
+    expanded = expanded * mask
+    expanded = np.clip(expanded, 0, None)
+
+    # Preserve original max intensity
+    expanded = expanded * (np.max(matrix) / np.max(expanded))
+
+    return expanded
+
+
+def replicate_matrix_with_spacing(matrix, center_distance_offset=0):
+    """
+    Replicates a matrix 3 times horizontally, with controllable spacing between centers.
+    Handles collisions (overlaps) by taking the maximum value in overlapping regions.
+
+    Args:
+        matrix: Input matrix.
+        center_distance_offset: Adjusts the ideal center-to-center distance.
+                              - Positive: Increases spacing (adds gaps between matrices).
+                              - Negative: Decreases spacing (causes overlaps).
+
+    Returns:
+        Combined matrix (matrix_sizex(matrix_size*3 + offset)) with 3 copies and resolved collisions.
+    """
+    h, w = matrix.shape
+    center = w // 2  # Center of the original matrix
+
+    # Ideal center-to-center distance (contiguous matrices)
+    ideal_center_distance = w
+
+    # Adjusted distance based on offset
+    actual_center_distance = ideal_center_distance + center_distance_offset
+
+    # Calculate starting positions for each copy
+    starts = [
+        0,
+        actual_center_distance - center,
+        2 * actual_center_distance - 2 * center,
+    ]
+
+    # Total width of the output matrix
+    total_width = starts[-1] + w
+
+    # Initialize result matrix with zeros
+    result = np.zeros((h, total_width))
+
+    # Paste each copy, handling collisions with np.maximum
+    for start in starts:
+        # Ensure indices stay within bounds
+        src_start = max(0, -start)
+        src_end = min(w, result.shape[1] - start)
+        dst_start = max(0, start)
+        dst_end = min(result.shape[1], start + w)
+
+        # Overlap copies by taking the max value in collisions
+        result[:, dst_start:dst_end] = np.maximum(
+            result[:, dst_start:dst_end], matrix[:, src_start:src_end]
+        )
+
     return result

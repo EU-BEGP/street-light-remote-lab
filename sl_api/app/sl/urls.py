@@ -41,6 +41,11 @@ urlpatterns = [
         name="grid-expansion",
     ),
     path(
+        "grids/<int:id>/distribution-simulation/",
+        grid_views.GridDistributionSimulationView.as_view(),
+        name="grid-distribution-simulation",
+    ),
+    path(
         "grids/uc-parameters/",
         grid_views.UltraConcurrentParametersView.as_view(),
         name="grid-uc-parameters",

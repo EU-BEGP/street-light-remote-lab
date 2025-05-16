@@ -8,7 +8,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from sl.models import Grid, Message
 from sl.serializers import GridSerializer
-from utils.tools import create_matrix_from_grid, smart_gaussian_extrapolate
+from utils.tools import (
+    create_matrix_from_grid,
+    replicate_matrix_with_spacing,
+    zero_edge_rbf_expand,
+)
 
 
 ## LIST grid
@@ -41,24 +45,6 @@ class GridRetrieveUpdateView(generics.RetrieveUpdateAPIView):
         else:
             # If the serializer is not valid, the serializer errors are returned.
             return Response(serializer.errors)
-
-
-class ExpansionGridView(generics.RetrieveAPIView):
-    serializer_class = GridSerializer
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-
-    def get_object(self):
-        grid_id = self.kwargs.get("id")
-        grid = Grid.objects.get(id=grid_id)
-        return grid
-
-    def retrieve(self, request, *args, **kwargs):
-        grid = self.get_object()
-        grid_messages = Message.objects.filter(grid=grid).order_by("id")
-        intensity_matrix = create_matrix_from_grid(grid_messages)
-        expanded_intensity_matrix = smart_gaussian_extrapolate(intensity_matrix)
-        return Response(expanded_intensity_matrix, status=status.HTTP_200_OK)
 
 
 class UltraConcurrentParametersView(generics.GenericAPIView):
@@ -107,3 +93,44 @@ class UltraConcurrentSearchView(generics.ListAPIView):
         return Grid.objects.filter(
             grid_type="ULTRA_CONCURRENT", uc_pwm=pwm, uc_height=height
         )
+
+
+class ExpansionGridView(generics.RetrieveAPIView):
+    serializer_class = GridSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        grid_id = self.kwargs.get("id")
+        grid = Grid.objects.get(id=grid_id)
+        return grid
+
+    def retrieve(self, request, *args, **kwargs):
+        grid = self.get_object()
+        grid_messages = Message.objects.filter(grid=grid).order_by("id")
+        intensity_matrix = create_matrix_from_grid(grid_messages)
+        expanded_intensity_matrix = zero_edge_rbf_expand(intensity_matrix)
+        return Response(expanded_intensity_matrix, status=status.HTTP_200_OK)
+
+
+class GridDistributionSimulationView(generics.RetrieveAPIView):
+    serializer_class = GridSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        grid_id = self.kwargs.get("id")
+        grid = Grid.objects.get(id=grid_id)
+        return grid
+
+    def retrieve(self, request, *args, **kwargs):
+        grid = self.get_object()
+        grid_messages = Message.objects.filter(grid=grid).order_by("id")
+        offset = int(request.query_params.get("offset", 0))
+
+        intensity_matrix = create_matrix_from_grid(grid_messages)
+        expanded_intensity_matrix = zero_edge_rbf_expand(intensity_matrix)
+        distribution_simulation_matrix = replicate_matrix_with_spacing(
+            expanded_intensity_matrix, center_distance_offset=offset
+        )
+        return Response(distribution_simulation_matrix, status=status.HTTP_200_OK)

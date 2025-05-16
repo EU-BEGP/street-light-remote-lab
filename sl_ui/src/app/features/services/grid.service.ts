@@ -37,6 +37,13 @@ export class GridService {
     return this.http.get(`${this.URL}${id}/expansion/`);
   }
 
+  getGridDistributionSimulation(id: number, offset: number): Observable<any> {
+    var url = `${this.URL}${id}/distribution-simulation/`
+    if (offset) url += `?offset=${offset}`
+
+    return this.http.get(url);
+  }
+
   getUCGridsParameters(): Observable<any> {
     return this.http.get(`${this.URL}uc-parameters/`)
   }
