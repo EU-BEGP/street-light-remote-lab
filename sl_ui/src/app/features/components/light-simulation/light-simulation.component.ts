@@ -13,43 +13,48 @@ import { GridService } from '../../services/grid.service';
   styleUrls: ['./light-simulation.component.css']
 })
 export class LightSimulationComponent implements OnInit, OnChanges {
+  // Input properties for grid dimensions and grid data
   @Input() gridDimension: number = 0;
   @Input() grid: Grid | null = null;
-  @Input() grids: Grid[] | null = null;
 
   separationNumber: number = 0;
+  // Chart properties for Plotly visualization
   chartData: any[] = [];
   chartLayout: any;
   chartConfiguration: any;
-  expandedGrids: any[] = [];
-  showGridSelector: boolean = false;
-  selectedGridIndex: number = 0;
 
   constructor(
     private chartConfigurationService: ChartConfigurationService,
     private gridService: GridService,
   ) { }
 
+  // Initialize chart when component loads
   ngOnInit(): void {
     this.initializeChart();
   }
 
+  // Handle input changes, particularly grid updates
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['grid'] && this.grid) {
-      this.handleSingleGridInput();
-    }
-
-    if (changes['grids'] && this.grids) {
-      this.handleMultipleGridsInput();
+      if (this.grid?.id) {
+        this.updateChart(this.grid.id);
+      }
     }
   }
 
+  // Set up initial chart configuration and empty surface
   private initializeChart(): void {
     this.chartLayout = this.chartConfigurationService.getChartSimulationLayout();
     this.chartConfiguration = this.chartConfigurationService.getChartRestrictiveToolbarConfiguration();
     this.chartData = [this.createBaseSurface()];
   }
 
+  // Generate a matrix filled with zeros for initial chart state
+  private generateInitialZValues(size: number): number[][] {
+    return Array.from({ length: size }, () => Array(size).fill(0));
+  }
+
+  // Create base surface data structure for the 3D chart
   private createBaseSurface(): any {
     return {
       x: Array.from({ length: this.gridDimension }, (_, i) => i),
@@ -61,69 +66,30 @@ export class LightSimulationComponent implements OnInit, OnChanges {
     };
   }
 
-  private generateInitialZValues(size: number): number[][] {
-    return Array.from({ length: size }, () => Array(size).fill(0));
-  }
-
-  private handleSingleGridInput(): void {
-    this.showGridSelector = false;
-    if (this.grid?.id) {
-      this.gridService.getGridExpansion(this.grid.id).subscribe(expandedGrid => {
-        this.expandedGrids = [expandedGrid];
-        this.updateChart(expandedGrid);
-      });
-    }
-  }
-
-  private handleMultipleGridsInput(): void {
-    this.showGridSelector = true;
-    if (this.grids?.length && this.grids[0].id) {
-      this.gridService.getGridExpansion(this.grids[0].id).subscribe(expandedGrid => {
-        this.expandedGrids = [expandedGrid];
-        this.updateChart(expandedGrid);
-      });
-    }
-  }
-
-  onGridSelect(event: any): void {
-    this.selectedGridIndex = event.value;
-    if (this.expandedGrids[this.selectedGridIndex]) {
-      this.updateChart(this.expandedGrids[this.selectedGridIndex]);
-    }
-  }
-
+  // Handle separation number selection from UI
   onSeparationNumberSelect(): void {
-    if (this.expandedGrids[this.selectedGridIndex]) {
-      this.updateChart(this.expandedGrids[this.selectedGridIndex]);
+    if (this.grid?.id) {
+      this.updateChart(this.grid.id, this.separationNumber);
     }
   }
 
-  private updateChart(zValues: number[][]): void {
-    const repeatedZ = this.repeatGridZValues(zValues, 3, this.separationNumber);
-
-    this.chartData = [{
-      ...this.createBaseSurface(),
-      z: repeatedZ,
-      x: Array.from({ length: repeatedZ[0].length }, (_, i) => i),
-      y: Array.from({ length: repeatedZ.length }, (_, i) => i)
-    }];
+  // Update chart data with simulation results from service
+  private updateChart(gridId: number, separationOffset: number = 0): void {
+    this.gridService.getGridDistributionSimulation(gridId, separationOffset).subscribe(simulationGrid => {
+      const processedSimulationGrid = this.processMatrixNegativeValues(simulationGrid)
+      this.chartData = [{
+        ...this.createBaseSurface(),
+        z: processedSimulationGrid,
+        x: Array.from({ length: processedSimulationGrid[0].length }, (_, i) => i),
+        y: Array.from({ length: processedSimulationGrid.length }, (_, i) => i)
+      }];
+    });
   }
 
-  private repeatGridZValues(zValues: number[][], repeatCount: number, separationDistance: number): number[][] {
-    const repeatedZ: number[][] = [];
-    const gap = Array(separationDistance).fill(NaN);
-
-    for (const row of zValues) {
-      const newRow: number[] = [];
-      for (let i = 0; i < repeatCount; i++) {
-        newRow.push(...row);
-        if (i < repeatCount - 1) {
-          newRow.push(...gap);
-        }
-      }
-      repeatedZ.push(newRow);
-    }
-
-    return repeatedZ;
-  }
+  // Convert -1 values to NaN for proper chart rendering
+  private processMatrixNegativeValues = (matrix: number[][]) => {
+    return matrix.map(row =>
+      row.map(val => val === -1 ? NaN : val)
+    );
+  };
 }

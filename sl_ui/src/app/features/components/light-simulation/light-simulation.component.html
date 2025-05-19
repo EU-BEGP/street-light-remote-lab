@@ -11,30 +11,23 @@
   </div>
 
   <div class="simulation-controls">
-    <!-- Grid selector (only shown for multiple grids) -->
-    <mat-form-field *ngIf="showGridSelector" appearance="outline" class="simulation-select">
-      <mat-label>Grid Selection</mat-label>
-      <mat-select (selectionChange)="onGridSelect($event)" [value]="selectedGridIndex">
-        <mat-option *ngFor="let grid of expandedGrids; let i = index" [value]="i">
-          Grid {{ i + 1 }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <!-- Separation selector (always shown) -->
     <mat-form-field appearance="outline" class="simulation-select">
       <mat-label>Separation</mat-label>
       <mat-select [(value)]="separationNumber" (selectionChange)="onSeparationNumberSelect()">
-        <mat-option [value]="0">None</mat-option>
-        <mat-option [value]="1">1 square</mat-option>
-        <mat-option [value]="2">2 squares</mat-option>
-        <mat-option [value]="3">3 squares</mat-option>
+        <mat-option [value]="0">None (Ideal Separation)</mat-option>
+        <mat-option [value]="-1">-1 cell</mat-option>
+        <mat-option [value]="-2">-2 cells</mat-option>
+        <mat-option [value]="-3">-3 cells</mat-option>
+        <mat-option [value]="-4">-4 cells</mat-option>
+        <mat-option [value]="-5">-5 cells</mat-option>
+        <mat-option [value]="1">1 cell</mat-option>
+        <mat-option [value]="2">2 cells</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
 
-    <div class="plot-wrapper">
-      <plotly-plot [data]="chartData" [layout]="chartLayout" [config]="chartConfiguration">
-      </plotly-plot>
-    </div>
+  <div class="plot-wrapper">
+    <plotly-plot [data]="chartData" [layout]="chartLayout" [config]="chartConfiguration">
+    </plotly-plot>
+  </div>
 </div>

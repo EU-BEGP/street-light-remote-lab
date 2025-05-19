@@ -199,51 +199,54 @@ def zero_edge_rbf_expand(matrix, target_size=16, decay_strength=2.0):
 
 def replicate_matrix_with_spacing(matrix, center_distance_offset=0):
     """
-    Replicates a matrix 3 times horizontally, with controllable spacing between centers.
-    Handles collisions (overlaps) by taking the maximum value in overlapping regions.
+    Replicates a matrix 3 times horizontally with controllable spacing between centers.
+    Handles collisions (overlaps) by taking the maximum value in overlapping regions,
+    and fills gaps with -1 (which should be converted to NaN in TypeScript).
 
     Args:
-        matrix: Input matrix.
-        center_distance_offset: Adjusts the ideal center-to-center distance.
-                              - Positive: Increases spacing (adds gaps between matrices).
-                              - Negative: Decreases spacing (causes overlaps).
+        matrix: Input matrix (2D numpy array).
+        center_distance_offset: Adjusts spacing between matrix centers:
+            - 0: Ideal contiguous placement
+            - Positive: Adds gaps between matrices (filled with -1)
+            - Negative: Creates overlaps (resolved by taking maximum values)
 
     Returns:
-        Combined matrix (matrix_sizex(matrix_size*3 + offset)) with 3 copies and resolved collisions.
+        Combined matrix with 3 copies, properly spaced/collided
     """
+
     h, w = matrix.shape
-    center = w // 2  # Center of the original matrix
-
-    # Ideal center-to-center distance (contiguous matrices)
-    ideal_center_distance = w
-
-    # Adjusted distance based on offset
-    actual_center_distance = ideal_center_distance + center_distance_offset
 
     # Calculate starting positions for each copy
+    ## First copy starts at 0
+    ## Second copy starts after first matrix + offset
+    ## Third copy starts after second matrix + offset
     starts = [
         0,
-        actual_center_distance - center,
-        2 * actual_center_distance - 2 * center,
+        w + center_distance_offset,
+        2 * (w + center_distance_offset),
     ]
 
-    # Total width of the output matrix
+    # Calculate total width including spacing
     total_width = starts[-1] + w
 
-    # Initialize result matrix with zeros
-    result = np.zeros((h, total_width))
+    # Initialize result matrix with -1
+    result = np.full((h, total_width), -1.0)
 
     # Paste each copy, handling collisions with np.maximum
     for start in starts:
-        # Ensure indices stay within bounds
+        # Ensure we don't go out of bounds
         src_start = max(0, -start)
         src_end = min(w, result.shape[1] - start)
         dst_start = max(0, start)
         dst_end = min(result.shape[1], start + w)
 
-        # Overlap copies by taking the max value in collisions
-        result[:, dst_start:dst_end] = np.maximum(
-            result[:, dst_start:dst_end], matrix[:, src_start:src_end]
-        )
+        # Get the target slice
+        target_slice = result[:, dst_start:dst_end]
+        source_slice = matrix[:, src_start:src_end]
+
+        # For existing values (collisions), take maximum; otherwise insert new values
+        mask = target_slice != -1  # Only consider non-gap areas for collision
+        target_slice[mask] = np.maximum(target_slice[mask], source_slice[mask])
+        target_slice[~mask] = source_slice[~mask]
 
     return result

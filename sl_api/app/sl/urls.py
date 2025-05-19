@@ -36,11 +36,6 @@ urlpatterns = [
         name="grid-update",
     ),
     path(
-        "grids/<int:id>/expansion/",
-        grid_views.ExpansionGridView.as_view(),
-        name="grid-expansion",
-    ),
-    path(
         "grids/<int:id>/distribution-simulation/",
         grid_views.GridDistributionSimulationView.as_view(),
         name="grid-distribution-simulation",

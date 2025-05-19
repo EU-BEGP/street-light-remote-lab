@@ -95,24 +95,6 @@ class UltraConcurrentSearchView(generics.ListAPIView):
         )
 
 
-class ExpansionGridView(generics.RetrieveAPIView):
-    serializer_class = GridSerializer
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-
-    def get_object(self):
-        grid_id = self.kwargs.get("id")
-        grid = Grid.objects.get(id=grid_id)
-        return grid
-
-    def retrieve(self, request, *args, **kwargs):
-        grid = self.get_object()
-        grid_messages = Message.objects.filter(grid=grid).order_by("id")
-        intensity_matrix = create_matrix_from_grid(grid_messages)
-        expanded_intensity_matrix = zero_edge_rbf_expand(intensity_matrix)
-        return Response(expanded_intensity_matrix, status=status.HTTP_200_OK)
-
-
 class GridDistributionSimulationView(generics.RetrieveAPIView):
     serializer_class = GridSerializer
     authentication_classes = (TokenAuthentication,)
