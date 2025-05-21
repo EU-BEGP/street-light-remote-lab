@@ -4,9 +4,8 @@
 
 import config from 'src/app/config.json'
 import { AuthService } from '../../services/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { StorageService } from 'src/app/features/services/storage.service';
 import { ToastrService } from 'ngx-toastr';
 import { User } from '../../interfaces/user';
@@ -17,6 +16,7 @@ import { User } from '../../interfaces/user';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
+  @Output() loginSuccess = new EventEmitter<any>();
 
   hidePassword: boolean = true;
   passwordResetUrl: string = `${config.api.baseUrl}${config.api.users.passwordReset}`;
@@ -30,7 +30,6 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
-    private router: Router,
     private storageService: StorageService,
     private toastr: ToastrService,
   ) { }
@@ -65,20 +64,16 @@ export class LoginComponent implements OnInit {
         if (response != undefined) {
           // Add token to local storage
           this.storageService.setToken(response.body.token)
-
           this.toastr.success(`Welcome ${user.email}`);
-
-          // Navigate to laboratory
-          this.router.navigate(['/laboratory']);
+          const dialogData = { "login": "success" }
+          this.loginSuccess.emit(dialogData);
         }
       }
     });
   }
 
   /*** Internal functions ***/
-
   /* Form manipulation */
-
   // Getters
   get emailControl() {
     return this.loginForm.get('email');

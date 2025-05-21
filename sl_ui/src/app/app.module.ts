@@ -2,7 +2,6 @@
 // MIT License - See LICENSE file in the root directory
 // Boris Pedraza, Alex Villazon, Omar Ormachea
 
-import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
@@ -11,18 +10,19 @@ import { CountdownModule } from 'ngx-countdown';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MaterialModule } from './material.module';
+import { NgModule } from '@angular/core';
 import { NgxHttpLoaderModule } from 'ngx-http-loader';
 import { ToastrModule } from 'ngx-toastr';
 
 // Components
-import { AccessComponent } from './core/pages/access/access.component';
+import { AccessComponent } from './core/components/access/access.component';
 import { AppComponent } from './app.component';
 import { CodeActivationComponent } from './core/pages/code-activation/code-activation.component';
 import { ConfirmationDialogComponent } from './core/components/confirmation-dialog/confirmation-dialog.component';
 import { DataAnalysisActivityComponent } from './features/pages/data-analysis-activity/data-analysis-activity.component';
 import { FooterComponent } from './core/components/footer/footer.component';
 import { GridSelectorComponent } from './features/components/grid-selector/grid-selector.component';
-import { LaboratoryComponent } from './features/pages/laboratory/laboratory.component';
+import { HomeComponent } from './features/pages/home/home.component';
 import { LightInformationComponent } from './features/components/light-information/light-information.component';
 import { LightIntensityDistributionComponent } from './features/components/light-intensity-distribution/light-intensity-distribution.component';
 import { LightIntensityDistributionDialogComponent } from './features/components/light-intensity-distribution-dialog/light-intensity-distribution-dialog.component';
@@ -38,7 +38,7 @@ import { NavbarComponent } from './core/components/navbar/navbar.component';
 import { NotFoundComponent } from './core/pages/not-found/not-found.component';
 import { ObjectControlComponent } from './features/components/object-control/object-control.component';
 import { ParameterSelectorComponent } from './features/components/parameter-selector/parameter-selector.component';
-import { ProfileComponent } from './core/pages/profile/profile.component';
+import { ProfileComponent } from './core/components/profile/profile.component';
 import { RealTimeInteractionActivityComponent } from './features/pages/real-time-interaction-activity/real-time-interaction-activity.component';
 import { RegistrationComponent } from './core/components/registration/registration.component';
 import { RobotCameraComponent } from './features/components/robot-camera/robot-camera.component';
@@ -62,7 +62,7 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     DataAnalysisActivityComponent,
     FooterComponent,
     GridSelectorComponent,
-    LaboratoryComponent,
+    HomeComponent,
     LightInformationComponent,
     LightIntensityDistributionComponent,
     LightIntensityDistributionDialogComponent,
@@ -99,18 +99,18 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     PlotlyViaWindowModule,
     ReactiveFormsModule,
     ToastrModule.forRoot({
-      timeOut: 3000,
       closeButton: true,
       preventDuplicates: true,
       progressBar: true,
+      timeOut: 3000,
     }),
   ],
   providers: [
     CookieService,
     {
+      multi: true,
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
-      multi: true,
     }
   ],
   bootstrap: [AppComponent],

@@ -2,9 +2,10 @@
 // MIT License - See LICENSE file in the root directory
 // Boris Pedraza, Alex Villazon, Omar Ormachea
 
+import { AccessComponent } from '../access/access.component';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CountdownConfig } from 'ngx-countdown';
-import { Input, Output, EventEmitter } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ProfileComponent } from '../profile/profile.component';
 import { Router, NavigationEnd } from '@angular/router';
 import { StorageService } from 'src/app/features/services/storage.service';
 import { Subscription } from 'rxjs';
@@ -16,61 +17,64 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit, OnDestroy {
-  @Input() hasAccessToLab: boolean = false;
-  @Input() countdownConfig: CountdownConfig = {
-    leftTime: 0,
-    format: 'HH:mm:ss',
-    demand: true,
-  };
-  @Output() countdownFinish: EventEmitter<void> = new EventEmitter<void>();
-
-  showMenu: boolean = false;
+  showNormalMenu: boolean = false;
   currentRoute: string = '';
-  private subscription?: Subscription;
+  private routerSubscription?: Subscription;
 
   constructor(
+    private dialog: MatDialog,
     private router: Router,
     private storageService: StorageService,
   ) { }
 
   ngOnInit(): void {
-    this.subscription = this.router.events
+    this.routerSubscription = this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
         this.currentRoute = this.router.url;
       });
 
-    this.showMenu = !!(this.storageService.getToken());
+    this.showNormalMenu = !!(this.storageService.getToken());
   }
+
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    if (this.routerSubscription) this.routerSubscription.unsubscribe();
   }
 
-  onCountdownFinish(event: any): void {
-    this.countdownFinish.emit(event);
-
+  showNavbarItem(routeName: string): boolean {
+    if (this.currentRoute == routeName) return false;
+    return true;
   }
 
-  goToMyProfile(): void {
-    this.router.navigate(['/profile']);
+  openProfileDialog(): void {
+    this.dialog.open(ProfileComponent, {
+      width: '600px',
+      maxHeight: '90vh',
+      autoFocus: true,
+      disableClose: false
+    });
   }
 
-  goToLogin(): void {
-    this.router.navigate(['']);
+  openAccessDialog(): void {
+    const dialogRef = this.dialog.open(AccessComponent, {
+      width: '600px',
+      maxHeight: '90vh',
+      autoFocus: true,
+      disableClose: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        if (result.login === "success") {
+          this.showNormalMenu = true;
+        }
+      }
+    });
   }
 
   logout(): void {
     this.storageService.clearToken();
-    this.showMenu = false;
-    this.goToLogin();
-  }
-
-  showNavbarItem(routeName: string): boolean {
-    if (this.currentRoute == routeName) {
-      return false;
-    }
-    return true;
+    this.showNormalMenu = false;
+    this.router.navigate(['/']);
   }
 }

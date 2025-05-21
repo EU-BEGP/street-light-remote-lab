@@ -5,35 +5,40 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-// Components
-import { AccessComponent } from './core/pages/access/access.component';
-import { CodeActivationComponent } from './core/pages/code-activation/code-activation.component';
-import { LaboratoryComponent } from './features/pages/laboratory/laboratory.component';
-import { LobbyComponent } from './core/pages/lobby/lobby.component';
-import { NotFoundComponent } from './core/pages/not-found/not-found.component';
-import { ProfileComponent } from './core/pages/profile/profile.component';
-
 // Guards
-import { AccessGuard } from './core/guards/access.guard';
 import { AuthGuard } from './core/guards/auth.guard';
 import { CanDeactivateLabGuard } from './features/guards/can-deactivate-lab.guard';
+import { HomeComponent } from './features/pages/home/home.component';
+
+// Components
+import { CodeActivationComponent } from './core/pages/code-activation/code-activation.component';
+import { DataAnalysisActivityComponent } from './features/pages/data-analysis-activity/data-analysis-activity.component';
+import { LightMonitoringActivityComponent } from './features/pages/light-monitoring-activity/light-monitoring-activity.component';
+import { LobbyComponent } from './core/pages/lobby/lobby.component';
+import { NotFoundComponent } from './core/pages/not-found/not-found.component';
+import { RealTimeInteractionActivityComponent } from './features/pages/real-time-interaction-activity/real-time-interaction-activity.component';
+
 
 const routes: Routes = [
   {
     path: '',
-    component: AccessComponent,
-    canActivate: [AccessGuard],
+    component: HomeComponent,
   },
   {
-    path: 'laboratory',
-    component: LaboratoryComponent,
+    path: 'real-time-01',
+    component: RealTimeInteractionActivityComponent,
     canActivate: [AuthGuard],
     canDeactivate: [CanDeactivateLabGuard]
   },
   {
-    path: 'profile',
-    component: ProfileComponent,
-    canActivate: [AuthGuard],
+    path: 'real-time-02',
+    component: LightMonitoringActivityComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'ultra-concurrent',
+    component: DataAnalysisActivityComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'account-activation',
@@ -45,7 +50,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    component: NotFoundComponent,
+    component: NotFoundComponent
   }
 ];
 

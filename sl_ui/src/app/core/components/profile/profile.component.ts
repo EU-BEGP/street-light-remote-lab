@@ -3,13 +3,11 @@
 // Boris Pedraza, Alex Villazon, Omar Ormachea
 
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { User } from '../../interfaces/user';
 import { UserService } from '../../services/user.service';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-profile',
@@ -24,6 +22,7 @@ export class ProfileComponent implements OnInit {
   });
 
   constructor(
+    private dialogRef: MatDialogRef<ProfileComponent>,
     private userService: UserService,
     private toastr: ToastrService,
     private formBuilder: FormBuilder,
@@ -65,14 +64,13 @@ export class ProfileComponent implements OnInit {
     this.userService.updateUserData(user).subscribe((response: any): void => {
       if (response.status !== null && response.status === 200) {
         this.toastr.success('Successful update of user data');
+        this.dialogRef.close();
       }
     });
   }
 
   /*** Internal functions ***/
-
   /* Form manipulation */
-
   patchFormValues(user: User): void {
     this.profileForm.patchValue({
       name: user.name,

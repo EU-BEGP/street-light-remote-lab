@@ -7,25 +7,27 @@ import { Injectable } from '@angular/core';
 import { StorageService } from 'src/app/features/services/storage.service';
 import { ToastrService } from 'ngx-toastr';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
-
   constructor(
     private router: Router,
     private storageService: StorageService,
-    private toastr: ToastrService,
+    private toastr: ToastrService
   ) { }
 
   canActivate(): boolean {
     if (!this.storageService.getToken()) {
-      // If the user is not logged in, redirect to the AccessComponent
-      this.router.navigate(['']);
-      this.toastr.error('You must be logged in to view this page.', 'Access Denied');
-      return false; // Prevent access to the protected route
+      this.toastr.error(
+        'You need to be logged in to continue',
+        'Authentication Required',
+        {
+          timeOut: 5000,
+          closeButton: true,
+        }
+      );
+      this.router.navigate(['/']); // Redirect to access page
+      return false;
     }
-
-    return true; // Allow access to the route
+    return true;
   }
 }

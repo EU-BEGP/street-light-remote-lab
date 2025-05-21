@@ -10,7 +10,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { StorageService } from 'src/app/features/services/storage.service';
 import { ToastrService } from 'ngx-toastr';
@@ -22,6 +22,7 @@ import { User } from '../../interfaces/user';
   styleUrls: ['./registration.component.css'],
 })
 export class RegistrationComponent implements OnInit {
+  @Output() registrationSuccess = new EventEmitter<any>();
   hidePassword: boolean = true;
   hidePasswordConfirmation: boolean = true;
 
@@ -81,6 +82,9 @@ export class RegistrationComponent implements OnInit {
           'Successful registration',
         );
 
+        const dialogData = { "registration": "success" }
+        this.registrationSuccess.emit(dialogData);
+
         setTimeout((): void => {
           this.router.navigate(['/account-activation'])
         }, 2000);
@@ -89,9 +93,7 @@ export class RegistrationComponent implements OnInit {
   }
 
   /*** Internal functions ***/
-
   /* Form manipulation */
-
   // Getters
   get nameControl() {
     return this.registrationForm.get('name');

@@ -3,13 +3,18 @@
 <!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
 
 <div class="access-container">
-  <mat-card class="card">
+  <h2 class="access-title">Access the Platform</h2>
+  <mat-card class="access-card">
     <mat-tab-group mat-align-tabs="center">
       <mat-tab label="Login">
-        <app-login></app-login>
+        <div class="tab-content">
+          <app-login (loginSuccess)="closeDialog($event)"></app-login>
+        </div>
       </mat-tab>
       <mat-tab label="Sign Up">
-        <app-registration></app-registration>
+        <div class="tab-content">
+          <app-registration (registrationSuccess)="closeDialog($event)"></app-registration>
+        </div>
       </mat-tab>
     </mat-tab-group>
   </mat-card>

@@ -18,7 +18,7 @@
         <mat-label>Last name</mat-label>
         <input matInput formControlName="lastName">
         <mat-error *ngIf="lastNameControl?.invalid && (lastNameControl?.touched || lastNameControl?.dirty)">
-          <div *If="lastNameControl?.hasError('required')">Last name is required</div>
+          <div *ngIf="lastNameControl?.hasError('required')">Last name is required</div>
         </mat-error>
       </mat-form-field>
 

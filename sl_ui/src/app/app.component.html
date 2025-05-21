@@ -6,9 +6,7 @@
 </ngx-http-loader>
 
 <div class="layout">
-  <app-navbar [hasAccessToLab]="hasAccessToLab" [countdownConfig]="countdownConfig"
-    (countdownFinish)="onCountdownFinish($event)">
-  </app-navbar>
+  <app-navbar></app-navbar>
   <div class="content">
     <router-outlet></router-outlet>
   </div>

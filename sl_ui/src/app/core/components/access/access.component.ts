@@ -2,17 +2,22 @@
 // MIT License - See LICENSE file in the root directory
 // Boris Pedraza, Alex Villazon, Omar Ormachea
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-access',
   templateUrl: './access.component.html',
   styleUrls: ['./access.component.css'],
 })
-export class AccessComponent implements OnInit {
+export class AccessComponent {
   title: string = '';
 
-  constructor() { }
+  constructor(
+    private dialogRef: MatDialogRef<AccessComponent>
+  ) { }
 
-  ngOnInit(): void { }
+  closeDialog(data?: any): any {
+    this.dialogRef.close(data);
+  }
 }
