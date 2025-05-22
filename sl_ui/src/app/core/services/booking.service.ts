@@ -2,14 +2,10 @@
 // MIT License - See LICENSE file in the root directory
 // Boris Pedraza, Alex Villazon, Omar Ormachea
 
-import { Injectable } from '@angular/core';
-import {
-  HttpClient,
-  HttpHeaders,
-} from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Booking } from '../interfaces/booking';
 import config from 'src/app/config.json';
+import { HttpClient, HttpHeaders, } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -27,11 +23,11 @@ export class BookingService {
     };
   }
 
-  getBookingInfo(accessKey: string, password: string | null): Observable<Booking[]> {
+  getBookingInfo(accessKey: string, password: string | null): Observable<any[]> {
     const accessParam = config.booking.urlParams.accessKey;
     const passwordParam = config.booking.urlParams.password;
     const url = `${this.URL}?${accessParam}=${accessKey}${password ? `&${passwordParam}=${password}` : ''}`;
 
-    return this.http.get<Booking[]>(url);
+    return this.http.get<any[]>(url);
   }
 }

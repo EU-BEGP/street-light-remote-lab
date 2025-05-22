@@ -3,6 +3,12 @@
 <!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
 
 <div class="activity-dashboard">
+  <div class="countdown-wrapper">
+    <div class="countdown-card">
+      <countdown [config]="countdownConfig" (event)="handleCountdownEvent($event)"></countdown>
+    </div>
+  </div>
+
   <div class="dashboard-row first-row">
     <app-light-table></app-light-table>
   </div>

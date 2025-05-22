@@ -1,5 +1,5 @@
 {
-  "version": "0.1.9",
+  "version": "1.0.0",
   "api": {
     "baseUrl": "",
     "streetLights": {
@@ -48,4 +48,9 @@
     "light_05",
     "light_06",
     "light_07"
+  ],
+  "realTimeEquipmentsIds": {
+    "realTime01": 40,
+    "realTime02": 43
+  }
 }

@@ -1,17 +1,20 @@
-// Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
 // MIT License - See LICENSE file in the root directory
+// Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
 // Boris Pedraza, Alex Villazon, Omar Ormachea
 
+import config from 'src/app/config.json';
+import { BookingService } from 'src/app/core/services/booking.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CountdownConfig } from 'ngx-countdown';
 import { Grid } from '../../interfaces/grid';
 import { GridService } from '../../services/grid.service';
 import { Message } from '../../interfaces/message';
 import { MqttService } from '../../services/mqtt.service';
 import { RobotWebsocketService } from '../../services/websockets/robot-websocket.service';
+import { Router } from '@angular/router';
+import { StorageService } from '../../services/storage.service';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import config from 'src/app/config.json';
-
 @Component({
   selector: 'app-real-time-interaction-activity',
   templateUrl: './real-time-interaction-activity.component.html',
@@ -28,18 +31,77 @@ export class RealTimeInteractionActivityComponent implements OnInit, OnDestroy {
   maxNumberGrids: number = 3;
   robotSubscription: Subscription | null = null;
 
+  // Booking variables
+  accessKey: string | null = null;
+  password: string | null = null;
+
+  // Counter configuration
+  countdownConfig: CountdownConfig = {
+    leftTime: 0,
+    format: 'HH:mm:ss',
+    demand: true
+  };
+  countdownActive: boolean = false;
+
   constructor(
+    private bookingService: BookingService,
     private gridService: GridService,
     private mqttService: MqttService,
     private robotWebsocketService: RobotWebsocketService,
+    private router: Router,
+    private storageService: StorageService,
     private toastr: ToastrService,
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.accessKey = this.storageService.getAccessKey();
+    this.password = this.storageService.getPassword();
+
+    if (this.accessKey) {
+      this.bookingService.getBookingInfo(this.accessKey, this.password).subscribe(response => {
+        if (response && response.length > 0) {
+          const remainingSeconds = this.getRemainingSeconds(response[0].end_date);
+          // Initialize countdown
+          this.countdownConfig = {
+            ...this.countdownConfig,
+            leftTime: remainingSeconds,
+            demand: false,
+            notify: [300, 60]
+          };
+          this.countdownActive = true;
+        }
+      });
+    }
+  }
 
   ngOnDestroy(): void {
     if (this.robotSubscription) this.robotSubscription.unsubscribe();
     this.robotWebsocketService.disconnect();
+  }
+
+  // Countdown logic
+  handleCountdownEvent(event: any): void {
+    if (!this.countdownActive) return;
+
+    if (event.action === 'notify') {
+      this.toastr.warning(`Only ${event.left} seconds remaining!`);
+    }
+
+    if (event.action === 'done') {
+      this.storageService.clearAccessData();
+      this.toastr.warning(
+        'Your booking time has expired',
+        'Time Up',
+        { timeOut: 5000, closeButton: true }
+      );
+      this.router.navigate(['/']);
+    }
+  }
+
+  private getRemainingSeconds(endDate: string): number {
+    const end = new Date(endDate).getTime();
+    const now = new Date().getTime();
+    return Math.max(Math.floor((end - now) / 1000), 0);
   }
 
   // Robot websocket connection

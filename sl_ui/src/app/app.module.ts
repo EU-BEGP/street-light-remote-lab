@@ -18,7 +18,6 @@ import { ToastrModule } from 'ngx-toastr';
 import { AccessComponent } from './core/components/access/access.component';
 import { AppComponent } from './app.component';
 import { CodeActivationComponent } from './core/pages/code-activation/code-activation.component';
-import { ConfirmationDialogComponent } from './core/components/confirmation-dialog/confirmation-dialog.component';
 import { DataAnalysisActivityComponent } from './features/pages/data-analysis-activity/data-analysis-activity.component';
 import { FooterComponent } from './core/components/footer/footer.component';
 import { GridSelectorComponent } from './features/components/grid-selector/grid-selector.component';
@@ -58,7 +57,6 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     AccessComponent,
     AppComponent,
     CodeActivationComponent,
-    ConfirmationDialogComponent,
     DataAnalysisActivityComponent,
     FooterComponent,
     GridSelectorComponent,

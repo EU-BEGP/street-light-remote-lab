@@ -43,24 +43,24 @@ export class StorageService {
   private readonly PASSWORD: string = 'pwd';
 
   getAccessKey(): string | null {
-    return localStorage.getItem(this.ACCESS_KEY);
+    return sessionStorage.getItem(this.ACCESS_KEY);
   }
 
   setAccessKey(key: string): void {
-    localStorage.setItem(this.ACCESS_KEY, key);
+    sessionStorage.setItem(this.ACCESS_KEY, key);
   }
 
   getPassword(): string | null {
-    return localStorage.getItem(this.PASSWORD);
+    return sessionStorage.getItem(this.PASSWORD);
   }
 
   setPassword(pwd: string): void {
-    localStorage.setItem(this.PASSWORD, pwd);
+    sessionStorage.setItem(this.PASSWORD, pwd);
   }
 
   clearAccessData(): void {
-    localStorage.removeItem(this.ACCESS_KEY);
-    localStorage.removeItem(this.PASSWORD);
+    sessionStorage.removeItem(this.ACCESS_KEY);
+    sessionStorage.removeItem(this.PASSWORD);
   }
 
   // Light Related
