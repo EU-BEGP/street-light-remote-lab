@@ -36,7 +36,7 @@ async def stream_video(websocket, rtsp_url):
     cap = open_stream(rtsp_url)
 
     if cap is not None:
-        frame_rate_target = 1 / 30  # (30 FPS)
+        frame_rate_target = 1 / 15  # (FPS)
         try:
             while True:
                 ret, frame = cap.read()

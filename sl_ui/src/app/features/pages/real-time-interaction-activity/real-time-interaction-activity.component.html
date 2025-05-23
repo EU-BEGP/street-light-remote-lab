@@ -13,7 +13,7 @@
   <div class="first-row">
     <app-light-information class="activity-component"></app-light-information>
     <app-object-control class="activity-component" (robotCommand)="sendRobotCommand()"></app-object-control>
-    <app-robot-camera class="activity-component"></app-robot-camera>
+    <app-camera-robot>class="activity-component"></app-camera-robot>
   </div>
 
   <div *ngIf="capturedGrids.length > 0" class="dashboard-row second-row">

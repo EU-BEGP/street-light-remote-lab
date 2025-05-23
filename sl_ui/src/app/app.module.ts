@@ -17,6 +17,8 @@ import { ToastrModule } from 'ngx-toastr';
 // Components
 import { AccessComponent } from './core/components/access/access.component';
 import { AppComponent } from './app.component';
+import { CameraLightsComponent } from './features/components/camera-lights/camera-lights.component';
+import { CameraRobotComponent } from './features/components/camera-robot/camera-robot.component';
 import { CodeActivationComponent } from './core/pages/code-activation/code-activation.component';
 import { DataAnalysisActivityComponent } from './features/pages/data-analysis-activity/data-analysis-activity.component';
 import { FooterComponent } from './core/components/footer/footer.component';
@@ -40,7 +42,6 @@ import { ParameterSelectorComponent } from './features/components/parameter-sele
 import { ProfileComponent } from './core/components/profile/profile.component';
 import { RealTimeInteractionActivityComponent } from './features/pages/real-time-interaction-activity/real-time-interaction-activity.component';
 import { RegistrationComponent } from './core/components/registration/registration.component';
-import { RobotCameraComponent } from './features/components/robot-camera/robot-camera.component';
 import { ScrollToTopComponent } from './core/components/scroll-to-top/scroll-to-top.component';
 import { SpinnerComponent } from './core/components/spinner/spinner.component';
 import { StaticIntensityChartComponent } from './features/components/static-intensity-chart/static-intensity-chart.component';
@@ -56,6 +57,8 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
   declarations: [
     AccessComponent,
     AppComponent,
+    CameraLightsComponent,
+    CameraRobotComponent,
     CodeActivationComponent,
     DataAnalysisActivityComponent,
     FooterComponent,
@@ -79,7 +82,6 @@ import { PlotlyViaWindowModule } from 'angular-plotly.js';
     ProfileComponent,
     RealTimeInteractionActivityComponent,
     RegistrationComponent,
-    RobotCameraComponent,
     ScrollToTopComponent,
     SpinnerComponent,
     StaticIntensityChartComponent,

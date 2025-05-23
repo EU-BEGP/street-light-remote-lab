@@ -9,8 +9,8 @@ import { Injectable, NgZone } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class CameraWebsocketService extends GeneralWebsocketService {
-  private readonly CAMERA_WS_URL: string = config.api.websocketUrls.camera;
+export class CameraLightsWebsocketService extends GeneralWebsocketService {
+  private readonly CAMERA_WS_URL: string = config.api.websocketUrls.cameraLights;
 
   constructor(ngZone: NgZone) {
     super(ngZone);

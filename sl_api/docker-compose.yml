@@ -3,12 +3,21 @@
 # Boris Pedraza, Alex Villazon, Omar Ormachea
 
 services:
-  camera_stream:
+  camera_stream_robot:
     build:
       context: ./camera_server
     ports:
       - "6003:6003"
-    env_file: .env
+    environment:
+      CAMERA_STREAM: ${CAMERA_STREAM_ROBOT}
+    restart: ${RESTART_POLICY}
+  camera_stream_lights:
+    build:
+      context: ./camera_server
+    ports:
+      - "6004:6003"
+    environment:
+      CAMERA_STREAM: ${CAMERA_STREAM_LIGHTS}
     restart: ${RESTART_POLICY}
   db:
     image: postgres:15-alpine
