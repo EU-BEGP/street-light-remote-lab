@@ -1,0 +1,33 @@
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+<div class="simulation-card">
+  <div class="simulation-header">
+    <h3 class="simulation-title">
+      <mat-icon>play_circle_outline</mat-icon>
+      Light Simulation
+    </h3>
+  </div>
+
+  <div class="simulation-controls">
+    <mat-form-field appearance="outline" class="simulation-select">
+      <mat-label>Separation</mat-label>
+      <mat-select [(value)]="separationNumber" (selectionChange)="onSeparationNumberSelect()">
+        <mat-option [value]="0">None (Ideal Separation)</mat-option>
+        <mat-option [value]="-1">-1 cell</mat-option>
+        <mat-option [value]="-2">-2 cells</mat-option>
+        <mat-option [value]="-3">-3 cells</mat-option>
+        <mat-option [value]="-4">-4 cells</mat-option>
+        <mat-option [value]="-5">-5 cells</mat-option>
+        <mat-option [value]="1">1 cell</mat-option>
+        <mat-option [value]="2">2 cells</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div class="plot-wrapper">
+    <plotly-plot [data]="chartData" [layout]="chartLayout" [config]="chartConfiguration">
+    </plotly-plot>
+  </div>
+</div>

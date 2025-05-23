@@ -1,0 +1,90 @@
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+<div class="light-info-card">
+  <div class="light-header">
+    <h3 class="light-title">
+      <mat-icon>lightbulb</mat-icon>
+      Light Information
+    </h3>
+    <div class="light-info">
+      <div class="light-code">{{light.code.toUpperCase() || '--'}}</div>
+      <div class="light-type">({{light.type || '--'}})</div>
+    </div>
+  </div>
+
+  <div class="light-section">
+    <h4 class="section-title">Basic Information</h4>
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="info-label">PWM</span>
+        <span class="info-value">{{light.pwm || '--'}}%</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Time Interval</span>
+        <span class="info-value">{{light.timeInterval || '--'}} s</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="light-section" *ngIf="light?.type=== 'AC' || light?.type=== 'AC_INV'">
+    <h4 class="section-title">AC Measurements</h4>
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="info-label">Voltage</span>
+        <span class="info-value">{{light.acVoltage || '--'}} V</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Current</span>
+        <span class="info-value">{{light.acCurrent || '--'}} A</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Power</span>
+        <span class="info-value">{{light.acPower || '--'}} W</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Energy</span>
+        <span class="info-value">{{light.acEnergy || '--'}} kWh</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Frequency</span>
+        <span class="info-value">{{light.acFrequency || '--'}} Hz</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Power Factor</span>
+        <span class="info-value">{{light.acFactor || '--'}}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="light-section" *ngIf="light?.type=== 'DC' || light?.type=== 'AC_INV'">
+    <h4 class="section-title">DC Measurements</h4>
+    <div class="info-grid">
+      <div class="info-item">
+        <span class="info-label">Voltage</span>
+        <span class="info-value">{{light.dcVoltage || '--'}} V</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Current</span>
+        <span class="info-value">{{light.dcCurrent || '--'}} A</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Power</span>
+        <span class="info-value">{{light.dcPower || '--'}} W</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Energy Consumed</span>
+        <span class="info-value">{{light.dcEnergyConsumption || '--'}} kWh</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Energy Charged</span>
+        <span class="info-value">{{light.dcEnergyCharge || '--'}} kWh</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Level</span>
+        <span class="info-value">{{light.dcLevel || '--'}}%</span>
+      </div>
+    </div>
+  </div>
+</div>

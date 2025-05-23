@@ -1,0 +1,21 @@
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+<div class="access-container">
+  <h2 class="access-title">Access the Platform</h2>
+  <mat-card class="access-card">
+    <mat-tab-group mat-align-tabs="center">
+      <mat-tab label="Login">
+        <div class="tab-content">
+          <app-login (loginSuccess)="closeDialog($event)"></app-login>
+        </div>
+      </mat-tab>
+      <mat-tab label="Sign Up">
+        <div class="tab-content">
+          <app-registration (registrationSuccess)="closeDialog($event)"></app-registration>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card>
+</div>

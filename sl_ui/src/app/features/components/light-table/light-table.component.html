@@ -1,0 +1,94 @@
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+<div class="light-table-card">
+  <div class="light-table-header">
+    <div class="header-row">
+      <h3 class="light-table-title">
+        <mat-icon>lightbulb</mat-icon>
+        DC Lights Information
+      </h3>
+      <div class="bulk-control-header">
+        <h3 class="bulk-control-title">
+          PWM Bulk Control
+        </h3>
+        <div class="slider-container">
+          <span class="slider-min">0%</span>
+          <mat-slider color="primary" min="0" max="100" step="1" thumbLabel [(ngModel)]="bulkPwmValue"
+            class="bulk-pwm-slider">
+          </mat-slider>
+          <span class="slider-max">100%</span>
+        </div>
+        <button mat-raised-button color="primary" class="control-button" (click)="sendBulkPwmCommand()">
+          <mat-icon>send</mat-icon>
+          SET ALL
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="lights" class="light-table">
+      <!-- Columns remain exactly the same as before -->
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef> Code </th>
+        <td mat-cell *matCellDef="let light"> {{light.code || '--'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="pwm">
+        <th mat-header-cell *matHeaderCellDef> Current PWM </th>
+        <td mat-cell *matCellDef="let light" [class.highlight]="light.pwm > 0">
+          <span class="pwm-value">{{light.pwm || '--'}}%</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="timeInterval">
+        <th mat-header-cell *matHeaderCellDef> Interval </th>
+        <td mat-cell *matCellDef="let light"> {{light.timeInterval || '--'}} s </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dcVoltage">
+        <th mat-header-cell *matHeaderCellDef> DC Voltage </th>
+        <td mat-cell *matCellDef="let light"> {{light.dcVoltage || '--'}} V </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dcCurrent">
+        <th mat-header-cell *matHeaderCellDef> DC Current </th>
+        <td mat-cell *matCellDef="let light"> {{light.dcCurrent || '--'}} A </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dcPower">
+        <th mat-header-cell *matHeaderCellDef> DC Power </th>
+        <td mat-cell *matCellDef="let light"> {{light.dcPower || '--'}} W </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dcLevel">
+        <th mat-header-cell *matHeaderCellDef> DC Level </th>
+        <td mat-cell *matCellDef="let light"> {{light.dcLevel || '--'}} % </td>
+      </ng-container>
+
+      <ng-container matColumnDef="control">
+        <th mat-header-cell *matHeaderCellDef> Control PWM</th>
+        <td mat-cell *matCellDef="let light">
+          <div class="control-container">
+            <div class="slider-container">
+              <span class="slider-min">0%</span>
+              <mat-slider color="primary" min="0" max="100" step="1" thumbLabel [value]="light.newPwm"
+                (input)="onPwmChange(light, $event)" class="pwm-slider">
+              </mat-slider>
+              <span class="slider-max">100%</span>
+            </div>
+            <button mat-raised-button color="primary" class="control-button" (click)="sendPwmCommand(light)">
+              <mat-icon>send</mat-icon>
+              SET
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>

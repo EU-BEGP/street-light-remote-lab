@@ -1,0 +1,167 @@
+// Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+// MIT License - See LICENSE file in the root directory
+// Boris Pedraza, Alex Villazon, Omar Ormachea
+
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ChartConfigurationService {
+
+  /* Layouts */
+  // Default layout
+  private defaultLayout = {
+    showlegend: false,
+    height: 450,
+    width: 450,
+    margin: {
+      l: 0,
+      r: 0,
+      b: 0,
+      t: 0,
+    },
+    scene: {
+      camera: {
+        eye: {
+          x: 0,
+          y: 2,
+          z: 0.5,
+        }
+      },
+      xaxis: {
+        autorange: 'reversed',
+        title: 'X Axis',
+        showgrid: true,
+        gridcolor: 'lightgray',
+      },
+      yaxis: {
+        autorange: 'reversed',
+        title: 'Y Axis',
+        showgrid: true,
+        gridcolor: 'lightgray',
+      },
+      zaxis: {
+        title: 'Z Axis',
+        gridcolor: 'lightgray',
+        showgrid: true,
+      },
+    },
+  };
+
+  //Simulation Layout
+  private simulationLayout = {
+    showlegend: false,
+    autosize: true,
+    height: 450,
+    width: 600,
+    margin: {
+      l: 0,
+      r: 0,
+      b: 0,
+      t: 0,
+    },
+    scene: {
+      aspectratio: { x: 3, y: 1, z: 0.7 },
+      aspectmode: 'manual',
+      camera: {
+        eye: {
+          x: 1.5,
+          y: 3,
+          z: 0.5,
+        }
+      },
+      xaxis: {
+        autorange: 'reversed',
+        title: 'X Axis',
+        showgrid: true,
+        gridcolor: 'lightgray',
+      },
+      yaxis: {
+        autorange: 'reversed',
+        title: 'Y Axis',
+        showgrid: true,
+        gridcolor: 'lightgray',
+      },
+      zaxis: {
+        title: 'Z Axis',
+        gridcolor: 'lightgray',
+        showgrid: true,
+      },
+    },
+  };
+
+  // Restrictive layout for simulations
+  private restrictiveLayout = {
+    ...this.defaultLayout, // Inherit properties from the initial layout
+    hovermode: false, // Disable hover interactions
+    dragmode: false, // Disable dragging
+    // Additional options to make it more static
+    xaxis: {
+      fixedrange: true, // Disable zooming on x-axis
+    },
+    yaxis: {
+      fixedrange: true, // Disable zooming on y-axis
+    },
+  };
+
+  /* Configurations */
+  // Restrictive configuration for the mode bar (toolbar)
+  private restrictiveToolbarConfiguration = {
+    displayModeBar: true,
+    modeBarButtonsToRemove: [
+      // 2D buttons
+      'zoom2d',
+      'pan2d',
+      'select2d',
+      'lasso2d',
+      'zoomIn2d',
+      'zoomOut2d',
+      'autoScale2d',
+      'resetScale2d',
+      // 3D buttons
+      'zoom3d',
+      'pan3d',
+      'orbitRotation',
+      'tableRotation',
+      'handleDrag3d',
+      'resetCameraDefault3d',
+      'resetCameraLastSave3d',
+      'hoverClosest3d',
+      // Cartesian buttons
+      'hoverClosestCartesian',
+      'hoverCompareCartesian',
+      // Geo buttons
+      'zoomInGeo',
+      'zoomOutGeo',
+      'resetGeo',
+      'hoverClosestGeo',
+      // Other buttons
+      'hoverClosestGl2d',
+      'hoverClosestPie',
+      'toggleHover',
+      'resetViews',
+      'sendDataToCloud',
+      'toggleSpikelines',
+      'resetViewMapbox',
+    ],
+  }
+
+  constructor() { }
+
+  getChartDefaultLayout(): any {
+    return this.defaultLayout;
+  }
+
+  getChartSimulationLayout(): any {
+    return this.simulationLayout;
+  }
+
+  getChartRestrictiveLayout(): any {
+    return this.restrictiveLayout;
+  }
+
+  getChartRestrictiveToolbarConfiguration(): any {
+    return this.restrictiveToolbarConfiguration;
+  }
+}

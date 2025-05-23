@@ -1,0 +1,56 @@
+{
+  "version": "1.0.0",
+  "api": {
+    "baseUrl": "",
+    "streetLights": {
+      "grid": "grids/",
+      "light": "lights/",
+      "mqtt": {
+        "lightCommand": "mqtt/light/",
+        "robotCommand": "mqtt/robot/"
+      },
+      "robot": "robots/"
+    },
+    "users": {
+      "accountActivation": "users/activate-account/",
+      "codeRequest": "users/request-code/",
+      "login": "users/token/",
+      "me": "users/me/",
+      "passwordReset": "accounts/password_reset/",
+      "signup": "users/signup/"
+    },
+    "websocketUrls": {
+      "camera": "",
+      "lightInformation": "",
+      "robotInformation": ""
+    }
+  },
+  "booking": {
+    "reservationUrl": "",
+    "urlParams": {
+      "accessKey": "access_key",
+      "password": "pwd"
+    }
+  },
+  "organizationData": {
+    "acronym": "UPB",
+    "name": "Universidad Privada Boliviana"
+  },
+  "appInformation": {
+    "title": "Street Light Remote Lab"
+  },
+  "controlledEnvLightCode": "light_10",
+  "controlledEnvLightType": "DC",
+  "gridDimension": 8,
+  "outsideLightsCodes": [
+    "light_03",
+    "light_04",
+    "light_05",
+    "light_06",
+    "light_07"
+  ],
+  "realTimeEquipmentsIds": {
+    "realTime01": 40,
+    "realTime02": 43
+  }
+}

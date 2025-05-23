@@ -1,0 +1,76 @@
+/* Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP */
+/* MIT License - See LICENSE file in the root directory */
+/* Boris Pedraza, Alex Villazon, Omar Ormachea */
+
+.activity-dashboard {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 1rem;
+  background-color: #eeeeee;
+  width: 100%;
+  max-width: 100%;
+  gap: 0.5rem;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.activity-component {
+  display: flex;
+  min-width: 0;
+}
+
+.parameter-row {
+  display: grid;
+  place-items: center;
+  width: 100%;
+}
+
+.parameter-row app-parameter-selector {
+  width: 33.33%;
+  max-width: 500px;
+  min-width: 300px;
+}
+
+.content-row {
+  display: grid;
+  width: 100%;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+}
+
+.content-row>* {
+  min-width: 0;
+}
+
+/* Responsive Adjustments */
+@media (min-width: 769px) {
+  .content-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1201px) {
+  .content-row {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .activity-dashboard {
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+
+  .content-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .parameter-row app-parameter-selector {
+    width: 100%;
+    max-width: 100%;
+    min-width: unset;
+  }
+}

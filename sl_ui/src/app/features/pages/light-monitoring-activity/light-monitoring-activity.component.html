@@ -1,0 +1,20 @@
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+<div class="activity-dashboard">
+  <div class="countdown-wrapper">
+    <div class="countdown-card">
+      <countdown [config]="countdownConfig" (event)="handleCountdownEvent($event)"></countdown>
+    </div>
+  </div>
+
+  <div class="dashboard-row first-row">
+    <app-light-table></app-light-table>
+  </div>
+
+  <div class="dashboard-row second-row">
+    <app-camera-lights class="activity-component camera-view"></app-camera-lights>
+    <app-multi-light-monitor></app-multi-light-monitor>
+  </div>
+</div>

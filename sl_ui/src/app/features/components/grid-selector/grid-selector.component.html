@@ -1,0 +1,21 @@
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+<div class="grid-selector-card">
+  <div class="selector-header">
+    <h3 class="selector-title">
+      <mat-icon>view_module</mat-icon>
+      Grid Selection
+    </h3>
+  </div>
+
+  <mat-radio-group (change)="onSelectionChange($event.value)" *ngIf="capturedGrids.length > 0" [(ngModel)]="selectedGridIndex" class="grid-options">
+    <mat-radio-button *ngFor="let item of [].constructor(capturedGrids.length); let i = index" [value]="i"
+      class="grid-option">
+      <div class="grid-label">
+        <span class="grid-number">Grid {{ i + 1 }}</span>
+      </div>
+    </mat-radio-button>
+  </mat-radio-group>
+</div>

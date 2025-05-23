@@ -1,0 +1,14 @@
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+<div class="scroll-to-top" [ngClass]="{ 'show-scrollTop': windowScrolled }">
+  <button
+    color="accent"
+    mat-fab
+    aria-label="Scroll to top icon"
+    (click)="scrollToTop()"
+  >
+    <mat-icon>keyboard_arrow_up</mat-icon>
+  </button>
+</div>

@@ -1,0 +1,23 @@
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+<div class="parameter-selector-bar">
+  <span class="bar-title">Parameter Selector</span>
+
+  <div class="parameter-field">
+    <label>PWM Intensity (%)</label>
+    <select [(ngModel)]="selectedPWM" (change)="onParameterSelected()" class="form-control">
+      <option value="" disabled selected>Select PWM</option>
+      <option *ngFor="let pwm of parameters.pwm_options" [value]="pwm">{{ pwm }}%</option>
+    </select>
+  </div>
+
+  <div class="parameter-field">
+    <label>Height (m)</label>
+    <select [(ngModel)]="selectedHeight" (change)="onParameterSelected()" class="form-control">
+      <option value="" disabled selected>Select Height</option>
+      <option *ngFor="let height of parameters.height_options" [value]="height">{{ height }}m</option>
+    </select>
+  </div>
+</div>

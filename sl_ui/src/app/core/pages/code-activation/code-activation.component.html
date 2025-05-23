@@ -1,0 +1,47 @@
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+<div class="activation-container">
+  <mat-card class="activation-card">
+    <mat-card-content>
+      <h2 class="activation-title">Thank you for signing up!</h2>
+
+      <div *ngIf="!activationStatus" class="activation-content">
+        <p class="activation-message">
+          A verification code has been sent to your email<br>
+          <small>(Check your inbox and spam folder)</small>
+        </p>
+        <p class="activation-note">Enter the code within 15 minutes to complete verification</p>
+
+        <form (ngSubmit)="sendCode()" #verificationForm="ngForm" class="activation-form">
+          <div class="code-inputs">
+            <input *ngFor="let i of [0,1,2,3,4,5]; let idx = index"
+                   type="tel"
+                   maxlength="1"
+                   pattern="[0-9]"
+                   class="code-input"
+                   (paste)="handlePaste($event)"
+                   (input)="handleInput($event)"
+                   (keydown)="handleKeyDown($event)">
+          </div>
+
+          <div class="button-container">
+            <button type="button" mat-button color="primary" class="resend-link" (click)="resendCode()">
+              Didn't receive the email? Click here to resend
+            </button>
+
+            <button type="submit" mat-raised-button color="primary" class="submit-button">
+              Activate Account
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div *ngIf="activationStatus" class="activation-success">
+        <mat-icon class="success-icon">check_circle</mat-icon>
+        <p class="success-message">Account activated successfully!</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

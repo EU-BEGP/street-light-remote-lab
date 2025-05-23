@@ -1,0 +1,30 @@
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+<div class="chart-card">
+  <div class="chart-header">
+    <h3 class="chart-title">
+      <mat-icon>area_chart</mat-icon>
+      Light Intensity Distribution Analysis
+    </h3>
+    <div class="chart-tabs">
+      <button [class.active]="activeTab === 'histogram'" (click)="setActiveTab('histogram')">
+        Histogram
+      </button>
+      <button [class.active]="activeTab === 'polar'" (click)="setActiveTab('polar')">
+        Polar
+      </button>
+      <button [class.active]="activeTab === 'threshold'" (click)="setActiveTab('threshold')">
+        Threshold
+      </button>
+      <button [class.active]="true" (click)="openChartInfoDialog()" aria-label="Chart information">
+        <mat-icon>info</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="chart-wrapper">
+    <plotly-plot [data]="chartData" [layout]="chartLayout"></plotly-plot>
+  </div>
+</div>

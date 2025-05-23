@@ -1,0 +1,23 @@
+/* Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP */
+/* MIT License - See LICENSE file in the root directory */
+/* Boris Pedraza, Alex Villazon, Omar Ormachea */
+
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.form-field {
+  width: 100%;
+}
+
+.form-error {
+  color: #f44336;
+  font-size: 0.75rem;
+  margin: -1rem 0 0.5rem 0;
+}
+
+.submit-button {
+  margin-top: 1rem;
+}

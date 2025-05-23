@@ -1,0 +1,39 @@
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+<app-spinner id="grid-spinner" [showSpinner]="loadingWs"></app-spinner>
+<div class="activity-dashboard">
+  <div class="countdown-wrapper">
+    <div class="countdown-card">
+      <countdown [config]="countdownConfig" (event)="handleCountdownEvent($event)"></countdown>
+    </div>
+  </div>
+
+  <div class="first-row">
+    <app-light-information class="activity-component"></app-light-information>
+    <app-object-control class="activity-component" (robotCommand)="sendRobotCommand()"></app-object-control>
+    <app-camera-robot>class="activity-component"></app-camera-robot>
+  </div>
+
+  <div *ngIf="capturedGrids.length > 0" class="dashboard-row second-row">
+    <app-grid-selector class="activity-component" [(selectedGridIndex)]="selectedGridIndex"
+      [capturedGrids]="capturedGrids">
+    </app-grid-selector>
+  </div>
+
+  <div class="dashboard-row third-row">
+    <app-live-intensity-matrix class="activity-component" [gridDimension]="gridDimension"
+      [selectedGridIndex]="selectedGridIndex" [currentMessage]="currentMessage">
+    </app-live-intensity-matrix>
+    <app-live-intensity-chart class="activity-component" [gridDimension]="gridDimension"
+      [selectedGridIndex]="selectedGridIndex" [currentMessage]="currentMessage">
+    </app-live-intensity-chart>
+    <app-light-intensity-distribution
+      class="activity-component"
+      [selectedGridIndex]="selectedGridIndex"
+      [capturedGrids]="capturedGrids"
+      [gridDimension]="gridDimension">
+    </app-light-intensity-distribution>
+  </div>
+</div>

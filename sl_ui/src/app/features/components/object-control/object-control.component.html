@@ -1,0 +1,60 @@
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+<div class="object-control-card">
+  <div class="control-header">
+    <h3 class="control-title">
+      <mat-icon>tune</mat-icon>
+      Object Controls
+    </h3>
+  </div>
+
+  <div class="control-content">
+    <!-- Light Control -->
+    <div class="light-control">
+      <div class="section-title">
+        <mat-icon>lightbulb</mat-icon>
+        <span>Light</span>
+      </div>
+
+      <div class="pwm-control">
+        <label class="pwm-label">Intensity</label>
+        <mat-slider min="0" max="100" step="10" [(ngModel)]="pwmValue" thumbLabel color="primary" class="pwm-slider">
+        </mat-slider>
+        <span class="slider-value">{{pwmValue}}%</span>
+      </div>
+
+      <mat-form-field appearance="outline" class="interval-select">
+        <mat-label>Interval</mat-label>
+        <select matNativeControl required [(ngModel)]="timeIntervalValue">
+          <option value="5">5s</option>
+          <option value="10">10s</option>
+          <option value="15">15s</option>
+          <option value="30">30s</option>
+          <option value="60">60s</option>
+        </select>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" (click)="sendLightCommand(false)" class="action-button">
+        <mat-icon>send</mat-icon>
+        Apply
+      </button>
+    </div>
+
+    <!-- Robot Control -->
+    <div class="robot-control">
+      <div class="section-title">
+        <mat-icon>precision_manufacturing</mat-icon>
+        <span>Robot</span>
+      </div>
+
+      <div class="robot-action">
+        <button mat-raised-button color="primary" (click)="sendRobotCommand()" class="action-button robot-button">
+          <mat-icon>camera</mat-icon>
+          Capture Grid
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

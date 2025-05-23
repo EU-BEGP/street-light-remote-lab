@@ -1,0 +1,31 @@
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+<mat-toolbar color="primary" class="navbar-container">
+  <div class="title-container">
+    <img id="logo" src="./assets/logo.png" alt="logo" width="30px" />
+    <span id="navbar-title">Street Light Remote Lab</span>
+  </div>
+
+  <span class="spacer"></span>
+
+  <div class="nav-buttons" *ngIf="showNormalMenu">
+    <button mat-button aria-label="Profile list button" (click)="openProfileDialog()" *ngIf="showNavbarItem('/profile')">
+      <mat-icon class="icon">person</mat-icon>
+      <span>Profile</span>
+    </button>
+
+    <button mat-button aria-label="Logout icon" (click)="logout()">
+      <mat-icon class="icon">logout</mat-icon>
+      <span>Logout</span>
+    </button>
+  </div>
+
+  <div class="nav-buttons" *ngIf="!showNormalMenu">
+    <button mat-button aria-label="Logout icon" (click)="openAccessDialog()">
+      <mat-icon class="icon">login</mat-icon>
+      Login / Sign Up
+    </button>
+  </div>
+</mat-toolbar>

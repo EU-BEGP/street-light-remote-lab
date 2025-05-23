@@ -1,0 +1,2 @@
+postgresql-client=15+248
+ffmpeg=7:5.1.6-0+deb12u1

@@ -1,0 +1,31 @@
+<!-- Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP -->
+<!-- MIT License - See LICENSE file in the root directory -->
+<!-- Boris Pedraza, Alex Villazon, Omar Ormachea -->
+
+
+<div class="matrix-card">
+  <div class="matrix-header">
+    <h3 class="matrix-title">
+      <mat-icon>grid_on</mat-icon>
+      Static Intensity Matrix
+    </h3>
+  </div>
+
+  <div class="matrix-wrapper">
+    <div class="matrix-grid" [style.gridTemplateColumns]="'repeat(' + gridDimension + ', 1fr)'">
+      <ng-container *ngFor="let row of currentMatrix.slice().reverse(); let yReversed = index">
+        <div *ngFor="let cell of row; let x = index"
+            [style.background]="getCellColor(cell)"
+            [class.cell-active]="cell > 0"
+            class="matrix-cell">
+          <div class="cell-value">
+            <!-- Display (x, y) where y = (gridDimension - 1 - yReversed) -->
+            <span>[{{x}},{{gridDimension - 1 - yReversed}}]</span>
+            <!-- Display intensity value in cell -->
+            <span>{{cell}}</span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,144 @@
+/* Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP */
+/* MIT License - See LICENSE file in the root directory */
+/* Boris Pedraza, Alex Villazon, Omar Ormachea */
+
+.object-control-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  min-width: 0;
+}
+
+.control-header {
+  padding-bottom: 0.25rem;
+}
+
+.control-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: var(--main-blue);
+  font-size: 1.1rem;
+}
+
+.control-title mat-icon {
+  color: var(--secondary-blue);
+}
+
+.control-content {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 1.5rem;
+}
+
+.light-control,
+.robot-control {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: var(--secondary-blue);
+}
+
+.section-title mat-icon {
+  font-size: 1.1rem;
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.pwm-control {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pwm-label {
+  font-size: 0.85rem;
+  color: #666;
+  min-width: 60px;
+}
+
+.slider-value {
+  font-size: 0.85rem;
+  color: #444;
+  min-width: 40px;
+  text-align: right;
+}
+
+.interval-select {
+  width: 100%;
+}
+
+.action-button {
+  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.robot-action {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+}
+
+.robot-button {
+  min-width: 150px;
+}
+
+/* Responsive Adjustments */
+@media (min-width: 600px) {
+  .control-content {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    gap: 1.5rem;
+  }
+
+  .light-control {
+    padding-right: 1.5rem;
+    border-right: 1px solid #eee;
+  }
+}
+
+@media (max-width: 480px) {
+  .control-title {
+    font-size: 1rem;
+  }
+
+  .pwm-label {
+    min-width: 50px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .slider-value {
+    min-width: 35px;
+    font-size: 0.8rem;
+  }
+
+  .pwm-control {
+    gap: 0.5rem;
+  }
+
+  .action-button {
+    font-size: 0.85rem;
+    padding: 0 0.75rem;
+  }
+}
