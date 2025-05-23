@@ -39,18 +39,12 @@
   "appInformation": {
     "title": "Street Light Remote Lab"
   },
-  "controlledEnvLightCode": "light_10",
-  "controlledEnvLightType": "DC",
-  "gridDimension": 8,
-  "outsideLightsCodes": [
-    "light_03",
-    "light_04",
-    "light_05",
-    "light_06",
-    "light_07"
-  ],
+  "controlledEnvLightCode": "",
+  "controlledEnvLightType": "",
+  "gridDimension": 0,
+  "outsideLightsCodes": [],
   "realTimeEquipmentsIds": {
-    "realTime01": 40,
-    "realTime02": 43
+    "realTime01": 0,
+    "realTime02": 0
   }
 }
