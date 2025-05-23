@@ -20,7 +20,8 @@
       "signup": "users/signup/"
     },
     "websocketUrls": {
-      "camera": "",
+      "cameraRobot": "",
+      "cameraLights": "",
       "lightInformation": "",
       "robotInformation": ""
     }
