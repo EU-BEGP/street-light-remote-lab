@@ -10,3 +10,4 @@ scikit-image==0.20.0
 scipy==1.10.0
 uuid==1.30
 uvicorn[standard]==0.30.6
+onvif-zeep==0.2.12
