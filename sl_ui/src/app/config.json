@@ -9,7 +9,11 @@
         "lightCommand": "mqtt/light/",
         "robotCommand": "mqtt/robot/"
       },
-      "robot": "robots/"
+      "robot": "robots/",
+      "cameraMovement": {
+        "move": "camera/move/",
+        "stop": "camera/stop/"
+      }
     },
     "users": {
       "accountActivation": "users/activate-account/",

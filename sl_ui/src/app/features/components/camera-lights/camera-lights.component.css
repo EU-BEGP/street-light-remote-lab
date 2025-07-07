@@ -56,6 +56,21 @@
   object-fit: cover;
 }
 
+.camera-controls-cross {
+  display: grid;
+  grid-template-columns: repeat(3, 40px);
+  grid-template-rows: repeat(3, 40px);
+  gap: 4px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.arrow-btn {
+  grid-column: auto;
+  grid-row: auto;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 1200px) {
   .video-frame {

@@ -4,6 +4,7 @@
 
 import { CameraLightsWebsocketService } from '../../services/websockets/camera-lights-websocket.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CameraMovementService } from '../../services/camera-movement.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,9 +15,11 @@ import { Subscription } from 'rxjs';
 export class CameraLightsComponent implements OnInit, OnDestroy {
   private cameraSubscription: Subscription | null = null;
   frame: string = './assets/street_lights.jpg';
+  private cameraNumber: number = 1;
 
   constructor(
     private cameraLightsWebsocketService: CameraLightsWebsocketService,
+    private cameraMovementService: CameraMovementService
   ) { }
 
   ngOnInit(): void {
@@ -42,5 +45,13 @@ export class CameraLightsComponent implements OnInit, OnDestroy {
         this.frame = `data:image/jpeg;base64,${camera_msg.frame}`;
       }
     });
+  }
+
+  moveCamera(direction: string): void {
+    this.cameraMovementService.moveCamera(direction, this.cameraNumber).subscribe();
+  }
+
+  stopCamera(): void {
+    this.cameraMovementService.stopCamera(this.cameraNumber).subscribe();
   }
 }

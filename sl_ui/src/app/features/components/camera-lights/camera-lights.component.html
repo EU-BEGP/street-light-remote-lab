@@ -14,5 +14,32 @@
     <div class="video-frame">
       <img [src]="frame" alt="Live camera feed" />
     </div>
+    <div class="camera-controls-cross">
+      <div></div>
+      <button mat-mini-fab color="primary" class="arrow-btn" aria-label="Arriba"
+        (mousedown)="moveCamera('up')" (mouseup)="stopCamera()" 
+        (touchstart)="moveCamera('up')" (touchend)="stopCamera()">
+        <mat-icon>arrow_upward</mat-icon>
+      </button>
+      <div></div>
+      <button mat-mini-fab color="primary" class="arrow-btn" aria-label="Izquierda"
+        (mousedown)="moveCamera('left')" (mouseup)="stopCamera()"
+        (touchstart)="moveCamera('left')" (touchend)="stopCamera()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div></div>
+      <button mat-mini-fab color="primary" class="arrow-btn" aria-label="Derecha"
+        (mousedown)="moveCamera('right')" (mouseup)="stopCamera()"
+        (touchstart)="moveCamera('right')" (touchend)="stopCamera()">
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+      <div></div>
+      <button mat-mini-fab color="primary" class="arrow-btn" aria-label="Abajo"
+        (mousedown)="moveCamera('down')" (mouseup)="stopCamera()"
+        (touchstart)="moveCamera('down')" (touchend)="stopCamera()">
+        <mat-icon>arrow_downward</mat-icon>
+      </button>
+      <div></div>
+    </div>
   </div>
 </div>
