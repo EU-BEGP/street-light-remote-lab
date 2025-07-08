@@ -22,8 +22,11 @@ camera_stream = os.environ.get("CAMERA_STREAM", None)
 def open_stream(rtsp_url, retries=3, timeout=5):
     cap = None
     for _ in range(retries):
-        cap = cv2.VideoCapture(rtsp_url)
+        # Use FFMPEG backend for better RTSP support
+        cap = cv2.VideoCapture(rtsp_url, cv2.CAP_FFMPEG)
         if cap.isOpened():
+            # Reduce buffer size to minimize delay (if supported)
+            cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
             return cap
 
         logging.error(f"Error: Unable to open RTSP stream at {rtsp_url}")
@@ -39,6 +42,9 @@ async def stream_video(websocket, rtsp_url):
         frame_rate_target = 1 / 15  # (FPS)
         try:
             while True:
+                # Discard old frames to reduce latency
+                for _ in range(2):
+                    cap.grab()
                 ret, frame = cap.read()
                 if not ret:
                     break  # End of stream
