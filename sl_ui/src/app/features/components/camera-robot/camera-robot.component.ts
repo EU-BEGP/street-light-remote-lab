@@ -5,6 +5,7 @@
 import { CameraRobotWebsocketService } from '../../services/websockets/camera-robot-websocket.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CameraMovementService } from '../../services/camera-movement.service';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -19,7 +20,8 @@ export class CameraRobotComponent implements OnInit, OnDestroy {
 
   constructor(
     private cameraRobotWebsocketService: CameraRobotWebsocketService,
-    private cameraMovementService: CameraMovementService
+    private cameraMovementService: CameraMovementService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -48,10 +50,14 @@ export class CameraRobotComponent implements OnInit, OnDestroy {
   }
 
   moveCamera(direction: string): void {
-    this.cameraMovementService.moveCamera(direction, this.cameraNumber).subscribe();
+    this.cameraMovementService.moveCamera(direction, this.cameraNumber).subscribe({
+      error: () => this.toastr.error('Error moving camera')
+    });
   }
 
   stopCamera(): void {
-    this.cameraMovementService.stopCamera(this.cameraNumber).subscribe();
+    this.cameraMovementService.stopCamera(this.cameraNumber).subscribe({
+      error: () => this.toastr.error('Error stopping camera')
+    });
   }
 }
