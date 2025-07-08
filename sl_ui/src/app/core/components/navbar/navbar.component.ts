@@ -77,4 +77,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.showNormalMenu = false;
     this.router.navigate(['/']);
   }
+
+  goHome(): void {
+    this.router.navigate(['/']);
+  }
 }

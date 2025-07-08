@@ -4,6 +4,8 @@
 
 import { CameraLightsWebsocketService } from '../../services/websockets/camera-lights-websocket.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CameraMovementService } from '../../services/camera-movement.service';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,9 +16,12 @@ import { Subscription } from 'rxjs';
 export class CameraLightsComponent implements OnInit, OnDestroy {
   private cameraSubscription: Subscription | null = null;
   frame: string = './assets/street_lights.jpg';
+  private cameraNumber: number = 1;
 
   constructor(
     private cameraLightsWebsocketService: CameraLightsWebsocketService,
+    private cameraMovementService: CameraMovementService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -41,6 +46,18 @@ export class CameraLightsComponent implements OnInit, OnDestroy {
       if (camera_msg) {
         this.frame = `data:image/jpeg;base64,${camera_msg.frame}`;
       }
+    });
+  }
+
+  moveCamera(direction: string): void {
+    this.cameraMovementService.moveCamera(direction, this.cameraNumber).subscribe({
+      error: () => this.toastr.error('Error moving camera')
+    });
+  }
+
+  stopCamera(): void {
+    this.cameraMovementService.stopCamera(this.cameraNumber).subscribe({
+      error: () => this.toastr.error('Error stopping camera')
     });
   }
 }

@@ -8,6 +8,7 @@ from sl.views import light_views
 from sl.views import message_views
 from sl.views import mqtt_views
 from sl.views import robot_views
+from sl.views import camera_views
 
 app_name = "sl"
 
@@ -69,5 +70,15 @@ urlpatterns = [
         "mqtt/light/",
         mqtt_views.PublishLightCommand.as_view(),
         name="mqtt-publish-light-command",
+    ),
+    path(
+        "camera/move/",
+        camera_views.MoveCameraView.as_view(),
+        name="camera-move"
+    ),
+    path(
+        "camera/stop/",
+        camera_views.StopCameraView.as_view(),
+        name="camera-stop"
     ),
 ]

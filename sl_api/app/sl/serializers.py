@@ -53,3 +53,12 @@ class GridSerializer(serializers.ModelSerializer):
             "uc_height",
             "grid_messages",
         ]
+
+
+class MoveCameraSerializer(serializers.Serializer):
+    direction = serializers.ChoiceField(choices=['up', 'down', 'left', 'right'])
+    camera_number = serializers.IntegerField(default=1, min_value=1, max_value=2)
+
+
+class StopCameraSerializer(serializers.Serializer):
+    camera_number = serializers.IntegerField(default=1, min_value=1, max_value=2)
