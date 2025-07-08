@@ -58,13 +58,6 @@
 }
 
 /* Responsive Adjustments */
-@media (max-width: 768px) {
-  .plot-wrapper {
-    width: 100%;
-    max-width: 500px;
-  }
-}
-
 @media (max-width: 576px) {
   .simulation-controls {
     flex-direction: column;

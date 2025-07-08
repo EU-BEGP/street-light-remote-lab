@@ -4,6 +4,7 @@
 
 import { CameraRobotWebsocketService } from '../../services/websockets/camera-robot-websocket.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CameraMovementService } from '../../services/camera-movement.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,9 +15,11 @@ import { Subscription } from 'rxjs';
 export class CameraRobotComponent implements OnInit, OnDestroy {
   private cameraSubscription: Subscription | null = null;
   frame: string = './assets/robot_01.jpeg';
+  private cameraNumber: number = 2;
 
   constructor(
     private cameraRobotWebsocketService: CameraRobotWebsocketService,
+    private cameraMovementService: CameraMovementService
   ) { }
 
   ngOnInit(): void {
@@ -42,5 +45,13 @@ export class CameraRobotComponent implements OnInit, OnDestroy {
         this.frame = `data:image/jpeg;base64,${camera_msg.frame}`;
       }
     });
+  }
+
+  moveCamera(direction: string): void {
+    this.cameraMovementService.moveCamera(direction, this.cameraNumber).subscribe();
+  }
+
+  stopCamera(): void {
+    this.cameraMovementService.stopCamera(this.cameraNumber).subscribe();
   }
 }

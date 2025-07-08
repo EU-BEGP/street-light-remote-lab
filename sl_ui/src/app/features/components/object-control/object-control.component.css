@@ -32,8 +32,8 @@
 }
 
 .control-content {
-  display: grid;
-  grid-template-rows: auto auto;
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
 }
 
@@ -91,30 +91,7 @@
   width: 100%;
 }
 
-.robot-action {
-  display: flex;
-  justify-content: center;
-  margin-top: auto;
-}
-
-.robot-button {
-  min-width: 150px;
-}
-
 /* Responsive Adjustments */
-@media (min-width: 600px) {
-  .control-content {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto;
-    gap: 1.5rem;
-  }
-
-  .light-control {
-    padding-right: 1.5rem;
-    border-right: 1px solid #eee;
-  }
-}
-
 @media (max-width: 480px) {
   .control-title {
     font-size: 1rem;
