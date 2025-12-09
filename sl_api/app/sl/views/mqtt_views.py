@@ -11,6 +11,8 @@ import json
 import os
 import paho.mqtt.publish as publish
 
+import uuid
+
 mqtt_grid_topic = os.environ.get("MQTT_PUB_ROBOT_TOPIC", None)
 mqtt_light_topic = os.environ.get("MQTT_PUB_LIGHT_TOPIC", None)
 mqtt_host = os.environ.get("MQTT_HOST", None)
@@ -38,6 +40,7 @@ class PublishRobotCommand(generics.GenericAPIView):
                 message = {
                     "robot_code": robot_code,
                     "start": start,
+                    "grid_code": str(uuid.uuid4()),
                 }
 
                 publish.single(

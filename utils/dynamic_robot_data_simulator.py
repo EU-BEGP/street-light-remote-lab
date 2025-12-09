@@ -7,7 +7,6 @@ import json
 import math
 import paho.mqtt.client as mqtt
 import random
-import uuid
 
 MQTT_PORT = 1883
 MQTT_HOST = ""
@@ -128,7 +127,7 @@ def on_message(client, userdata, msg):
     if message["robot_code"] == robot_code and message["start"]:
         robot = Robot(
             robot_code=robot_code,
-            grid_code=str(uuid.uuid4()),
+            grid_code=message["grid_code"],
             width=int(width),
             height=int(height),
             lower_intensity_val=int(lower_intensity_value),
