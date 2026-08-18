@@ -1,0 +1,157 @@
+# Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+# MIT License - See LICENSE file in the root directory
+# Boris Pedraza, Alex Villazon, Omar Ormachea
+
+services:
+  db:
+    image: postgres:15-alpine
+    env_file: ./sl_api/.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    restart: unless-stopped
+
+  redis:
+    image: redis:latest
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+    restart: unless-stopped
+
+  init:
+    image: street-light-remote-lab-app
+    build:
+      context: ./sl_api
+    env_file: ./sl_api/.env
+    volumes:
+      - ./sl_api/app:/app
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "python manage.py migrate && python manage.py seed_demo_data"
+
+  app:
+    image: street-light-remote-lab-app
+    build:
+      context: ./sl_api
+    ports:
+      - "8003:8000"
+    volumes:
+      - ./sl_api/app:/app
+    env_file: ./sl_api/.env
+    environment:
+      MQTT_HOST: mosquitto
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      mosquitto:
+        condition: service_started
+      init:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  ui:
+    build:
+      context: ./sl_ui
+    ports:
+      - "4203:80"
+    depends_on:
+      - app
+    restart: unless-stopped
+
+  # Not part of the MQTT/light/robot flow, opt in with `--profile extras`.
+  camera_stream_robot:
+    profiles: ["extras"]
+    build:
+      context: ./sl_api/camera_server
+    ports:
+      - "6003:6003"
+    env_file: ./sl_api/.env
+    environment:
+      CAMERA_STREAM: ${CAMERA_STREAM_ROBOT}
+    restart: unless-stopped
+
+  camera_stream_lights:
+    profiles: ["extras"]
+    build:
+      context: ./sl_api/camera_server
+    ports:
+      - "6004:6003"
+    env_file: ./sl_api/.env
+    environment:
+      CAMERA_STREAM: ${CAMERA_STREAM_LIGHTS}
+    restart: unless-stopped
+
+  influxdb:
+    profiles: ["extras"]
+    image: influxdb:2.7-alpine
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2:rw
+      - influxdb_config:/etc/influxdb2:rw
+    env_file: ./sl_api/.env
+    restart: unless-stopped
+
+  telegraf:
+    profiles: ["extras"]
+    image: telegraf:1.30-alpine
+    depends_on:
+      - influxdb
+    volumes:
+      - ./sl_api/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    env_file: ./sl_api/.env
+    restart: unless-stopped
+
+  grafana:
+    profiles: ["extras"]
+    image: grafana/grafana:9.0.4
+    ports:
+      - 3003:3000
+    env_file: ./sl_api/.env
+    restart: unless-stopped
+
+  # MQTT simulators, opt in with `--profile sim`. No prompts, values are
+  # hardcoded to match `seed_demo_data`.
+  sim_robot:
+    profiles: ["sim"]
+    build:
+      context: ./utils
+    command: dynamic_robot_realistic_data_simulator.py
+    depends_on:
+      - mosquitto
+
+  sim_controlled_light:
+    profiles: ["sim"]
+    build:
+      context: ./utils
+    command: dynamic_light_data_simulator.py
+    depends_on:
+      - mosquitto
+
+  sim_monitoring_lights:
+    profiles: ["sim"]
+    build:
+      context: ./utils
+    command: multi_light_data_simulator.py
+    depends_on:
+      - mosquitto
+
+volumes:
+  postgres_data:
+  redis_data:
+  influxdb_data:
+  influxdb_config:

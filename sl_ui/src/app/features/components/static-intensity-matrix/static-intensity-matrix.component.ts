@@ -52,7 +52,7 @@ export class StaticIntensityMatrixComponent implements OnInit {
   getCellColor(value: number): string {
     if (value === 0) return 'white';
 
-    const max = 400;
+    const max = 500;
     const ratio = value / max;
     const red = Math.floor(255 * ratio);
     const green = Math.floor(130 * ratio);

@@ -2,7 +2,7 @@
 # MIT License - See LICENSE file in the root directory
 # Boris Pedraza, Alex Villazon, Omar Ormachea
 
-FROM python:3.10
+FROM python:3.10-bookworm
 ENV PYTHONUNBUFFERED=1
 
 # Copy the requirements and packages files

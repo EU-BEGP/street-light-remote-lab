@@ -6,11 +6,17 @@ import random
 import uuid
 
 MQTT_PORT = 1883
-MQTT_HOST = ""
+MQTT_HOST = "mosquitto"
 MQTT_USER = ""
 MQTT_PWD = ""
-MQTT_SUB_TOPIC = ""
-MQTT_PUB_TOPIC = ""
+MQTT_SUB_TOPIC = "street-light-rl/robots/post/"
+MQTT_PUB_TOPIC = "street-light-rl/robots/get/"
+
+ROBOT_CODE = "robot_01"
+WIDTH = 8
+HEIGHT = 8
+LOWER_INTENSITY_VALUE = 0
+UPPER_INTENSITY_VALUE = 500
 
 """
 Class that allows user to create robot object given the following:
@@ -187,39 +193,13 @@ def on_message(client, userdata, msg):
         print("[Robot Data Simulator]: The code provided doesn't match")
 
 
-# User interactions
-def get_robot_code():
-    """Prompt the user to enter the robot code."""
-    return input("Enter the robot code: ")
-
-
-def get_width():
-    """Prompt the user to enter the grid width."""
-    return input("Enter the grid width: ")
-
-
-def get_height():
-    """Prompt the user to enter the grid height."""
-    return input("Enter the grid height: ")
-
-
-def get_lower_intensity_value():
-    """Prompt the user to enter the grid lower intensity value."""
-    return input("Enter the grid lower intensity value: ")
-
-
-def get_upper_intensity_value():
-    """Prompt the user to enter the grid upper intensity value."""
-    return input("Enter the grid upper intensity value: ")
-
-
 if __name__ == "__main__":
     global robot_code, width, height, lower_intensity_value, upper_intensity_value
-    robot_code = get_robot_code()
-    width = get_width()
-    height = get_height()
-    lower_intensity_value = get_lower_intensity_value()
-    upper_intensity_value = get_upper_intensity_value()
+    robot_code = ROBOT_CODE
+    width = WIDTH
+    height = HEIGHT
+    lower_intensity_value = LOWER_INTENSITY_VALUE
+    upper_intensity_value = UPPER_INTENSITY_VALUE
 
     print("[Robot Data Simulator]: Initialized")
     mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)

@@ -10,12 +10,17 @@ import random
 import threading
 
 MQTT_PORT = 1883
-MQTT_HOST = ""
+MQTT_HOST = "mosquitto"
 MQTT_USER = ""
 MQTT_PWD = ""
-MQTT_SUB_TOPIC = ""
-MQTT_PUB_TOPIC = ""
-MQTT_AUTH = {"username": MQTT_USER, "password": MQTT_PWD}
+MQTT_SUB_TOPIC = "street-light-rl/lights/post/"
+MQTT_PUB_TOPIC = "street-light-rl/lights/get/"
+MQTT_AUTH = {"username": MQTT_USER, "password": MQTT_PWD} if MQTT_USER else None
+
+LIGHT_CODE = "light_06"
+LIGHT_TYPE = "DC"
+PWM = 50
+TIME_INTERVAL_MS = 5000
 
 
 # MQTT functions
@@ -39,59 +44,12 @@ def mqtt_loop():
     mqttc.loop_forever()
 
 
-# User interactions
-def get_light_code():
-    """Prompt the user to enter the light code."""
-    return input("Enter the light code: ")
-
-
-def get_light_type():
-    """Prompt the user to enter the type of light and validate it."""
-    valid_light_types = ["DC", "AC", "AC_INV"]
-    while True:
-        light_type = (
-            input("Enter the type of light ( DC, AC or AC_INV): ").strip().upper()
-        )
-        if light_type in valid_light_types:
-            return light_type
-        else:
-            print("Invalid input! Please enter one of the following: DC, AC or AC_INV.")
-
-
-def get_pwm():
-    """Prompt the user to enter the PWM value and validate it."""
-    while True:
-        try:
-            pwm = int(input("Enter the PWM value (0-100): "))
-            if 0 <= pwm <= 100:
-                return pwm
-            else:
-                print("Invalid input! The PWM value should be between 0 and 100.")
-        except ValueError:
-            print("Invalid input! Please enter a valid integer.")
-
-
-def get_time_interval():
-    """Prompt the user to enter the time interval and validate it."""
-    while True:
-        try:
-            time_interval = int(input("Enter the time interval in miliseconds: "))
-            if time_interval > 0:
-                return time_interval
-            else:
-                print("Invalid input! The time interval must be a positive integer.")
-        except ValueError:
-            print("Invalid input! Please enter a valid integer.")
-
-
 if __name__ == "__main__":
     global light_object, time_interval
-    # Get user input
-    print("[Light Data Simulator]: Please provide the following details:")
-    light_code = get_light_code()
-    light_type = get_light_type()
-    pwm = get_pwm()
-    time_interval = get_time_interval()
+    light_code = LIGHT_CODE
+    light_type = LIGHT_TYPE
+    pwm = PWM
+    time_interval = TIME_INTERVAL_MS
 
     light_object = {
         "light_code": light_code,

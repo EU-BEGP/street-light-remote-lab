@@ -46,16 +46,11 @@ To ensure correct requests, update the `"baseUrl": ""` field to point to your AP
 
 #### The Dockerfile
 
-While running in the **development** environment you need to modify a line in the `Dockerfile` to avoid base path errors.
+The `Dockerfile` builds with `ng build` and no `--base-href` override, so the image
+serves correctly at the root path for local/development use. For a **production**
+deployment behind a subpath, add the `--base-href` flag back to that line, matching
+your reverse-proxy path.
 
-Change this line:
-```
-RUN npm run ng build -- --base-href /street-light-rl/
-```
-To this:
-```
-RUN npm run ng build
-```
 ### Running the Project
 
 Once the environment setup is done you can run the project following the next steps:

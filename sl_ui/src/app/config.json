@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "api": {
-    "baseUrl": "",
+    "baseUrl": "http://localhost:8003/",
     "streetLights": {
       "grid": "grids/",
       "light": "lights/",
@@ -20,10 +20,10 @@
       "signup": "users/signup/"
     },
     "websocketUrls": {
-      "cameraRobot": "",
-      "cameraLights": "",
-      "lightInformation": "",
-      "robotInformation": ""
+      "cameraRobot": "ws://localhost:6003/",
+      "cameraLights": "ws://localhost:6004/",
+      "lightInformation": "ws://localhost:8003/sl/light-information/",
+      "robotInformation": "ws://localhost:8003/sl/robot-information/"
     }
   },
   "booking": {
@@ -40,10 +40,16 @@
   "appInformation": {
     "title": "Street Light Remote Lab"
   },
-  "controlledEnvLightCode": "",
-  "controlledEnvLightType": "",
-  "gridDimension": 0,
-  "outsideLightsCodes": [],
+  "controlledEnvLightCode": "light_06",
+  "controlledEnvLightType": "DC",
+  "gridDimension": 8,
+  "outsideLightsCodes": [
+    "light_01",
+    "light_02",
+    "light_03",
+    "light_04",
+    "light_05"
+  ],
   "realTimeEquipmentsIds": {
     "realTime01": 0,
     "realTime02": 0

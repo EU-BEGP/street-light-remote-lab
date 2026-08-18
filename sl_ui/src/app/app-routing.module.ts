@@ -7,8 +7,6 @@ import { RouterModule, Routes } from '@angular/router';
 
 // Guards
 import { AuthGuard } from './core/guards/auth.guard';
-import { BookingRealTime01Guard } from './features/guards/booking-real-time-01.guard';
-import { BookingRealTime02Guard } from './features/guards/booking-real-time-02.guard';
 import { HomeComponent } from './features/pages/home/home.component';
 
 // Components
@@ -27,12 +25,12 @@ const routes: Routes = [
   {
     path: 'real-time-01',
     component: RealTimeInteractionActivityComponent,
-    canActivate: [BookingRealTime01Guard, AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: 'real-time-02',
     component: LightMonitoringActivityComponent,
-    canActivate: [BookingRealTime02Guard, AuthGuard],
+    canActivate: [AuthGuard],
   },
   {
     path: 'ultra-concurrent',

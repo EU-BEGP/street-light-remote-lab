@@ -162,6 +162,9 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
+# Local setup guide (contains demo credentials, not for the repo)
+SETUP.md
+
 # Environments
 .env
 .venv

@@ -93,7 +93,7 @@ export class LiveIntensityMatrixComponent implements OnInit, OnChanges {
       return 'white';
     }
 
-    const max = 400;
+    const max = 500;
     const ratio = value / max;
 
     const red = Math.floor(255 * ratio);

@@ -18,7 +18,7 @@ mqtt_port = os.environ.get("MQTT_PORT", 1883)
 mqtt_user = os.environ.get("MQTT_USER", None)
 mqtt_pwd = os.environ.get("MQTT_PWD", None)
 
-mqtt_auth = {"username": mqtt_user, "password": mqtt_pwd}
+mqtt_auth = {"username": mqtt_user, "password": mqtt_pwd} if mqtt_user else None
 
 
 class PublishRobotCommand(generics.GenericAPIView):

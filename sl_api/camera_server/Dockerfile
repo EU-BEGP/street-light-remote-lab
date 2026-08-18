@@ -2,7 +2,7 @@
 # MIT License - See LICENSE file in the root directory
 # Boris Pedraza, Alex Villazon, Omar Ormachea
 
-FROM python:3.10
+FROM python:3.10-bookworm
 ENV PYTHONUNBUFFERED=1
 
 # Copy the requirements
@@ -11,7 +11,7 @@ RUN [ -f /requirements.txt ] && sed -i 's/\r$//' /requirements.txt
 
 # Install system packages and Python dependencies
 RUN apt-get update && apt-get upgrade -y && \
-  apt-get install -y libgl1-mesa-glx=22.3.6-1+deb12u1 --no-install-recommends && \
+  apt-get install -y libgl1-mesa-glx --no-install-recommends && \
   rm -rf /var/lib/apt/lists/* && \
   pip install --no-cache-dir -r /requirements.txt
 
