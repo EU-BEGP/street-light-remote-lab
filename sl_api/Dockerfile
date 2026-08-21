@@ -10,7 +10,8 @@ COPY ./requirements.txt /requirements.txt
 COPY ./packages.txt /tmp/packages.txt
 
 # Install system packages and Python dependencies
-RUN apt-get update && \
+RUN sed -i 's/\r$//' /tmp/packages.txt && \
+  apt-get update && \
   xargs -a /tmp/packages.txt apt-get install -y && \
   rm -rf /var/lib/apt/lists/* && \
   pip install --no-cache-dir -r /requirements.txt && \
